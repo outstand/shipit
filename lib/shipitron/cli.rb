@@ -23,5 +23,18 @@ module Shipitron
         Logger.fatal 'Deploy failed.'
       end
     end
+
+    desc 'server_deploy <app>', 'Server-side component of deploy'
+    def server_deploy(app)
+      $stdout.sync = true
+      require 'shipitron/server/deploy_application'
+      result = Server::DeployApplication.call(
+        application: app
+      )
+
+      if result.failure?
+        Logger.fatal 'Deploy failed.'
+      end
+    end
   end
 end

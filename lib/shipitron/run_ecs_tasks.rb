@@ -8,6 +8,7 @@ module Shipitron
     include Metaractor
     include EcsClient
 
+    required :application
     required :clusters, :ecs_task
 
     def call
@@ -16,6 +17,14 @@ module Shipitron
           response = ecs_client(region: cluster.region).run_task(
             cluster: cluster.name,
             task_definition: ecs_task,
+            overrides: {
+              container_overrides: [
+                {
+                  name: 'shipitron',
+                  command: ['server_deploy', application]
+                }
+              ]
+            },
             count: 1,
             started_by: 'shipitron'
           )
@@ -36,6 +45,10 @@ module Shipitron
     end
 
     private
+    def application
+      context.application
+    end
+
     def clusters
       context.clusters
     end
