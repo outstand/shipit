@@ -3,6 +3,9 @@ require 'metaractor'
 require 'shipitron/logger'
 require 'shipitron/ecs_client'
 
+# Note: This is a best effort client side check to make sure there
+# isn't a deploy running.  The server side check has more guarantees.
+
 module Shipitron
   class EnsureDeployNotRunning
     include Metaractor
