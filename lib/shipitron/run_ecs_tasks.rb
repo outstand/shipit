@@ -30,16 +30,16 @@ module Shipitron
           )
 
           if !response.failures.empty?
-            Logger.error 'ECS API Failure!'
             response.failures.each do |failure|
-              Logger.error "#{failure.arn}: #{failure.reason}"
+              fail_with_error! message: "ECS run_task failure: #{failure.arn}: #{failure.reason}"
             end
           end
 
         rescue Aws::ECS::Errors::ServiceError => e
-          Logger.error "Error: #{e.message}"
-          Logger.error e.backtrace.join("\n")
-          context.fail!
+          fail_with_errors!(messages: [
+            "Error: #{e.message}",
+            e.backtrace.join("\n")
+          ])
         end
       end
     end

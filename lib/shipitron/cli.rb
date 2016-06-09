@@ -20,6 +20,9 @@ module Shipitron
       )
 
       if result.failure?
+        result.errors.each do |error|
+          Logger.fatal error
+        end
         Logger.fatal 'Deploy failed.'
       end
     end
@@ -33,6 +36,9 @@ module Shipitron
       )
 
       if result.failure?
+        result.errors.each do |error|
+          Logger.fatal error
+        end
         Logger.fatal 'Deploy failed.'
       end
     end

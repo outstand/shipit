@@ -21,14 +21,16 @@ module Shipitron
               desired_status: status
             )
             if !response.task_arns.empty?
-              Logger.fatal 'Shipitron says "THERE CAN BE ONLY ONE"'
-              Logger.fatal 'Deploy is already running; exiting.'
-              context.fail!
+              fail_with_errors!(messages: [
+                'Shipitron says "THERE CAN BE ONLY ONE"',
+                'Deploy is already running.'
+              ])
             end
           rescue Aws::ECS::Errors::ClusterNotFoundException
-            Logger.fatal 'Shipitron says "PUNY HUMAN IS MISSING A CLUSTER"'
-            Logger.fatal "Cluster '#{cluster.name}' not found in region #{cluster.region}; exiting."
-            context.fail!
+            fail_with_errors!(messages: [
+              'Shipitron says "PUNY HUMAN IS MISSING A CLUSTER"',
+              "Cluster '#{cluster.name}' not found in region #{cluster.region}."
+            ])
           end
         end
       end
