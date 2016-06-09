@@ -36,7 +36,6 @@ ENV USE_BUNDLE_EXEC true
 COPY Gemfile shipitron.gemspec /shipitron/
 COPY lib/shipitron/version.rb /shipitron/lib/shipitron/
 RUN cd /shipitron \
-    && bundle config build.nokogiri --use-system-libraries \
     && bundle install \
     && git config --global push.default simple
 COPY . /shipitron/
