@@ -14,5 +14,5 @@ A deployment tool for use with Docker and ECS
 
 ## Development
 
-- `docker build -t outstand/shipitron:dev .`
+- `./build_dev.sh`
 - `docker run -it --rm -v $(pwd):/shipitron outstand/shipitron:dev deploy <app>`
