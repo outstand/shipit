@@ -30,7 +30,7 @@ ENV SHIPITRON_VERSION=0.1.0
 
 RUN gem install shipitron -v ${SHIPITRON_VERSION}
 
-COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY scripts/docker-entrypoint.sh /docker-entrypoint.sh
 
 ENV DUMB_INIT_SETSID 0
 ENTRYPOINT ["/docker-entrypoint.sh"]

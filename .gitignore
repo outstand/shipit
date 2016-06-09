@@ -1,3 +1,4 @@
 config/
 pkg/
 Gemfile.lock
+tmp/

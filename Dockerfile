@@ -33,17 +33,19 @@ RUN apk add --no-cache \
 
 ENV USE_BUNDLE_EXEC true
 
+WORKDIR /shipitron
 COPY Gemfile shipitron.gemspec /shipitron/
 COPY lib/shipitron/version.rb /shipitron/lib/shipitron/
-RUN cd /shipitron \
-    && bundle install \
-    && git config --global push.default simple
+COPY scripts/fetch-bundler-data.sh /shipitron/scripts/fetch-bundler-data.sh
+
+ARG bundler_data_host
+RUN /shipitron/scripts/fetch-bundler-data.sh ${bundler_data_host} && \
+      bundle install && \
+      git config --global push.default simple
 COPY . /shipitron/
 RUN ln -s /shipitron/exe/shipitron /usr/local/bin/shipitron
 
-WORKDIR /shipitron
-
-COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY scripts/docker-entrypoint.sh /docker-entrypoint.sh
 
 ENV DUMB_INIT_SETSID 0
 ENTRYPOINT ["/docker-entrypoint.sh"]
