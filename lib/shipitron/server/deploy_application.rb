@@ -1,5 +1,6 @@
 require 'shipitron'
 require 'metaractor'
+require 'shipitron/consul_lock'
 require 'shipitron/server/pull_git_repo'
 require 'shipitron/server/build_docker_image'
 require 'shipitron/server/push_docker_image'
@@ -12,8 +13,26 @@ module Shipitron
     class DeployApplication
       include Metaractor
       include Interactor::Organizer
+      include ConsulLock
 
       required :application
+
+      around do |interactor|
+        Diplomat.configure do |config|
+          config.url = "http://#{ENV['CONSUL_HOST']}:8500"
+        end
+
+        begin
+          with_lock(key: "shipitron/#{application}/deploy_lock") do
+            interactor.call
+          end
+        rescue UnableToLock
+          fail_with_errors!(messages: [
+            'Shipitron says: THERE CAN BE ONLY ONE',
+            'Unable to acquire deploy lock.'
+          ])
+        end
+      end
 
       organize [
         PullGitRepo,
