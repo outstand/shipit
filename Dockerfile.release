@@ -1,8 +1,10 @@
 FROM ruby:2.3.1-alpine
 MAINTAINER Ryan Schlesinger <ryan@outstand.com>
 
-RUN addgroup shipitron && \
-    adduser -S -G shipitron shipitron
+RUN addgroup -S shipitron && \
+    adduser -S -G shipitron shipitron && \
+    addgroup -g 1101 docker && \
+    addgroup shipitron docker
 
 ENV GOSU_VERSION 1.9
 ENV DUMB_INIT_VERSION 1.0.3
