@@ -12,10 +12,15 @@ module Shipitron
     desc 'deploy <app>', 'Deploys the app'
     option :ember, type: :boolean, default: false
     option :ember_only, type: :boolean, default: false
+    option :debug, type: :boolean, default: false
     def deploy(app)
       $stdout.sync = true
-      require 'shipitron/deploy_application'
-      result = DeployApplication.call(
+      if options[:debug] == false
+        Logger.level = :info
+      end
+
+      require 'shipitron/client/deploy_application'
+      result = Client::DeployApplication.call(
         application: app
       )
 
@@ -28,11 +33,23 @@ module Shipitron
     end
 
     desc 'server_deploy <app>', 'Server-side component of deploy'
-    def server_deploy(app)
+    option :name, required: true
+    option :repository, required: true
+    option :bucket, required: true
+    option :image_name, required: true
+    option :debug, type: :boolean, default: false
+    def server_deploy
       $stdout.sync = true
+      if options[:debug] == false
+        Logger.level = :info
+      end
+
       require 'shipitron/server/deploy_application'
       result = Server::DeployApplication.call(
-        application: app
+        application: options[:name],
+        repository_url: options[:repository],
+        s3_cache_bucket: options[:bucket],
+        image_name: options[:image_name]
       )
 
       if result.failure?

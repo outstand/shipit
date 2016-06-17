@@ -1,9 +1,10 @@
 require 'shipitron'
 require 'metaractor'
 require 'shipitron/consul_lock'
-require 'shipitron/server/pull_git_repo'
-require 'shipitron/server/build_docker_image'
-require 'shipitron/server/push_docker_image'
+require 'shipitron/server/git/pull_repo'
+require 'shipitron/server/docker/configure'
+require 'shipitron/server/docker/build_image'
+require 'shipitron/server/docker/push_image'
 require 'shipitron/server/register_ecs_task_definition'
 require 'shipitron/server/migrate_database'
 require 'shipitron/server/update_ecs_service'
@@ -16,8 +17,15 @@ module Shipitron
       include ConsulLock
 
       required :application
+      required :repository_url
+      required :s3_cache_bucket
+      required :image_name
 
       around do |interactor|
+        if ENV['CONSUL_HOST'].nil?
+          fail_with_error!(message: 'Environment variable CONSUL_HOST required')
+        end
+
         Diplomat.configure do |config|
           config.url = "http://#{ENV['CONSUL_HOST']}:8500"
         end
@@ -35,9 +43,10 @@ module Shipitron
       end
 
       organize [
-        PullGitRepo,
-        BuildDockerImage,
-        PushDockerImage,
+        Git::PullRepo,
+        Docker::Configure,
+        Docker::BuildImage,
+        Docker::PushImage,
         RegisterEcsTaskDefinition,
         MigrateDatabase,
         UpdateEcsService

@@ -1,5 +1,5 @@
-require 'shipitron/ensure_deploy_not_running'
-describe Shipitron::EnsureDeployNotRunning do
+require 'shipitron/client/ensure_deploy_not_running'
+describe Shipitron::Client::EnsureDeployNotRunning do
   let(:clusters) do
     [
       Hashie::Mash.new(name: 'blue', region: 'us-east-1'),
@@ -7,7 +7,7 @@ describe Shipitron::EnsureDeployNotRunning do
     ]
   end
   let(:action) do
-    Shipitron::EnsureDeployNotRunning.new(
+    Shipitron::Client::EnsureDeployNotRunning.new(
       clusters: clusters
     )
   end

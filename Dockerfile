@@ -31,7 +31,9 @@ RUN apk add --no-cache ca-certificates gnupg && \
 RUN apk add --no-cache \
     build-base \
     git \
-    openssh
+    openssh \
+    perl \
+    bash
 
 ENV USE_BUNDLE_EXEC true
 
@@ -45,7 +47,10 @@ RUN /shipitron/scripts/fetch-bundler-data.sh ${bundler_data_host} && \
       bundle install && \
       git config --global push.default simple
 COPY . /shipitron/
-RUN ln -s /shipitron/exe/shipitron /usr/local/bin/shipitron
+RUN ln -s /shipitron/exe/shipitron /usr/local/bin/shipitron && \
+    mkdir -p /home/shipitron/.ssh && \
+    chown shipitron:shipitron /home/shipitron/.ssh && \
+    chmod 700 /home/shipitron/.ssh
 
 COPY scripts/docker-entrypoint.sh /docker-entrypoint.sh
 

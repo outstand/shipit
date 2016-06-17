@@ -28,9 +28,17 @@ RUN apk add --no-cache ca-certificates gnupg && \
     apk del gnupg && \
     rm -rf /root/.gnupg
 
+RUN apk add --no-cache \
+    git \
+    perl \
+    bash
+
 ENV SHIPITRON_VERSION=0.1.0
 
-RUN gem install shipitron -v ${SHIPITRON_VERSION}
+RUN gem install shipitron -v ${SHIPITRON_VERSION} && \
+    mkdir -p /home/shipitron/.ssh && \
+    chown shipitron:shipitron /home/shipitron/.ssh && \
+    chmod 700 /home/shipitron/.ssh
 
 COPY scripts/docker-entrypoint.sh /docker-entrypoint.sh
 

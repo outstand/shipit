@@ -19,7 +19,15 @@ module Shipitron
     end
 
     def self.logger
-      Thread.current[:logger] = ::Logger.new(STDOUT)
+      Thread.current[:logger] ||= ::Logger.new(STDOUT)
+    end
+
+    def self.level
+      logger.level
+    end
+
+    def self.level=(new_level)
+      logger.level = new_level
     end
   end
 end

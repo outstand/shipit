@@ -1,5 +1,5 @@
-require 'shipitron/run_ecs_tasks'
-describe Shipitron::RunEcsTasks do
+require 'shipitron/client/run_ecs_tasks'
+describe Shipitron::Client::RunEcsTasks do
   let(:application) { 'skynet' }
   let(:clusters) do
     [
@@ -9,7 +9,7 @@ describe Shipitron::RunEcsTasks do
   end
   let(:ecs_task) { 'shipitron' }
   let(:action) do
-    Shipitron::RunEcsTasks.new(
+    Shipitron::Client::RunEcsTasks.new(
       application: application,
       clusters: clusters,
       ecs_task: ecs_task
