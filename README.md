@@ -7,11 +7,11 @@ Example config file:
 ```yaml
 applications:
   dummy-app:
-    respository: git@github.com:outstand/dummy-app
+    repository: git@github.com:outstand/dummy-app
     cache_bucket: bucket
     image_name: outstand/dummy-app
     build_script: shipitron/build.sh
-    post_build:
+    post_builds:
       - ecs_task: dummy-app
         container_name: dummy-app
         command: echo postbuild

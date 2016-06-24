@@ -1,4 +1,5 @@
 require 'shipitron'
+require 'shipitron/post_build'
 
 module Shipitron
   module Client
@@ -8,8 +9,15 @@ module Shipitron
       required :application
 
       def call
-        context.clusters = clusters
-        context.ecs_task = ecs_task
+        context.repository_url = config.repository
+        context.s3_cache_bucket = config.cache_bucket
+        context.image_name = config.image_name
+        context.build_script = config.build_script
+        context.post_builds = config.post_builds.map{|pb| PostBuild.new(pb.symbolize_keys)}
+        context.clusters = config.ecs_clusters
+        context.shipitron_task = config.shipitron_task
+        context.ecs_tasks = config.ecs_tasks
+        context.ecs_services = config.ecs_services
       end
 
       private
@@ -19,14 +27,6 @@ module Shipitron
 
       def config
         @config ||= Shipitron.config.applications[application]
-      end
-
-      def clusters
-        config.ecs_clusters
-      end
-
-      def ecs_task
-        config.ecs_task
       end
     end
   end

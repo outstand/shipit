@@ -24,5 +24,9 @@ module Shipitron
         end
       end
     end
+
+    def to_s
+      "ecs_task:#{ecs_task},container_name:#{container_name},command:#{command}"
+    end
   end
 end

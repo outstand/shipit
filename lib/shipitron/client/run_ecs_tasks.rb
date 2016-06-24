@@ -1,5 +1,6 @@
 require 'shipitron'
 require 'shipitron/ecs_client'
+require 'shellwords'
 
 module Shipitron
   module Client
@@ -8,19 +9,27 @@ module Shipitron
       include EcsClient
 
       required :application
-      required :clusters, :ecs_task
+      required :clusters
+      required :shipitron_task
+      required :repository_url
+      required :s3_cache_bucket
+      required :image_name
+      required :ecs_tasks
+      required :ecs_services
+      optional :build_script
+      optional :post_builds
 
       def call
         clusters.each do |cluster|
           begin
             response = ecs_client(region: cluster.region).run_task(
               cluster: cluster.name,
-              task_definition: ecs_task,
+              task_definition: shipitron_task,
               overrides: {
                 container_overrides: [
                   {
                     name: 'shipitron',
-                    command: ['server_deploy', application]
+                    command: command_args(cluster)
                   }
                 ]
               },
@@ -52,8 +61,45 @@ module Shipitron
         context.clusters
       end
 
-      def ecs_task
-        context.ecs_task
+      def shipitron_task
+        context.shipitron_task
+      end
+
+      def escape(str)
+        Shellwords.escape(str)
+      end
+
+      def escaped(sym)
+        escape(context[sym])
+      end
+
+      def command_args(cluster)
+        [
+          'server_deploy',
+          '--name', escaped(:application),
+          '--repository', escaped(:repository_url),
+          '--bucket', escaped(:s3_cache_bucket),
+          '--image-name', escaped(:image_name),
+          '--region', escape(cluster.region),
+          '--cluster-name', escape(cluster.name),
+        ].tap do |ary|
+          ary << '--ecs-tasks'
+          ary.concat context.ecs_tasks.each {|s| escape(s)}
+
+          ary << '--ecs-services'
+          ary.concat context.ecs_services.each {|s| escape(s)}
+
+          if context.build_script != nil
+            ary.concat ['--build-script', escaped(:build_script)]
+          end
+
+          if context.post_builds != nil
+            ary << '--post-builds'
+            ary.concat context.post_builds.map(&:to_s).each {|s| escape(s)}
+          end
+
+          Logger.debug "command_args: #{ary.inspect}"
+        end
       end
     end
   end
