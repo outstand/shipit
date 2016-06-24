@@ -1,5 +1,4 @@
 require 'shipitron'
-require 'metaractor'
 require 'shipitron/server/download_bundler_cache'
 require 'shipitron/server/docker/run_build_script'
 require 'shipitron/server/upload_bundler_cache'

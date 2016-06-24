@@ -1,5 +1,4 @@
 require 'shipitron'
-require 'diplomat'
 require 'shipitron/consul_keys'
 
 module Shipitron

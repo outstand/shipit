@@ -1,6 +1,4 @@
 require 'shipitron'
-require 'metaractor'
-require 'shipitron/logger'
 require 'shipitron/ecs_client'
 
 module Shipitron

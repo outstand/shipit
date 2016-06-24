@@ -1,5 +1,4 @@
 require 'shipitron'
-require 'metaractor'
 require 'shellwords'
 
 module Shipitron

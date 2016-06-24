@@ -1,5 +1,4 @@
 require 'shipitron'
-require 'metaractor'
 require 'shipitron/server/git/configure'
 require 'shipitron/server/git/download_cache'
 require 'shipitron/server/git/update_cache'

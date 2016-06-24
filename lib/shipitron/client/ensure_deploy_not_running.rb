@@ -1,6 +1,4 @@
 require 'shipitron'
-require 'metaractor'
-require 'shipitron/logger'
 require 'shipitron/ecs_client'
 
 # Note: This is a best effort client side check to make sure there

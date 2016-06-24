@@ -3,6 +3,30 @@ A deployment tool for use with Docker and ECS
 
 ## Usage
 
+Example config file:
+```yaml
+applications:
+  dummy-app:
+    respository: git@github.com:outstand/dummy-app
+    cache_bucket: bucket
+    image_name: outstand/dummy-app
+    build_script: shipitron/build.sh
+    post_build:
+      - ecs_task: dummy-app
+        container_name: dummy-app
+        command: echo postbuild
+    ecs_clusters:
+      - name: us-east-1-prod-blue
+        region: us-east-1
+      - name: us-east-1-prod-green
+        region: us-east-1
+    shipitron_task: shipitron
+    ecs_tasks:
+      - dummy-app
+    ecs_services:
+      - dummy-app
+```
+
 - Create shipitron.yml file
 - `docker run -it --rm -v shipitron.yml:/shipitron/config/shipitron.yml outstand/shipitron:<version> deploy <app>`
 

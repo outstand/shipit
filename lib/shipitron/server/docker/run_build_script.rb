@@ -1,5 +1,4 @@
 require 'shipitron'
-require 'metaractor'
 
 module Shipitron
   module Server
@@ -10,6 +9,11 @@ module Shipitron
         required :application
         required :image_name
         required :git_sha
+        optional :build_script
+
+        before do
+          context.build_script ||= 'shipitron/build.sh'
+        end
 
         def call
           Logger.info 'Building docker image'
@@ -17,10 +21,10 @@ module Shipitron
           image_name_with_tag = "#{image_name}:#{git_sha}"
 
           FileUtils.cd("/home/shipitron/#{application}") do
-            unless Pathname.new('shipitron/build.sh').exist?
-              fail_with_error!(message: 'shipitron/build.sh does not exist')
+            unless Pathname.new(build_script).exist?
+              fail_with_error!(message: "#{build_script} does not exist")
             end
-            Logger.info `shipitron/build.sh #{image_name_with_tag}`
+            Logger.info `#{build_script} #{image_name_with_tag}`
             if $? != 0
               fail_with_error!(message: "build script exited with non-zero code: #{$?}")
             end
@@ -40,6 +44,10 @@ module Shipitron
 
         def git_sha
           context.git_sha
+        end
+
+        def build_script
+          context.build_script
         end
       end
     end

@@ -1,5 +1,4 @@
 require 'shipitron'
-require 'metaractor'
 
 module Shipitron
   module Server

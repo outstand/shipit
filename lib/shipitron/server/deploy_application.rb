@@ -1,12 +1,11 @@
 require 'shipitron'
-require 'metaractor'
 require 'shipitron/consul_lock'
 require 'shipitron/server/git/pull_repo'
 require 'shipitron/server/docker/configure'
 require 'shipitron/server/docker/build_image'
 require 'shipitron/server/docker/push_image'
 require 'shipitron/server/register_ecs_task_definition'
-require 'shipitron/server/migrate_database'
+require 'shipitron/server/run_post_build'
 require 'shipitron/server/update_ecs_service'
 
 module Shipitron
@@ -16,10 +15,17 @@ module Shipitron
       include Interactor::Organizer
       include ConsulLock
 
+      # Parameters ending in _args are the cli version of that parameter
       required :application
       required :repository_url
       required :s3_cache_bucket
       required :image_name
+      required :region
+      required :cluster_name
+      required :ecs_tasks
+      required :ecs_services
+      optional :build_script
+      optional :post_builds
 
       around do |interactor|
         if ENV['CONSUL_HOST'].nil?
@@ -42,13 +48,19 @@ module Shipitron
         end
       end
 
+      before do
+        if context.ecs_tasks.nil? && context.ecs_tasks_args != nil
+          # parse ecs_tasks_args
+        end
+      end
+
       organize [
         Git::PullRepo,
         Docker::Configure,
         Docker::BuildImage,
         Docker::PushImage,
         RegisterEcsTaskDefinition,
-        MigrateDatabase,
+        RunPostBuild,
         UpdateEcsService
       ]
 

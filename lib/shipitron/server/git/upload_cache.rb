@@ -1,5 +1,4 @@
 require 'shipitron'
-require 'metaractor'
 require 'shipitron/fetch_bucket'
 require 'find'
 require 'archive/tar/minitar'
