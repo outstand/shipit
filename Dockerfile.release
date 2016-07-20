@@ -33,6 +33,8 @@ RUN apk add --no-cache \
     perl \
     bash
 
+WORKDIR /app
+
 ENV SHIPITRON_VERSION=0.1.0
 
 RUN gem install shipitron -v ${SHIPITRON_VERSION} && \
