@@ -3,7 +3,8 @@ require 'shipitron/ecs_client'
 
 module Shipitron
   module Server
-    class RegisterEcsTaskDefinition
+    # TODO: tag `latest` when updating
+    class UpdateEcsTaskDefinition
       include Metaractor
       include EcsClient
 

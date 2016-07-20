@@ -4,7 +4,7 @@ require 'shipitron/server/git/pull_repo'
 require 'shipitron/server/docker/configure'
 require 'shipitron/server/docker/build_image'
 require 'shipitron/server/docker/push_image'
-require 'shipitron/server/register_ecs_task_definition'
+require 'shipitron/server/update_ecs_task_definition'
 require 'shipitron/server/run_post_build'
 require 'shipitron/server/update_ecs_service'
 
@@ -59,7 +59,7 @@ module Shipitron
         Docker::Configure,
         Docker::BuildImage,
         Docker::PushImage,
-        RegisterEcsTaskDefinition,
+        UpdateEcsTaskDefinition,
         RunPostBuild,
         UpdateEcsService
       ]
