@@ -10,10 +10,10 @@ module Shipitron
       required :region
       required :cluster_name
       required :ecs_services
-      required :ecs_tasks
+      required :ecs_task_defs
 
       def call
-        Logger.info "Updating ECS services [#{ecs_services.join(', ')}] with task definitions [#{ecs_tasks.map(&:to_s).join(', ')}]"
+        Logger.info "Updating ECS services [#{ecs_services.join(', ')}] with task definitions [#{ecs_task_defs.map(&:to_s).join(', ')}]"
 
         begin
           service_task_defs = {}
@@ -30,8 +30,8 @@ module Shipitron
               task_definition: service.task_definition
             )
 
-            # For the task definition, find the locally updated version in ecs_tasks
-            ecs_task = ecs_tasks.find {|task| task.name == response.task_definition.family }
+            # For the task definition, find the locally updated version in ecs_task_defs
+            ecs_task = ecs_task_defs.find {|task| task.name == response.task_definition.family }
             service_task_defs[service.service_name] = ecs_task
           end
 
@@ -66,8 +66,8 @@ module Shipitron
         context.ecs_services
       end
 
-      def ecs_tasks
-        context.ecs_tasks
+      def ecs_task_defs
+        context.ecs_task_defs
       end
     end
   end

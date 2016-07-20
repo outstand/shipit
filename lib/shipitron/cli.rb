@@ -41,7 +41,7 @@ module Shipitron
     option :image_name, required: true
     option :region, required: true
     option :cluster_name, required: true
-    option :ecs_tasks, type: :array, required: true
+    option :ecs_task_defs, type: :array, required: true
     option :ecs_services, type: :array, required: true
     option :build_script, default: nil
     option :post_builds, type: :array
@@ -60,7 +60,7 @@ module Shipitron
         image_name: options[:image_name],
         region: options[:region],
         cluster_name: options[:cluster_name],
-        ecs_tasks: options[:ecs_tasks],
+        ecs_task_defs: options[:ecs_task_defs],
         ecs_services: options[:ecs_services],
         build_script: options[:build_script],
         post_builds: options[:post_builds]

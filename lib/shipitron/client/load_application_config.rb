@@ -16,7 +16,7 @@ module Shipitron
         context.post_builds = config.post_builds.map {|pb| PostBuild.new(pb) }
         context.clusters = config.ecs_clusters
         context.shipitron_task = config.shipitron_task
-        context.ecs_tasks = config.ecs_tasks
+        context.ecs_task_defs = config.ecs_task_defs
         context.ecs_services = config.ecs_services
       end
 

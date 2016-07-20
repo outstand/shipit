@@ -9,13 +9,13 @@ module Shipitron
 
       required :region
       required :docker_image
-      required :ecs_tasks
+      required :ecs_task_defs
 
       def call
-        Logger.info "Updating ECS task definitions [#{ecs_tasks.map(&:name).join(', ')}] with image #{docker_image}"
+        Logger.info "Updating ECS task definitions [#{ecs_task_defs.map(&:name).join(', ')}] with image #{docker_image}"
 
         begin
-          ecs_tasks.each do |ecs_task|
+          ecs_task_defs.each do |ecs_task|
             existing_task = ecs_client(region: region).describe_task_definition(
               task_definition: ecs_task.name
             ).task_definition
@@ -65,8 +65,8 @@ module Shipitron
         context.docker_image
       end
 
-      def ecs_tasks
-        context.ecs_tasks
+      def ecs_task_defs
+        context.ecs_task_defs
       end
     end
   end

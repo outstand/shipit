@@ -14,7 +14,7 @@ module Shipitron
       required :repository_url
       required :s3_cache_bucket
       required :image_name
-      required :ecs_tasks
+      required :ecs_task_defs
       required :ecs_services
       optional :build_script
       optional :post_builds
@@ -83,8 +83,8 @@ module Shipitron
           '--region', escape(cluster.region),
           '--cluster-name', escape(cluster.name),
         ].tap do |ary|
-          ary << '--ecs-tasks'
-          ary.concat context.ecs_tasks.each {|s| escape(s)}
+          ary << '--ecs-task-defs'
+          ary.concat context.ecs_task_defs.each {|s| escape(s)}
 
           ary << '--ecs-services'
           ary.concat context.ecs_services.each {|s| escape(s)}

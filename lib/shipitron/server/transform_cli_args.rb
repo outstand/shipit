@@ -13,7 +13,7 @@ module Shipitron
       required :image_name
       required :region
       required :cluster_name
-      required :ecs_tasks
+      required :ecs_task_defs
       required :ecs_services
       optional :build_script
       optional :post_builds
@@ -33,9 +33,9 @@ module Shipitron
 
         cli_args.docker_image = DockerImage.new(name: context.image_name)
 
-        cli_args.ecs_tasks = []
-        ecs_tasks.each do |ecs_task|
-          cli_args.ecs_tasks << EcsTask.new(name: ecs_task)
+        cli_args.ecs_task_defs = []
+        ecs_task_defs.each do |task_def|
+          cli_args.ecs_task_defs << EcsTask.new(name: task_def)
         end
 
         if post_builds != nil && !post_builds.empty?
@@ -49,8 +49,8 @@ module Shipitron
       end
 
       private
-      def ecs_tasks
-        context.ecs_tasks
+      def ecs_task_defs
+        context.ecs_task_defs
       end
 
       def post_builds

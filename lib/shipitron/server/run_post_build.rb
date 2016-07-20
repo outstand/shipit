@@ -74,10 +74,6 @@ module Shipitron
       def cluster_name
         context.cluster_name
       end
-
-      def ecs_tasks
-        context.ecs_tasks
-      end
     end
   end
 end

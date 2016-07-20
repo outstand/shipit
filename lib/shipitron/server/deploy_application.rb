@@ -22,7 +22,7 @@ module Shipitron
       required :docker_image
       required :region
       required :cluster_name
-      required :ecs_tasks
+      required :ecs_task_defs
       required :ecs_services
       optional :build_script
       optional :post_builds

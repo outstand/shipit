@@ -21,7 +21,7 @@ applications:
       - name: us-east-1-prod-green
         region: us-east-1
     shipitron_task: shipitron
-    ecs_tasks:
+    ecs_task_defs:
       - dummy-app
     ecs_services:
       - dummy-app
@@ -36,4 +36,4 @@ applications:
 - `./build_dev.sh`
 - `docker run -it --rm -v $(pwd):/shipitron -v shipitron_fog:/fog -e FOG_LOCAL=true outstand/shipitron:dev rspec spec` to run specs
 - `docker run -it --rm -v $(pwd):/shipitron outstand/shipitron:dev deploy <app>` to run client side
-- `docker run -it --rm -v $(pwd):/shipitron -v /bin/docker:/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v shipitron_fog:/fog -e FOG_LOCAL=true -e CONSUL_HOST=<consul host> outstand/shipitron:dev server_deploy --name dummy-app --repository git@github.com:outstand/dummy-app --bucket bucket --image-name outstand/dummy-app --region us-east-1 --cluster_name us-east-1-prod-blue --ecs_tasks dummy-app --ecs_services dummy-app foobar --build-script 'shipitron/build.sh' --post-builds 'ecs_task:dummy-app,container_name:dummy-app,command:echo postbuild' --debug` to run server side (dummy-app is an example)
+- `docker run -it --rm -v $(pwd):/shipitron -v /bin/docker:/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v shipitron_fog:/fog -e FOG_LOCAL=true -e CONSUL_HOST=<consul host> outstand/shipitron:dev server_deploy --name dummy-app --repository git@github.com:outstand/dummy-app --bucket bucket --image-name outstand/dummy-app --region us-east-1 --cluster_name us-east-1-prod-blue --ecs_task_defs dummy-app --ecs_services dummy-app foobar --build-script 'shipitron/build.sh' --post-builds 'ecs_task:dummy-app,container_name:dummy-app,command:echo postbuild' --debug` to run server side (dummy-app is an example)
