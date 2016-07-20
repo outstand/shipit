@@ -13,13 +13,7 @@ module Shipitron
         context.s3_cache_bucket = config.cache_bucket
         context.image_name = config.image_name
         context.build_script = config.build_script
-        context.post_builds = config.post_builds.map do |pb|
-          pb = pb.to_h
-          pb.extend(Hashie::Extensions::SymbolizeKeys)
-          pb.symbolize_keys!
-
-          PostBuild.new(pb)
-        end
+        context.post_builds = config.post_builds.map {|pb| PostBuild.new(pb) }
         context.clusters = config.ecs_clusters
         context.shipitron_task = config.shipitron_task
         context.ecs_tasks = config.ecs_tasks
