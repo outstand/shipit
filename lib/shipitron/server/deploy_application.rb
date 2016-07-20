@@ -48,12 +48,6 @@ module Shipitron
         end
       end
 
-      before do
-        if context.ecs_tasks.nil? && context.ecs_tasks_args != nil
-          # parse ecs_tasks_args
-        end
-      end
-
       organize [
         Git::PullRepo,
         Docker::Configure,
