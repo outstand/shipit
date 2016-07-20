@@ -1,5 +1,5 @@
 require 'thor'
-require 'shipitron/logger'
+require 'shipitron'
 
 module Shipitron
   class CLI < Thor
@@ -10,14 +10,16 @@ module Shipitron
     end
 
     desc 'deploy <app>', 'Deploys the app'
+    option :config_file, default: 'shipitron/config.yml'
+    option :secrets_file, default: 'shipitron/secrets.yml'
     option :ember, type: :boolean, default: false
     option :ember_only, type: :boolean, default: false
     option :debug, type: :boolean, default: false
     def deploy(app)
-      $stdout.sync = true
-      if options[:debug] == false
-        Logger.level = :info
-      end
+      setup(
+        config_file: options[:config_file],
+        secrets_file: options[:secrets_file]
+      )
 
       require 'shipitron/client/deploy_application'
       result = Client::DeployApplication.call(
@@ -43,12 +45,12 @@ module Shipitron
     option :ecs_services, type: :array, required: true
     option :build_script, default: nil
     option :post_builds, type: :array
+    option :secrets_file, default: 'shipitron/secrets.yml'
     option :debug, type: :boolean, default: false
     def server_deploy
-      $stdout.sync = true
-      if options[:debug] == false
-        Logger.level = :info
-      end
+      setup(
+        secrets_file: options[:secrets_file]
+      )
 
       require 'shipitron/server/transform_cli_args'
       cli_args = Server::TransformCliArgs.call!(
@@ -75,6 +77,17 @@ module Shipitron
         end
         Logger.fatal 'Deploy failed.'
       end
+    end
+
+    private
+    def setup(config_file:nil, secrets_file:nil)
+      $stdout.sync = true
+      if options[:debug] == false
+        Logger.level = :info
+      end
+
+      Shipitron.config_file = config_file unless config_file.nil?
+      Shipitron.secrets_file = secrets_file unless secrets_file.nil?
     end
   end
 end

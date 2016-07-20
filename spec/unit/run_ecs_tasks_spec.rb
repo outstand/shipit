@@ -3,8 +3,8 @@ describe Shipitron::Client::RunEcsTasks do
   let(:application) { 'skynet' }
   let(:clusters) do
     [
-      Hashie::Mash.new(name: 'blue', region: 'us-east-1'),
-      Hashie::Mash.new(name: 'green', region: 'us-west-1')
+      Smash.new(name: 'blue', region: 'us-east-1'),
+      Smash.new(name: 'green', region: 'us-west-1')
     ]
   end
   let(:ecs_task) { 'shipitron' }
@@ -19,7 +19,7 @@ describe Shipitron::Client::RunEcsTasks do
   let(:east_ecs_client) { action.ecs_client(region: 'us-east-1') }
   let(:west_ecs_client) { action.ecs_client(region: 'us-west-1') }
   let(:response) do
-    Hashie::Mash.new(failures: [])
+    Smash.new(failures: [])
   end
 
   before do
@@ -69,7 +69,7 @@ describe Shipitron::Client::RunEcsTasks do
 
   context 'when there is a response failure' do
     let(:response) do
-      Hashie::Mash.new(failures: [
+      Smash.new(failures: [
         {arn: 'arn', reason: 'oops'}
       ])
     end

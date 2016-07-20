@@ -2,8 +2,8 @@ require 'shipitron/client/ensure_deploy_not_running'
 describe Shipitron::Client::EnsureDeployNotRunning do
   let(:clusters) do
     [
-      Hashie::Mash.new(name: 'blue', region: 'us-east-1'),
-      Hashie::Mash.new(name: 'green', region: 'us-west-1')
+      Smash.new(name: 'blue', region: 'us-east-1'),
+      Smash.new(name: 'green', region: 'us-west-1')
     ]
   end
   let(:action) do
@@ -13,10 +13,10 @@ describe Shipitron::Client::EnsureDeployNotRunning do
   end
   let(:result) { action.context }
 
-  let(:blue_pending_response) { Hashie::Mash.new(task_arns: []) }
-  let(:blue_running_response) { Hashie::Mash.new(task_arns: []) }
-  let(:green_pending_response) { Hashie::Mash.new(task_arns: []) }
-  let(:green_running_response) { Hashie::Mash.new(task_arns: []) }
+  let(:blue_pending_response) { Smash.new(task_arns: []) }
+  let(:blue_running_response) { Smash.new(task_arns: []) }
+  let(:green_pending_response) { Smash.new(task_arns: []) }
+  let(:green_running_response) { Smash.new(task_arns: []) }
   let(:east_ecs_client) { action.ecs_client(region: 'us-east-1') }
   let(:west_ecs_client) { action.ecs_client(region: 'us-west-1') }
 
@@ -43,7 +43,7 @@ describe Shipitron::Client::EnsureDeployNotRunning do
   end
 
   context 'with a blue pending task' do
-    let(:blue_pending_response) { Hashie::Mash.new(task_arns: [:a_deploy]) }
+    let(:blue_pending_response) { Smash.new(task_arns: [:a_deploy]) }
 
     it 'fails' do
       action.run
@@ -53,7 +53,7 @@ describe Shipitron::Client::EnsureDeployNotRunning do
   end
 
   context 'with a green running task' do
-    let(:green_running_response) { Hashie::Mash.new(task_arns: [:a_deploy]) }
+    let(:green_running_response) { Smash.new(task_arns: [:a_deploy]) }
 
     it 'fails' do
       action.run

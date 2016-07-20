@@ -19,7 +19,7 @@ module Shipitron
       optional :post_builds
 
       def call
-        cli_args = Hashie::Mash.new
+        cli_args = Smash.new
 
         %i[
           application
