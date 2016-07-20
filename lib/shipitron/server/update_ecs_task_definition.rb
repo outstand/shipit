@@ -3,18 +3,16 @@ require 'shipitron/ecs_client'
 
 module Shipitron
   module Server
-    # TODO: tag `latest` when updating
     class UpdateEcsTaskDefinition
       include Metaractor
       include EcsClient
 
       required :region
-      required :image_name
-      required :image_name_with_tag
+      required :docker_image
       required :ecs_tasks
 
       def call
-        Logger.info "Updating ECS task definitions [#{ecs_tasks.map(&:name).join(', ')}] with image #{image_name_with_tag}"
+        Logger.info "Updating ECS task definitions [#{ecs_tasks.map(&:name).join(', ')}] with image #{docker_image}"
 
         begin
           ecs_tasks.each do |ecs_task|
@@ -25,8 +23,8 @@ module Shipitron
             updated_image = false
             existing_task.container_definitions.each do |container_def|
               container_def.image.match(/([^:]+)(?::.+)?/) do |m|
-                if m[1] == image_name
-                  container_def.image = image_name_with_tag
+                if m[1] == docker_image.name
+                  container_def.image = docker_image.name_with_tag
                   updated_image = true
                 end
               end
@@ -34,7 +32,7 @@ module Shipitron
 
             unless updated_image
               fail_with_error!(
-                message: "Unable to update ECS task definition; #{image_name} not found in task family #{ecs_task.name}."
+                message: "Unable to update ECS task definition; #{docker_image.name} not found in task family #{ecs_task.name}."
               )
             end
 
@@ -63,12 +61,8 @@ module Shipitron
         context.region
       end
 
-      def image_name
-        context.image_name
-      end
-
-      def image_name_with_tag
-        context.image_name_with_tag
+      def docker_image
+        context.docker_image
       end
 
       def ecs_tasks

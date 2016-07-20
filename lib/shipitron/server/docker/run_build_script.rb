@@ -7,7 +7,7 @@ module Shipitron
         include Metaractor
 
         required :application
-        required :image_name
+        required :docker_image
         required :git_sha
         optional :build_script
 
@@ -18,19 +18,17 @@ module Shipitron
         def call
           Logger.info 'Building docker image'
 
-          image_name_with_tag = "#{image_name}:#{git_sha}"
+          docker_image.tag = git_sha
 
           FileUtils.cd("/home/shipitron/#{application}") do
             unless Pathname.new(build_script).exist?
               fail_with_error!(message: "#{build_script} does not exist")
             end
-            Logger.info `#{build_script} #{image_name_with_tag}`
+            Logger.info `#{build_script} #{docker_image}`
             if $? != 0
               fail_with_error!(message: "build script exited with non-zero code: #{$?}")
             end
           end
-
-          context.image_name_with_tag = image_name_with_tag
         end
 
         private
@@ -38,8 +36,8 @@ module Shipitron
           context.application
         end
 
-        def image_name
-          context.image_name
+        def docker_image
+          context.docker_image
         end
 
         def git_sha

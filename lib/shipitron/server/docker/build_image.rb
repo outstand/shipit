@@ -11,7 +11,7 @@ module Shipitron
         include Interactor::Organizer
 
         required :application
-        required :image_name
+        required :docker_image
         required :git_sha
 
         organize [

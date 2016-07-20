@@ -25,12 +25,13 @@ module Shipitron
           application
           repository_url
           s3_cache_bucket
-          image_name
           region
           cluster_name
           ecs_services
           build_script
         ].each_with_object(cli_args) { |k, args| args[k] = context[k] }
+
+        cli_args.docker_image = DockerImage.new(name: context.image_name)
 
         cli_args.ecs_tasks = []
         ecs_tasks.each do |ecs_task|
