@@ -3,7 +3,7 @@ require 'shipitron/ecs_client'
 
 module Shipitron
   module Server
-    class UpdateEcsService
+    class UpdateEcsServices
       include Metaractor
       include EcsClient
 

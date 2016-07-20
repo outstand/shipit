@@ -6,7 +6,7 @@ require 'shipitron/server/docker/build_image'
 require 'shipitron/server/docker/push_image'
 require 'shipitron/server/update_ecs_task_definitions'
 require 'shipitron/server/run_post_build'
-require 'shipitron/server/update_ecs_service'
+require 'shipitron/server/update_ecs_services'
 
 module Shipitron
   module Server
@@ -55,7 +55,7 @@ module Shipitron
         Docker::PushImage,
         UpdateEcsTaskDefinitions,
         RunPostBuild,
-        UpdateEcsService
+        UpdateEcsServices
       ]
 
       def call
