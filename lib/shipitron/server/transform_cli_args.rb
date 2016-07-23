@@ -1,5 +1,5 @@
 require 'shipitron'
-require 'shipitron/ecs_task'
+require 'shipitron/ecs_task_def'
 require 'shipitron/post_build'
 
 module Shipitron
@@ -35,7 +35,7 @@ module Shipitron
 
         cli_args.ecs_task_defs = []
         ecs_task_defs.each do |task_def|
-          cli_args.ecs_task_defs << EcsTask.new(name: task_def)
+          cli_args.ecs_task_defs << EcsTaskDef.new(name: task_def)
         end
 
         if post_builds != nil && !post_builds.empty?

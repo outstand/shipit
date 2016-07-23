@@ -1,7 +1,7 @@
 require 'shipitron'
 
 module Shipitron
-  class EcsTask < Hashie::Dash
+  class EcsTaskDef < Hashie::Dash
     property :name
     property :revision
 
