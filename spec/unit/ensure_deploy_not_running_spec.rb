@@ -2,8 +2,8 @@ require 'shipitron/client/ensure_deploy_not_running'
 describe Shipitron::Client::EnsureDeployNotRunning do
   let(:clusters) do
     [
-      Smash.new(name: 'blue', region: 'us-east-1'),
-      Smash.new(name: 'green', region: 'us-west-1')
+      Shipitron::Smash.new(name: 'blue', region: 'us-east-1'),
+      Shipitron::Smash.new(name: 'green', region: 'us-west-1')
     ]
   end
   let(:action) do
@@ -13,14 +13,17 @@ describe Shipitron::Client::EnsureDeployNotRunning do
   end
   let(:result) { action.context }
 
-  let(:blue_pending_response) { Smash.new(task_arns: []) }
-  let(:blue_running_response) { Smash.new(task_arns: []) }
-  let(:green_pending_response) { Smash.new(task_arns: []) }
-  let(:green_running_response) { Smash.new(task_arns: []) }
-  let(:east_ecs_client) { action.ecs_client(region: 'us-east-1') }
-  let(:west_ecs_client) { action.ecs_client(region: 'us-west-1') }
+  let(:blue_pending_response) { Shipitron::Smash.new(task_arns: []) }
+  let(:blue_running_response) { Shipitron::Smash.new(task_arns: []) }
+  let(:green_pending_response) { Shipitron::Smash.new(task_arns: []) }
+  let(:green_running_response) { Shipitron::Smash.new(task_arns: []) }
+  let(:east_ecs_client) { double(:east_ecs_client) }
+  let(:west_ecs_client) { double(:west_ecs_client) }
 
   before do
+    allow(action).to receive(:ecs_client).with(region: 'us-east-1').and_return east_ecs_client
+    allow(action).to receive(:ecs_client).with(region: 'us-west-1').and_return west_ecs_client
+
     allow(east_ecs_client).to receive(:list_tasks).with(
       hash_including(desired_status: 'PENDING')
     ).and_return(blue_pending_response)
@@ -43,7 +46,7 @@ describe Shipitron::Client::EnsureDeployNotRunning do
   end
 
   context 'with a blue pending task' do
-    let(:blue_pending_response) { Smash.new(task_arns: [:a_deploy]) }
+    let(:blue_pending_response) { Shipitron::Smash.new(task_arns: [:a_deploy]) }
 
     it 'fails' do
       action.run
@@ -53,7 +56,7 @@ describe Shipitron::Client::EnsureDeployNotRunning do
   end
 
   context 'with a green running task' do
-    let(:green_running_response) { Smash.new(task_arns: [:a_deploy]) }
+    let(:green_running_response) { Shipitron::Smash.new(task_arns: [:a_deploy]) }
 
     it 'fails' do
       action.run
