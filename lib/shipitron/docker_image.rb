@@ -6,14 +6,14 @@ module Shipitron
     property :tag
 
     def name_with_tag(tag_override = nil)
-      tag_str = [tag, tag_override, ''].first {|str| !str.nil? }
+      tag_str = [tag_override, tag, ''].find {|str| !str.nil? }
       tag_str = tag_str.to_s
 
       if !tag_str.empty? && !tag_str.start_with?(':')
-        tag_str.prepend(':')
+        tag_str = tag_str.dup.prepend(':')
       end
 
-      "#{image_name}#{tag_str}"
+      "#{name}#{tag_str}"
     end
 
     def to_s

@@ -1,0 +1,23 @@
+---
+applications:
+  dummy-app:
+    repository: git@github.com:outstand/dummy-app
+    cache_bucket: outstand-shipitron
+    image_name: outstand/dummy-app
+    build_script: shipitron/build.sh
+    post_builds:
+      - ecs_task: dummy-app
+        container_name: dummy-app
+        command: echo postbuild
+    ecs_clusters:
+      - name: us-east-1-prod-blue
+        region: us-east-1
+      # - name: us-east-1-prod-green
+      #   region: us-east-1
+    shipitron_task: shipitron
+    ecs_task_defs:
+      - dummy-app
+    ecs_task_def_dir: shipitron/ecs_task_defs
+    ecs_service_dir: shipitron/ecs_services
+    ecs_services:
+      - dummy-app
