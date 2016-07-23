@@ -19,6 +19,9 @@ module Shipitron
 
     def config
       @config ||= Smash.load(config_file).merge(secrets)
+    rescue ArgumentError
+      Logger.warn "Config file '#{config_file}' does not exist"
+      @config = secrets
     end
 
     def secrets_file
@@ -31,6 +34,9 @@ module Shipitron
 
     def secrets
       @secrets ||= Smash.load(secrets_file)
+    rescue ArgumentError
+      Logger.warn "Secrets file '#{secrets_file}' does not exist"
+      @secrets = Smash.new
     end
   end
 end
