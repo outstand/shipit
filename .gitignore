@@ -1,4 +1,4 @@
-shipitron/
-pkg/
+/shipitron/
+/pkg/
 Gemfile.lock
-tmp/
+/tmp/
