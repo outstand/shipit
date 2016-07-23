@@ -42,7 +42,9 @@ module Shipitron
     option :region, required: true
     option :cluster_name, required: true
     option :ecs_task_defs, type: :array, required: true
+    option :ecs_task_def_templates, type: :array, default: []
     option :ecs_services, type: :array, required: true
+    option :ecs_service_templates, type: :array, default: []
     option :build_script, default: nil
     option :post_builds, type: :array
     option :secrets_file, default: 'shipitron/secrets.yml'
@@ -61,7 +63,9 @@ module Shipitron
         region: options[:region],
         cluster_name: options[:cluster_name],
         ecs_task_defs: options[:ecs_task_defs],
+        ecs_task_def_templates: options[:ecs_task_def_templates],
         ecs_services: options[:ecs_services],
+        ecs_service_templates: options[:ecs_service_templates],
         build_script: options[:build_script],
         post_builds: options[:post_builds]
       ).cli_args

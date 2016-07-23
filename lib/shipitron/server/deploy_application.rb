@@ -15,7 +15,6 @@ module Shipitron
       include Interactor::Organizer
       include ConsulLock
 
-      # Parameters ending in _args are the cli version of that parameter
       required :application
       required :repository_url
       required :s3_cache_bucket
@@ -23,7 +22,9 @@ module Shipitron
       required :region
       required :cluster_name
       required :ecs_task_defs
+      optional :ecs_task_def_templates
       required :ecs_services
+      optional :ecs_service_templates
       optional :build_script
       optional :post_builds
 

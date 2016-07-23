@@ -15,9 +15,16 @@ module Shipitron
       required :s3_cache_bucket
       required :image_name
       required :ecs_task_defs
+      optional :ecs_task_def_templates
       required :ecs_services
+      optional :ecs_service_templates
       optional :build_script
       optional :post_builds
+
+      before do
+        context.ecs_task_def_templates ||= []
+        context.ecs_service_templates ||= []
+      end
 
       def call
         clusters.each do |cluster|
@@ -84,10 +91,10 @@ module Shipitron
           '--cluster-name', escape(cluster.name),
         ].tap do |ary|
           ary << '--ecs-task-defs'
-          ary.concat context.ecs_task_defs.each {|s| escape(s)}
+          ary.concat(context.ecs_task_defs.each {|s| escape(s)})
 
           ary << '--ecs-services'
-          ary.concat context.ecs_services.each {|s| escape(s)}
+          ary.concat(context.ecs_services.each {|s| escape(s)})
 
           if context.build_script != nil
             ary.concat ['--build-script', escaped(:build_script)]
@@ -95,10 +102,21 @@ module Shipitron
 
           if context.post_builds != nil
             ary << '--post-builds'
-            ary.concat context.post_builds.map(&:to_s).each {|s| escape(s)}
+            ary.concat(context.post_builds.map(&:to_s).each {|s| escape(s)})
+          end
+
+          if !context.ecs_task_def_templates.empty?
+            ary << '--ecs-task-def-templates'
+            ary.concat(context.ecs_task_def_templates.map {|t| Base64.urlsafe_encode64(t)})
+          end
+
+          if !context.ecs_service_templates.empty?
+            ary << '--ecs-service-templates'
+            ary.concat(context.ecs_service_templates.map {|t| Base64.urlsafe_encode64(t)})
           end
 
           Logger.debug "command_args: #{ary.inspect}"
+          Logger.debug ary.join(' ')
         end
       end
     end

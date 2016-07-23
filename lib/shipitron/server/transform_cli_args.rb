@@ -1,6 +1,8 @@
 require 'shipitron'
+require 'shipitron/docker_image'
 require 'shipitron/ecs_task_def'
 require 'shipitron/post_build'
+require 'base64'
 
 module Shipitron
   module Server
@@ -14,9 +16,16 @@ module Shipitron
       required :region
       required :cluster_name
       required :ecs_task_defs
+      optional :ecs_task_def_templates
       required :ecs_services
+      optional :ecs_service_templates
       optional :build_script
       optional :post_builds
+
+      before do
+        context.ecs_task_def_templates ||= []
+        context.ecs_service_templates ||= []
+      end
 
       def call
         cli_args = Smash.new
@@ -37,6 +46,19 @@ module Shipitron
         ecs_task_defs.each do |task_def|
           cli_args.ecs_task_defs << EcsTaskDef.new(name: task_def)
         end
+
+        cli_args.ecs_task_def_templates = []
+        context.ecs_task_def_templates.each do |template|
+          cli_args.ecs_task_def_templates << Base64.urlsafe_decode64(template)
+        end
+
+        cli_args.ecs_service_templates = []
+        context.ecs_service_templates.each do |template|
+          cli_args.ecs_service_templates << Base64.urlsafe_decode64(template)
+        end
+
+        Logger.debug "task_def_templates: #{cli_args.ecs_task_def_templates}"
+        Logger.debug "service_templates: #{cli_args.ecs_service_templates}"
 
         if post_builds != nil && !post_builds.empty?
           cli_args.post_builds = []

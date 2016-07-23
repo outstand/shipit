@@ -1,66 +1,39 @@
 require 'shipitron'
-require 'shipitron/ecs_client'
+require 'shipitron/server/ecs_task_defs/parse_templates'
+require 'shipitron/server/ecs_task_defs/map_parsed_templates'
+require 'shipitron/server/ecs_task_defs/update_from_params'
+require 'shipitron/server/ecs_task_defs/update_in_place'
 
 module Shipitron
   module Server
     class UpdateEcsTaskDefinitions
       include Metaractor
-      include EcsClient
+      include Interactor::Organizer
 
       required :region
       required :docker_image
       required :ecs_task_defs
+      optional :ecs_task_def_templates
+
+      before do
+        context.ecs_task_def_templates ||= []
+        context.template_context = { tag: docker_image.tag }
+      end
+
+      organize [
+        EcsTaskDefs::ParseTemplates,
+        EcsTaskDefs::MapParsedTemplates,
+        EcsTaskDefs::UpdateFromParams,
+        EcsTaskDefs::UpdateInPlace
+      ]
 
       def call
         Logger.info "Updating ECS task definitions [#{ecs_task_defs.map(&:name).join(', ')}] with image #{docker_image}"
-
-        begin
-          ecs_task_defs.each do |ecs_task|
-            existing_task = ecs_client(region: region).describe_task_definition(
-              task_definition: ecs_task.name
-            ).task_definition
-
-            updated_image = false
-            existing_task.container_definitions.each do |container_def|
-              container_def.image.match(/([^:]+)(?::.+)?/) do |m|
-                if m[1] == docker_image.name
-                  container_def.image = docker_image.name_with_tag
-                  updated_image = true
-                end
-              end
-            end
-
-            unless updated_image
-              fail_with_error!(
-                message: "Unable to update ECS task definition; #{docker_image.name} not found in task family #{ecs_task.name}."
-              )
-            end
-
-            existing_task = existing_task.to_h
-
-            ecs_task.revision = ecs_client(region: region).register_task_definition(
-              [
-                :family,
-                :container_definitions,
-                :volumes
-              ].each_with_object({}) { |k, hash| hash[k] = existing_task[k] if existing_task.has_key?(k) }
-            ).task_definition.revision
-
-            Logger.info "Created task definition #{ecs_task}"
-          end
-        rescue Aws::ECS::Errors::ServiceError => e
-          fail_with_errors!(messages: [
-            "Error: #{e.message}",
-            e.backtrace.join("\n")
-          ])
-        end
+        super
+        Logger.info 'Done'
       end
 
       private
-      def region
-        context.region
-      end
-
       def docker_image
         context.docker_image
       end

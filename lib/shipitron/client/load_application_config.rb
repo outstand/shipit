@@ -18,6 +18,8 @@ module Shipitron
         context.shipitron_task = config.shipitron_task
         context.ecs_task_defs = config.ecs_task_defs
         context.ecs_services = config.ecs_services
+        context.ecs_task_def_dir = config.ecs_task_def_dir
+        context.ecs_service_dir = config.ecs_service_dir
       end
 
       private
