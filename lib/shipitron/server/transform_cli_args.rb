@@ -11,6 +11,7 @@ module Shipitron
 
       required :application
       required :repository_url
+      optional :repository_branch
       required :s3_cache_bucket
       required :image_name
       required :region
@@ -33,6 +34,7 @@ module Shipitron
         %i[
           application
           repository_url
+          repository_branch
           s3_cache_bucket
           region
           cluster_name

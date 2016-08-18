@@ -10,6 +10,11 @@ module Shipitron
         required :application
         required :repository_url
         required :s3_cache_bucket
+        optional :repository_branch
+
+        before do
+          context.repository_branch ||= 'master'
+        end
 
         def call
           if !Pathname.new('/home/shipitron/git-cache/objects').directory?
@@ -20,7 +25,7 @@ module Shipitron
           else
             Logger.info 'Fetching new git commits'
             FileUtils.cd('/home/shipitron/git-cache') do
-              `git fetch #{Shellwords.escape repository_url} master:master`
+              `git fetch #{Shellwords.escape repository_url} #{Shellwords.escape repository_branch}:#{Shellwords.escape repository_branch}`
             end
           end
         end
@@ -36,6 +41,10 @@ module Shipitron
 
         def s3_cache_bucket
           context.s3_cache_bucket
+        end
+
+        def repository_branch
+          context.repository_branch
         end
       end
     end

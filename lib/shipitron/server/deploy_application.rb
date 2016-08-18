@@ -27,6 +27,7 @@ module Shipitron
       optional :ecs_service_templates
       optional :build_script
       optional :post_builds
+      optional :repository_branch
 
       around do |interactor|
         if ENV['CONSUL_HOST'].nil?

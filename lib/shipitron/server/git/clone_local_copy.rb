@@ -9,10 +9,16 @@ module Shipitron
 
         required :application
         required :repository_url
+        optional :repository_branch
+
+        before do
+          context.repository_branch ||= 'master'
+        end
 
         def call
+          Logger.info "Using this branch: #{repository_branch}"
           FileUtils.cd('/home/shipitron') do
-            `git clone git-cache #{Shellwords.escape application} --recursive --branch master`
+            `git clone git-cache #{Shellwords.escape application} --recursive --branch #{Shellwords.escape repository_branch}`
           end
 
           Logger.info 'Using this git commit:'
@@ -29,6 +35,10 @@ module Shipitron
 
         def repository_url
           context.repository_url
+        end
+
+        def repository_branch
+          context.repository_branch
         end
       end
     end

@@ -15,6 +15,7 @@ module Shipitron
         required :application
         required :repository_url
         required :s3_cache_bucket
+        optional :repository_branch
 
         organize [
           Configure,
