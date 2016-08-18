@@ -1,6 +1,7 @@
 require 'shipitron'
 require 'shipitron/ecs_client'
 require 'shellwords'
+require 'base64'
 
 module Shipitron
   module Client
@@ -23,6 +24,7 @@ module Shipitron
       optional :simulate
 
       before do
+        context.post_builds ||= []
         context.ecs_task_def_templates ||= []
         context.ecs_service_templates ||= []
       end
@@ -108,7 +110,7 @@ module Shipitron
             ary.concat ['--build-script', escaped(:build_script)]
           end
 
-          if context.post_builds != nil
+          if !context.post_builds.empty?
             ary << '--post-builds'
             ary.concat(context.post_builds.map(&:to_s).each {|s| escape(s)})
           end

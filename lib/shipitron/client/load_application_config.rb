@@ -13,7 +13,13 @@ module Shipitron
         context.s3_cache_bucket = config.cache_bucket
         context.image_name = config.image_name
         context.build_script = config.build_script
-        context.post_builds = config.post_builds.map {|pb| PostBuild.new(pb) }
+        context.post_builds = begin
+                                if config.post_builds.nil?
+                                  []
+                                else
+                                  config.post_builds.map {|pb| PostBuild.new(pb) }
+                                end
+                              end
         context.clusters = config.ecs_clusters
         context.shipitron_task = config.shipitron_task
         context.ecs_task_defs = config.ecs_task_defs
