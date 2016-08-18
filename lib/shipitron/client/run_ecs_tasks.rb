@@ -20,6 +20,7 @@ module Shipitron
       optional :ecs_service_templates
       optional :build_script
       optional :post_builds
+      optional :simulate
 
       before do
         context.ecs_task_def_templates ||= []
@@ -27,8 +28,15 @@ module Shipitron
       end
 
       def call
+        Logger.info "Skipping ECS run_task calls due to --simulate" if simulate?
+
         clusters.each do |cluster|
           begin
+            if simulate?
+              command_args(cluster)
+              next
+            end
+
             response = ecs_client(region: cluster.region).run_task(
               cluster: cluster.name,
               task_definition: shipitron_task,
@@ -115,9 +123,16 @@ module Shipitron
             ary.concat(context.ecs_service_templates.map {|t| Base64.urlsafe_encode64(t)})
           end
 
-          Logger.debug "command_args: #{ary.inspect}"
-          Logger.debug ary.join(' ')
+          if simulate?
+            Logger.info "server_deploy command: #{ary.join(' ')}"
+          else
+            Logger.debug "server_deploy command: #{ary.join(' ')}"
+          end
         end
+      end
+
+      def simulate?
+        context.simulate == true
       end
     end
   end

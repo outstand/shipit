@@ -15,6 +15,7 @@ module Shipitron
     option :ember, type: :boolean, default: false
     option :ember_only, type: :boolean, default: false
     option :debug, type: :boolean, default: false
+    option :simulate, type: :boolean, default: false
     def deploy(app)
       setup(
         config_file: options[:config_file],
@@ -23,7 +24,8 @@ module Shipitron
 
       require 'shipitron/client/deploy_application'
       result = Client::DeployApplication.call(
-        application: app
+        application: app,
+        simulate: options[:simulate]
       )
 
       if result.failure?

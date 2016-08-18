@@ -11,8 +11,11 @@ module Shipitron
       include EcsClient
 
       required :clusters
+      optional :simulate
 
       def call
+        return if simulate?
+
         clusters.each do |cluster|
           %w[PENDING RUNNING].each do |status|
             begin
@@ -41,6 +44,10 @@ module Shipitron
       private
       def clusters
         context.clusters
+      end
+
+      def simulate?
+        context.simulate == true
       end
     end
   end
