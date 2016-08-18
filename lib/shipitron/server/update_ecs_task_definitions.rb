@@ -1,5 +1,5 @@
 require 'shipitron'
-require 'shipitron/server/ecs_task_defs/parse_templates'
+require 'shipitron/parse_templates'
 require 'shipitron/server/ecs_task_defs/map_parsed_templates'
 require 'shipitron/server/ecs_task_defs/update_from_params'
 require 'shipitron/server/ecs_task_defs/update_in_place'
@@ -17,11 +17,12 @@ module Shipitron
 
       before do
         context.ecs_task_def_templates ||= []
+        context.templates = context.ecs_task_def_templates
         context.template_context = { tag: docker_image.tag }
       end
 
       organize [
-        EcsTaskDefs::ParseTemplates,
+        ParseTemplates,
         EcsTaskDefs::MapParsedTemplates,
         EcsTaskDefs::UpdateFromParams,
         EcsTaskDefs::UpdateInPlace

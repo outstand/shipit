@@ -1,5 +1,6 @@
 require 'shipitron'
 require 'shipitron/ecs_client'
+require 'shipitron/parse_templates'
 
 module Shipitron
   module Server
@@ -11,11 +12,25 @@ module Shipitron
       required :cluster_name
       required :ecs_services
       required :ecs_task_defs
+      optional :ecs_service_templates
+
+      before do
+        context.ecs_service_templates ||= []
+      end
 
       def call
         Logger.info "Updating ECS services [#{ecs_services.join(', ')}] with task definitions [#{ecs_task_defs.map(&:to_s).join(', ')}]"
 
         begin
+          service_templates = ParseTemplates.call!(
+            templates: ecs_service_templates,
+            template_context: {
+              cluster: cluster_name,
+              revision: nil,
+              count: nil
+            }
+          ).parsed_templates
+
           service_task_defs = {}
 
           # Find all requested services
@@ -31,18 +46,30 @@ module Shipitron
             )
 
             # For the task definition, find the locally updated version in ecs_task_defs
-            ecs_task = ecs_task_defs.find {|task| task.name == response.task_definition.family }
-            service_task_defs[service.service_name] = ecs_task
+            ecs_task_def = ecs_task_defs.find {|task| task.name == response.task_definition.family }
+            service_task_defs[service.service_name] = ecs_task_def
           end
 
-          service_task_defs.each do |ecs_service, ecs_task|
-            Logger.info "Updating #{ecs_service} with #{ecs_task}"
+          service_task_defs.each do |ecs_service, ecs_task_def|
+            Logger.info "Updating #{ecs_service} with #{ecs_task_def}"
 
-            ecs_client(region: region).update_service(
+            service_params = {
               cluster: cluster_name,
               service: ecs_service,
-              task_definition: ecs_task.name_with_revision
-            )
+              task_definition: ecs_task_def.name_with_revision
+            }
+
+            template = service_templates.find {|t| t.service_name == ecs_service }
+            if template != nil
+              if template.deployment_configuration != nil
+                Logger.debug "Merging deployment config: #{template.deployment_configuration}"
+                service_params.merge(
+                  deployment_configuration: template.deployment_configuration
+                )
+              end
+            end
+
+            ecs_client(region: region).update_service(service_params)
           end
 
         rescue Aws::ECS::Errors::ServiceError => e
@@ -68,6 +95,10 @@ module Shipitron
 
       def ecs_task_defs
         context.ecs_task_defs
+      end
+
+      def ecs_service_templates
+        context.ecs_service_templates
       end
     end
   end
