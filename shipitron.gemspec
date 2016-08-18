@@ -18,11 +18,11 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency 'thor', '~> 0.19'
-  spec.add_runtime_dependency 'aws-sdk', '~> 2.3'
+  spec.add_runtime_dependency 'aws-sdk', '~> 2.4'
   spec.add_runtime_dependency 'hashie', '~> 3.4'
   spec.add_runtime_dependency 'metaractor', '~> 0.5'
   spec.add_runtime_dependency 'diplomat', '~> 0.18'
-  spec.add_runtime_dependency 'fog-aws', '~> 0.9'
+  spec.add_runtime_dependency 'fog-aws', '~> 0.11'
   spec.add_runtime_dependency 'mime-types', '~> 3.0'
   spec.add_runtime_dependency 'minitar', '~> 0.5'
   spec.add_runtime_dependency 'mustache', '~> 1.0'
