@@ -3,7 +3,7 @@ require 'shipitron/fetch_bucket'
 
 module Shipitron
   module Server
-    class DownloadBundlerCache
+    class DownloadBuildCache
       include Metaractor
 
       required :application

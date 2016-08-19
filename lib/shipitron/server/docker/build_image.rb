@@ -1,7 +1,7 @@
 require 'shipitron'
-require 'shipitron/server/download_bundler_cache'
+require 'shipitron/server/download_build_cache'
 require 'shipitron/server/docker/run_build_script'
-require 'shipitron/server/upload_bundler_cache'
+require 'shipitron/server/upload_build_cache'
 
 module Shipitron
   module Server
@@ -15,9 +15,9 @@ module Shipitron
         required :git_sha
 
         organize [
-          DownloadBundlerCache,
+          DownloadBuildCache,
           Docker::RunBuildScript,
-          UploadBundlerCache
+          UploadBuildCache
         ]
       end
     end
