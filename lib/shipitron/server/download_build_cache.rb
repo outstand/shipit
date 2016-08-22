@@ -10,17 +10,17 @@ module Shipitron
       required :s3_cache_bucket
 
       def call
-        Logger.info "Downloading bundler cache from bucket #{s3_cache_bucket}"
+        Logger.info "Downloading build cache from bucket #{s3_cache_bucket}"
 
-        s3_file = bucket.files.get("#{application}.bundler-cache.tar.gz")
+        s3_file = bucket.files.get("#{application}.build-cache.tar.gz")
         if s3_file.nil?
-          Logger.warn 'Bundler cache not found.'
+          Logger.warn 'Build cache not found.'
           return
         end
 
-        bundler_cache = Pathname.new("/home/shipitron/#{application}/tmp/bundler-cache.tar.gz")
-        bundler_cache.parent.mkpath
-        bundler_cache.open('wb') do |local_file|
+        build_cache = Pathname.new("/home/shipitron/#{application}/tmp/build-cache.tar.gz")
+        build_cache.parent.mkpath
+        build_cache.open('wb') do |local_file|
           local_file.write(s3_file.body)
         end
 
