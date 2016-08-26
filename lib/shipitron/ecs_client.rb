@@ -9,10 +9,10 @@ module Shipitron
 
     def generate_ecs_client(region:)
       options = {region: region}
-      if Shipitron.config.aws_access_key_id? && Shipitron.config.aws_secret_access_key
+      if Shipitron.secrets.aws_access_key_id? && Shipitron.secrets.aws_secret_access_key?
         options.merge!(
-          access_key_id: Shipitron.config.aws_access_key_id,
-          secret_access_key: Shipitron.config.aws_secret_access_key
+          access_key_id: Shipitron.secrets.aws_access_key_id,
+          secret_access_key: Shipitron.secrets.aws_secret_access_key
         )
       end
 

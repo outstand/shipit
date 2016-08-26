@@ -1,4 +1,5 @@
 require 'shipitron'
+#TODO: remove
 
 module Shipitron
   module Client

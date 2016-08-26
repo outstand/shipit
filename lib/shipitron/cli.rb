@@ -9,22 +9,22 @@ module Shipitron
       say Shipitron::VERSION.to_s
     end
 
-    desc 'deploy <app>', 'Deploys the app'
+    desc 'deploy [<app>...]', 'Deploys the applications'
     option :config_file, default: 'shipitron/config.yml'
     option :secrets_file, default: 'shipitron/secrets.yml'
     option :ember, type: :boolean, default: false
     option :ember_only, type: :boolean, default: false
     option :debug, type: :boolean, default: false
     option :simulate, type: :boolean, default: false
-    def deploy(app)
+    def deploy(*apps)
       setup(
         config_file: options[:config_file],
         secrets_file: options[:secrets_file]
       )
 
-      require 'shipitron/client/deploy_application'
-      result = Client::DeployApplication.call(
-        application: app,
+      require 'shipitron/client/deploy_applications'
+      result = Client::DeployApplications.call(
+        application_names: apps,
         simulate: options[:simulate]
       )
 
@@ -37,19 +37,21 @@ module Shipitron
     end
 
     desc 'server_deploy', 'Server-side component of deploy'
-    option :name, required: true
-    option :repository, required: true
-    option :branch, default: 'master'
-    option :bucket, required: true
-    option :image_name, required: true
-    option :region, required: true
-    option :cluster_name, required: true
-    option :ecs_task_defs, type: :array, required: true
-    option :ecs_task_def_templates, type: :array, default: []
-    option :ecs_services, type: :array, required: true
-    option :ecs_service_templates, type: :array, default: []
-    option :build_script, default: nil
-    option :post_builds, type: :array
+    # option :name, required: true
+    # option :repository, required: true
+    # option :branch, default: 'master'
+    # option :bucket, required: true
+    # option :image_name, required: true
+    # option :region, required: true
+    # option :cluster_name, required: true
+    # option :ecs_task_defs, type: :array, required: true
+    # option :ecs_task_def_templates, type: :array, default: []
+    # option :ecs_services, type: :array, required: true
+    # option :ecs_service_templates, type: :array, default: []
+    # option :build_script, default: nil
+    # option :post_builds, type: :array
+    option :s3_bucket, required: true
+    option :input_file_name, required: true
     option :secrets_file, default: 'shipitron/secrets.yml'
     option :debug, type: :boolean, default: false
     def server_deploy
@@ -57,26 +59,27 @@ module Shipitron
         secrets_file: options[:secrets_file]
       )
 
-      require 'shipitron/server/transform_cli_args'
-      cli_args = Server::TransformCliArgs.call!(
-        application: options[:name],
-        repository_url: options[:repository],
-        repository_branch: options[:branch],
-        s3_cache_bucket: options[:bucket],
-        image_name: options[:image_name],
-        region: options[:region],
-        cluster_name: options[:cluster_name],
-        ecs_task_defs: options[:ecs_task_defs],
-        ecs_task_def_templates: options[:ecs_task_def_templates],
-        ecs_services: options[:ecs_services],
-        ecs_service_templates: options[:ecs_service_templates],
-        build_script: options[:build_script],
-        post_builds: options[:post_builds]
-      ).cli_args
+      # require 'shipitron/server/transform_cli_args'
+      # cli_args = Server::TransformCliArgs.call!(
+      #   application: options[:name],
+      #   repository_url: options[:repository],
+      #   repository_branch: options[:branch],
+      #   s3_cache_bucket: options[:bucket],
+      #   image_name: options[:image_name],
+      #   region: options[:region],
+      #   cluster_name: options[:cluster_name],
+      #   ecs_task_defs: options[:ecs_task_defs],
+      #   ecs_task_def_templates: options[:ecs_task_def_templates],
+      #   ecs_services: options[:ecs_services],
+      #   ecs_service_templates: options[:ecs_service_templates],
+      #   build_script: options[:build_script],
+      #   post_builds: options[:post_builds]
+      # ).cli_args
 
-      require 'shipitron/server/deploy_application'
-      result = Server::DeployApplication.call(
-        cli_args
+      require 'shipitron/server/deploy_applications'
+      result = Server::DeployApplications.call(
+        s3_bucket: options[:s3_bucket],
+        input_file_name: options[:input_file_name]
       )
 
       if result.failure?

@@ -10,24 +10,27 @@ require 'shipitron/server/update_ecs_services'
 
 module Shipitron
   module Server
-    class DeployApplication
+    class DeployApplications
       include Metaractor
       include Interactor::Organizer
       include ConsulLock
 
-      required :application
-      required :repository_url
-      required :s3_cache_bucket
-      required :docker_image
-      required :region
-      required :cluster_name
-      required :ecs_task_defs
-      optional :ecs_task_def_templates
-      required :ecs_services
-      optional :ecs_service_templates
-      optional :build_script
-      optional :post_builds
-      optional :repository_branch
+      # required :application
+      # required :repository_url
+      # required :s3_cache_bucket
+      # required :docker_image
+      # required :region
+      # required :cluster_name
+      # required :ecs_task_defs
+      # optional :ecs_task_def_templates
+      # required :ecs_services
+      # optional :ecs_service_templates
+      # optional :build_script
+      # optional :post_builds
+      # optional :repository_branch
+
+      required :s3_bucket
+      required :input_file_name
 
       around do |interactor|
         if ENV['CONSUL_HOST'].nil?
@@ -51,16 +54,23 @@ module Shipitron
       end
 
       organize [
-        Git::PullRepo,
-        Docker::Configure,
-        Docker::BuildImage,
-        Docker::PushImage,
-        UpdateEcsTaskDefinitions,
-        RunPostBuild,
-        UpdateEcsServices
+        # BuildApplications,
+        # PreLaunchApplications,
+        # LaunchApplications
       ]
 
+      # organize [
+      #   Git::PullRepo,
+      #   Docker::Configure,
+      #   Docker::BuildImage,
+      #   Docker::PushImage,
+      #   UpdateEcsTaskDefinitions
+      # ]
+        #RunPostBuild,
+        #UpdateEcsServices
+
       def call
+        context.applications = LoadApplications.call!
         Logger.info "==> Deploying #{application} (server-side)"
         super
         Logger.info "==> Done"

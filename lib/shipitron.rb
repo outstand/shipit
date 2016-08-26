@@ -3,6 +3,7 @@ require 'hashie'
 require 'shipitron/logger'
 require 'metaractor'
 require 'shipitron/smash'
+require 'shipitron/config'
 
 module Shipitron
   CONFIG_FILE = 'shipitron/config.yml'.freeze
@@ -18,10 +19,10 @@ module Shipitron
     end
 
     def config
-      @config ||= Smash.load(config_file).merge(secrets)
+      @config ||= Config.new(Smash.load(config_file))
     rescue ArgumentError
       Logger.warn "Config file '#{config_file}' does not exist"
-      @config = secrets
+      @config = Smash.new
     end
 
     def secrets_file

@@ -4,8 +4,14 @@ module Shipitron
   class Logger
     class << self
       %i[debug info warn error fatal].each do |sym|
-        define_method(sym) do |message|
-          logger.send(sym, "#{Thread.current[:logger_tag]}#{message}")
+        define_method(sym) do |message=nil, &block|
+          if block != nil
+            logger.send(sym) do
+              "#{Thread.current[:logger_tag]}#{block.call}"
+            end
+          else
+            logger.send(sym, "#{Thread.current[:logger_tag]}#{message}")
+          end
         end
       end
     end
