@@ -44,5 +44,6 @@ RUN gem install shipitron -v ${SHIPITRON_VERSION} && \
 
 COPY scripts/docker-entrypoint.sh /docker-entrypoint.sh
 
+ENV DUMB_INIT_SETSID 0
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["help"]

@@ -55,5 +55,6 @@ RUN ln -s /shipitron/exe/shipitron /usr/local/bin/shipitron && \
 
 COPY scripts/docker-entrypoint.sh /docker-entrypoint.sh
 
+ENV DUMB_INIT_SETSID 0
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["help"]
