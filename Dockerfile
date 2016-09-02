@@ -7,7 +7,7 @@ RUN addgroup -S shipitron && \
     addgroup shipitron docker
 
 ENV GOSU_VERSION 1.9
-ENV DUMB_INIT_VERSION 1.1.1
+ENV DUMB_INIT_VERSION 1.1.3
 
 RUN apk add --no-cache ca-certificates gnupg && \
     mkdir -p /tmp/build && \
@@ -55,6 +55,5 @@ RUN ln -s /shipitron/exe/shipitron /usr/local/bin/shipitron && \
 
 COPY scripts/docker-entrypoint.sh /docker-entrypoint.sh
 
-ENV DUMB_INIT_SETSID 0
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["help"]
