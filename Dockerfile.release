@@ -29,6 +29,7 @@ RUN apk add --no-cache ca-certificates gnupg && \
     rm -rf /root/.gnupg
 
 RUN apk add --no-cache \
+    build-base \
     git \
     perl \
     bash
