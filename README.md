@@ -42,6 +42,6 @@ applications:
 To release a new version:
 - Update the version number in `version.rb` and `Dockerfile.release` and commit the result.
 - `./build_dev.sh`
-- `docker run -it --rm -v ~/.gitconfig:/root/.gitconfig -v ~/.gitconfig.user:/root/.gitconfig.user -v ~/.ssh/id_rsa:/root/.ssh/id_rsa -v ~/.gem:/root/.gem outstand/shipitron:dev rake release`
+- `docker run -it --rm -v ~/.gitconfig:/root/.gitconfig -v ~/.gitconfig.user:/root/.gitconfig.user -v ~/.ssh/id_rsa:/root/.ssh/id_rsa -v ~/.gem:/root/.gem -w /shipitron outstand/shipitron:dev rake release`
 - `docker build -t outstand/shipitron:VERSION -f Dockerfile.release .`
 - `docker push outstand/shipitron:VERSION`
