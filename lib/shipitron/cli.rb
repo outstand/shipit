@@ -39,7 +39,7 @@ module Shipitron
     desc 'server_deploy', 'Server-side component of deploy'
     option :name, required: true
     option :repository, required: true
-    option :branch, default: 'master'
+    option :repository_branch, default: 'master'
     option :bucket, required: true
     option :image_name, required: true
     option :region, required: true
@@ -61,7 +61,7 @@ module Shipitron
       cli_args = Server::TransformCliArgs.call!(
         application: options[:name],
         repository_url: options[:repository],
-        repository_branch: options[:branch],
+        repository_branch: options[:repository_branch],
         s3_cache_bucket: options[:bucket],
         image_name: options[:image_name],
         region: options[:region],
