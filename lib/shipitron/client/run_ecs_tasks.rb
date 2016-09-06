@@ -22,6 +22,7 @@ module Shipitron
       optional :build_script
       optional :post_builds
       optional :simulate
+      optional :repository_branch
 
       before do
         context.post_builds ||= []
@@ -123,6 +124,10 @@ module Shipitron
           if !context.ecs_service_templates.empty?
             ary << '--ecs-service-templates'
             ary.concat(context.ecs_service_templates.map {|t| Base64.urlsafe_encode64(t)})
+          end
+
+          unless context.repository_branch.nil?
+            ary.concat ['--repository-branch', escaped(:repository_branch)]
           end
 
           if simulate?
