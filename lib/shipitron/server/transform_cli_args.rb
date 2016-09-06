@@ -18,7 +18,7 @@ module Shipitron
       required :cluster_name
       required :ecs_task_defs
       optional :ecs_task_def_templates
-      required :ecs_services
+      optional :ecs_services
       optional :ecs_service_templates
       optional :build_script
       optional :post_builds

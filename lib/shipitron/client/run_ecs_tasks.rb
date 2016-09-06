@@ -17,7 +17,7 @@ module Shipitron
       required :image_name
       required :ecs_task_defs
       optional :ecs_task_def_templates
-      required :ecs_services
+      optional :ecs_services
       optional :ecs_service_templates
       optional :build_script
       optional :post_builds
@@ -27,6 +27,7 @@ module Shipitron
       before do
         context.post_builds ||= []
         context.ecs_task_def_templates ||= []
+        context.ecs_services ||= []
         context.ecs_service_templates ||= []
       end
 
@@ -104,8 +105,10 @@ module Shipitron
           ary << '--ecs-task-defs'
           ary.concat(context.ecs_task_defs.each {|s| escape(s)})
 
-          ary << '--ecs-services'
-          ary.concat(context.ecs_services.each {|s| escape(s)})
+          unless context.ecs_services.empty?
+            ary << '--ecs-services'
+            ary.concat(context.ecs_services.each {|s| escape(s)})
+          end
 
           if context.build_script != nil
             ary.concat ['--build-script', escaped(:build_script)]

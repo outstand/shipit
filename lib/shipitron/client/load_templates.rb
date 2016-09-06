@@ -6,7 +6,7 @@ module Shipitron
       include Metaractor
 
       required :ecs_task_def_dir
-      required :ecs_service_dir
+      optional :ecs_service_dir
 
       def call
         context.ecs_task_def_templates = load_templates(ecs_task_def_dir)
@@ -23,6 +23,8 @@ module Shipitron
       end
 
       def load_templates(dir)
+        return [] if dir.nil?
+
         search_path = Pathname.new(dir)
         unless search_path.directory?
           fail_with_error!(
