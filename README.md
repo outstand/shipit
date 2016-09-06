@@ -30,7 +30,7 @@ applications:
 - Create shipitron.yml file
 - Add needed ssh known hosts to `shipitron/<app name>/git_host_key` in consul k/v
 - Add git ssh deploy key to `shipitron/<app name>/git_deploy_key` in consul k/v
-- Add docker auth config (~/.docker/config.json) after `docker login`) to `shipitron/<app name>/docker_auth` in consul k/v
+- Add docker auth config (`~/.docker/config.json` after `docker login`) to `shipitron/<app name>/docker_auth` in consul k/v
 - `docker run -it --rm -v shipitron.yml:/shipitron/config/shipitron.yml outstand/shipitron:<version> deploy <app>`
 
 ## Development
