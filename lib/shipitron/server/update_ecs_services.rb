@@ -10,15 +10,21 @@ module Shipitron
 
       required :region
       required :cluster_name
-      required :ecs_services
+      optional :ecs_services
       required :ecs_task_defs
       optional :ecs_service_templates
 
       before do
+        context.ecs_services ||= []
         context.ecs_service_templates ||= []
       end
 
       def call
+        if ecs_services.empty?
+          Logger.info 'No ECS services to update.'
+          return
+        end
+
         Logger.info "Updating ECS services [#{ecs_services.join(', ')}] with task definitions [#{ecs_task_defs.map(&:to_s).join(', ')}]"
 
         begin

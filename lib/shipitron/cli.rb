@@ -46,7 +46,7 @@ module Shipitron
     option :cluster_name, required: true
     option :ecs_task_defs, type: :array, required: true
     option :ecs_task_def_templates, type: :array, default: []
-    option :ecs_services, type: :array, required: true
+    option :ecs_services, type: :array, default: []
     option :ecs_service_templates, type: :array, default: []
     option :build_script, default: nil
     option :post_builds, type: :array
