@@ -48,6 +48,7 @@ module Shipitron
                 cluster: cluster_name,
                 tasks: [task_arn]
               )
+              next if response.tasks.empty?
               Logger.info "Task status: #{response.tasks.first.last_status}"
               break if response.tasks.first.last_status == 'STOPPED'.freeze
               sleep 1
