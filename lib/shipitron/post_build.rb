@@ -28,5 +28,9 @@ module Shipitron
     def to_s
       "ecs_task:#{ecs_task},container_name:#{container_name},command:#{command}"
     end
+
+    def command_ary
+      command.split(' ')
+    end
   end
 end

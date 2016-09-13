@@ -26,7 +26,7 @@ module Shipitron
                 container_overrides: [
                   {
                     name: post_build.container_name,
-                    command: [post_build.command]
+                    command: post_build.command_ary
                   }
                 ]
               },
