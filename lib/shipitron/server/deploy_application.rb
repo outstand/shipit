@@ -6,6 +6,7 @@ require 'shipitron/server/docker/build_image'
 require 'shipitron/server/docker/push_image'
 require 'shipitron/server/update_ecs_task_definitions'
 require 'shipitron/server/run_post_build'
+require 'shipitron/server/update_deploy_ref'
 require 'shipitron/server/update_ecs_services'
 
 module Shipitron
@@ -57,6 +58,7 @@ module Shipitron
         Docker::PushImage,
         UpdateEcsTaskDefinitions,
         RunPostBuild,
+        UpdateDeployRef,
         UpdateEcsServices
       ]
 

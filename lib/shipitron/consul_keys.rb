@@ -30,5 +30,16 @@ module Shipitron
       end
     end
 
+    def set_key(key:, value:)
+      Logger.debug "Setting key #{key}"
+      Diplomat::Kv.put(key, value)
+    end
+
+    def set_key!(key:, value:)
+      set_key(key: key, value: value).tap do |retval|
+        raise "Unable to set #{key}!" if retval != true
+      end
+    end
+
   end
 end
