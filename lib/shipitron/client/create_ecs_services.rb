@@ -1,6 +1,7 @@
 require 'shipitron'
 require 'shipitron/ecs_client'
 require 'shipitron/mustache_yaml_parser'
+require 'securerandom'
 
 module Shipitron
   module Client
