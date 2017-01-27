@@ -9,6 +9,7 @@ module Shipitron
         include EcsClient
 
         required :region
+        required :docker_image
         required :ecs_task_defs
 
         def call
@@ -57,6 +58,10 @@ module Shipitron
         private
         def region
           context.region
+        end
+
+        def docker_image
+          context.docker_image
         end
 
         def ecs_task_defs
