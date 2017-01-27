@@ -37,7 +37,7 @@ RUN apk add --no-cache \
 
 WORKDIR /app
 
-ENV SHIPITRON_VERSION=0.3.1
+ENV SHIPITRON_VERSION=0.3.2
 
 RUN gem install shipitron -v ${SHIPITRON_VERSION} && \
     mkdir -p /home/shipitron/.ssh && \
