@@ -33,7 +33,10 @@ RUN apk add --no-cache \
     git \
     openssh-client \
     perl \
-    bash
+    bash \
+    curl \
+    wget \
+    jq
 
 ENV USE_BUNDLE_EXEC true
 ENV BUNDLE_GEMFILE /shipitron/Gemfile

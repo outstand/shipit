@@ -33,7 +33,10 @@ RUN apk add --no-cache \
     git \
     openssh-client \
     perl \
-    bash
+    bash \
+    curl \
+    wget \
+    jq
 
 WORKDIR /app
 
