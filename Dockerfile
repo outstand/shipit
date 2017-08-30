@@ -51,7 +51,6 @@ ENV BUNDLE_GEMFILE /shipitron/Gemfile
 WORKDIR /app
 COPY Gemfile shipitron.gemspec /shipitron/
 COPY lib/shipitron/version.rb /shipitron/lib/shipitron/
-COPY scripts/fetch-bundler-data.sh /shipitron/scripts/fetch-bundler-data.sh
 
 COPY --from=cache /usr/local/bundle /usr/local/bundle
 RUN (bundle check || bundle install) && \
