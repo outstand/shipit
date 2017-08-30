@@ -1,3 +1,10 @@
+FROM ruby:2.4.1-alpine as cache
+COPY cache/ /tmp/
+RUN   cd /usr/local/bundle && \
+    ([ -f /tmp/bundler-data.tar.gz ] && \
+    tar -zxf /tmp/bundler-data.tar.gz && \
+    rm /tmp/bundler-data.tar.gz) || true
+
 FROM ruby:2.4.1-alpine
 MAINTAINER Ryan Schlesinger <ryan@outstand.com>
 
@@ -46,9 +53,8 @@ COPY Gemfile shipitron.gemspec /shipitron/
 COPY lib/shipitron/version.rb /shipitron/lib/shipitron/
 COPY scripts/fetch-bundler-data.sh /shipitron/scripts/fetch-bundler-data.sh
 
-ARG bundler_data_host
-RUN /shipitron/scripts/fetch-bundler-data.sh ${bundler_data_host} && \
-      (bundle check || bundle install) && \
+COPY --from=cache /usr/local/bundle /usr/local/bundle
+RUN (bundle check || bundle install) && \
       git config --global push.default simple
 COPY . /shipitron/
 RUN ln -s /shipitron/exe/shipitron /usr/local/bin/shipitron && \
