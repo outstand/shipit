@@ -24,9 +24,12 @@ module Shipitron
             unless Pathname.new(build_script).exist?
               fail_with_error!(message: "#{build_script} does not exist")
             end
-            Logger.info `#{build_script} #{docker_image}`
-            if $? != 0
-              fail_with_error!(message: "build script exited with non-zero code: #{$?}")
+
+            cmd = TTY::Command.new
+            result = cmd.run!("#{build_script} #{docker_image}")
+
+            if result.failure?
+              fail_with_error!(message: "build script exited with non-zero code: #{result.exit_status}")
             end
           end
         end
