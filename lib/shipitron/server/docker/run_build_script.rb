@@ -1,4 +1,5 @@
 require 'shipitron'
+require 'tty-command'
 
 module Shipitron
   module Server
