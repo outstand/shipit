@@ -7,11 +7,12 @@ module Shipitron
         include Metaractor
 
         required :docker_image
+        required :named_tag
 
         def call
-          Logger.info "Pushing docker image #{docker_image} and #{docker_image.name_with_tag(:latest)}"
+          Logger.info "Pushing docker image #{docker_image} and #{docker_image.name_with_tag(named_tag)}"
 
-          Logger.info `docker tag #{docker_image} #{docker_image.name_with_tag(:latest)}`
+          Logger.info `docker tag #{docker_image} #{docker_image.name_with_tag(named_tag)}`
           if $? != 0
             fail_with_error!(message: 'Docker tag failed.')
           end
@@ -21,15 +22,19 @@ module Shipitron
             fail_with_error!(message: 'Docker push failed.')
           end
 
-          Logger.info `docker push #{docker_image.name_with_tag(:latest)}`
+          Logger.info `docker push #{docker_image.name_with_tag(named_tag)}`
           if $? != 0
-            fail_with_error!(message: 'Docker push (latest) failed.')
+            fail_with_error!(message: "Docker push (#{named_tag}) failed.")
           end
         end
 
         private
         def docker_image
           context.docker_image
+        end
+
+        def named_tag
+          context.named_tag
         end
       end
     end

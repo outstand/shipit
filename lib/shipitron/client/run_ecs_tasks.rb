@@ -15,6 +15,7 @@ module Shipitron
       required :repository_url
       required :s3_cache_bucket
       required :image_name
+      required :named_tag
       required :ecs_task_defs
       optional :ecs_task_def_templates
       optional :ecs_services
@@ -99,6 +100,7 @@ module Shipitron
           '--repository', escaped(:repository_url),
           '--bucket', escaped(:s3_cache_bucket),
           '--image-name', escaped(:image_name),
+          '--named-tag', escaped(:named_tag),
           '--region', escape(cluster.region),
           '--cluster-name', escape(cluster.name),
         ].tap do |ary|

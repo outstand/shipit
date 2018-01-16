@@ -12,8 +12,6 @@ module Shipitron
     desc 'deploy <app>', 'Deploys the app'
     option :config_file, default: 'shipitron/config.yml'
     option :secrets_file, default: 'shipitron/secrets.yml'
-    option :ember, type: :boolean, default: false
-    option :ember_only, type: :boolean, default: false
     option :debug, type: :boolean, default: false
     option :simulate, type: :boolean, default: false
     def deploy(app)
@@ -42,6 +40,7 @@ module Shipitron
     option :repository_branch, default: 'master'
     option :bucket, required: true
     option :image_name, required: true
+    option :named_tag, required: true
     option :region, required: true
     option :cluster_name, required: true
     option :ecs_task_defs, type: :array, required: true
@@ -64,6 +63,7 @@ module Shipitron
         repository_branch: options[:repository_branch],
         s3_cache_bucket: options[:bucket],
         image_name: options[:image_name],
+        named_tag: options[:named_tag],
         region: options[:region],
         cluster_name: options[:cluster_name],
         ecs_task_defs: options[:ecs_task_defs],

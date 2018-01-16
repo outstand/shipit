@@ -11,6 +11,7 @@ module Shipitron
       include Interactor::Organizer
 
       required :application
+      optional :simulate
 
       organize [
         LoadApplicationConfig,
