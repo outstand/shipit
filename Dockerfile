@@ -1,11 +1,11 @@
-FROM ruby:2.4.1-alpine as cache
+FROM ruby:2.5.0-alpine3.7 as cache
 COPY cache/ /tmp/
 RUN   cd /usr/local/bundle && \
     ([ -f /tmp/bundler-data.tar.gz ] && \
     tar -zxf /tmp/bundler-data.tar.gz && \
     rm /tmp/bundler-data.tar.gz) || true
 
-FROM ruby:2.4.1-alpine
+FROM ruby:2.5.0-alpine3.7
 MAINTAINER Ryan Schlesinger <ryan@outstand.com>
 
 RUN addgroup -S shipitron && \
