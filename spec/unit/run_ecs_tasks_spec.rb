@@ -11,6 +11,7 @@ describe Shipitron::Client::RunEcsTasks do
   let(:repository_url) { 'git@github.com:outstand/dummy-app' }
   let(:s3_cache_bucket) { 'outstand-shipitron' }
   let(:image_name) { 'outstand/dummy-app' }
+  let(:named_tag) { 'latest' }
   let(:ecs_task_defs) { ['dummy-app'] }
   let(:ecs_services) { ['dummy-app'] }
   let(:action) do
@@ -21,6 +22,7 @@ describe Shipitron::Client::RunEcsTasks do
       repository_url: repository_url,
       s3_cache_bucket: s3_cache_bucket,
       image_name: image_name,
+      named_tag: named_tag,
       ecs_task_defs: ecs_task_defs,
       ecs_services: ecs_services
     )
