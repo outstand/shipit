@@ -40,7 +40,7 @@ module Shipitron
     option :repository_branch, default: 'master'
     option :bucket, required: true
     option :image_name, required: true
-    option :named_tag, required: true
+    option :named_tag, default: 'latest'
     option :region, required: true
     option :cluster_name, required: true
     option :ecs_task_defs, type: :array, required: true
