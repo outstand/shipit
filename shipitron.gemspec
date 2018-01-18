@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'aws-sdk-ecs', '~> 1.8'
   spec.add_runtime_dependency 'hashie', '~> 3.5'
   spec.add_runtime_dependency 'metaractor', '~> 0.5'
-  spec.add_runtime_dependency 'diplomat', '~> 0.18'
+  spec.add_runtime_dependency 'diplomat', '~> 2.0'
   spec.add_runtime_dependency 'fog-aws', '~> 2.0'
   spec.add_runtime_dependency 'mime-types', '~> 3.1'
   spec.add_runtime_dependency 'minitar', '~> 0.6'
