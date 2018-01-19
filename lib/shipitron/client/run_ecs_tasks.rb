@@ -139,7 +139,7 @@ module Shipitron
                 if context.ecs_services.include?(name)
                   Base64.urlsafe_encode64(data)
                 end
-              end
+              end.compact
             )
           end
 
