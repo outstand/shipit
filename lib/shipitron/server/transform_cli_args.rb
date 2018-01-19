@@ -14,6 +14,7 @@ module Shipitron
       optional :repository_branch
       required :s3_cache_bucket
       required :image_name
+      required :named_tag
       required :region
       required :cluster_name
       required :ecs_task_defs
@@ -36,6 +37,7 @@ module Shipitron
           repository_url
           repository_branch
           s3_cache_bucket
+          named_tag
           region
           cluster_name
           ecs_services

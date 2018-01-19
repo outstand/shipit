@@ -15,6 +15,7 @@ module Shipitron
       required :repository_url
       required :s3_cache_bucket
       required :image_name
+      required :named_tag
       required :ecs_task_defs
       optional :ecs_task_def_templates
       optional :ecs_services
@@ -26,9 +27,9 @@ module Shipitron
 
       before do
         context.post_builds ||= []
-        context.ecs_task_def_templates ||= []
+        context.ecs_task_def_templates ||= {}
         context.ecs_services ||= []
-        context.ecs_service_templates ||= []
+        context.ecs_service_templates ||= {}
       end
 
       def call
@@ -99,6 +100,7 @@ module Shipitron
           '--repository', escaped(:repository_url),
           '--bucket', escaped(:s3_cache_bucket),
           '--image-name', escaped(:image_name),
+          '--named-tag', escaped(:named_tag),
           '--region', escape(cluster.region),
           '--cluster-name', escape(cluster.name),
         ].tap do |ary|
@@ -121,12 +123,24 @@ module Shipitron
 
           if !context.ecs_task_def_templates.empty?
             ary << '--ecs-task-def-templates'
-            ary.concat(context.ecs_task_def_templates.map {|t| Base64.urlsafe_encode64(t)})
+            ary.concat(
+              context.ecs_task_def_templates.map do |name, data|
+                if context.ecs_task_defs.include?(name)
+                  Base64.urlsafe_encode64(data)
+                end
+              end.compact
+            )
           end
 
           if !context.ecs_service_templates.empty?
             ary << '--ecs-service-templates'
-            ary.concat(context.ecs_service_templates.map {|t| Base64.urlsafe_encode64(t)})
+            ary.concat(
+              context.ecs_service_templates.map do |name, data|
+                if context.ecs_services.include?(name)
+                  Base64.urlsafe_encode64(data)
+                end
+              end.compact
+            )
           end
 
           unless context.repository_branch.nil?

@@ -29,7 +29,12 @@ module Shipitron
       end
 
       def deploy_ref_key
-        fetch_key!(key: "shipitron/#{application}/deploy_ref_key")
+        key = fetch_key(key: "shipitron/#{application}/deploy_ref_key")
+        if key.nil?
+          key = "shipitron/#{application}/deploy_ref"
+          Logger.info "Defaulting deploy_ref_key to #{key}"
+        end
+        key
       end
     end
   end

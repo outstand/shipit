@@ -15,7 +15,11 @@ module Shipitron
         end
 
         def call
-          docker_auth = fetch_key!(key: "shipitron/#{application}/docker_auth")
+          docker_auth = begin
+                          key = fetch_key(key: "shipitron/#{application}/docker_auth")
+                          key = fetch_key!(key: 'shipitron/docker_auth') if key.nil?
+                          key
+                        end
           auth_file = Pathname.new('/home/shipitron/.docker/config.json')
           auth_file.parent.mkpath
           auth_file.open('wb') do |file|
