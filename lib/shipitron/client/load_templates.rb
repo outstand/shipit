@@ -23,7 +23,7 @@ module Shipitron
       end
 
       def load_templates(dir)
-        return [] if dir.nil?
+        return {} if dir.nil?
 
         search_path = Pathname.new(dir)
         unless search_path.directory?
@@ -32,11 +32,12 @@ module Shipitron
           )
         end
 
-        templates = []
+        templates = {}
         search_path.find do |path|
           next if path.directory?
+          next if path.extname != '.yml'
 
-          templates << path.read
+          templates[path.basename('.yml').to_s] = path.read
         end
 
         Logger.debug "Templates loaded: #{templates.inspect}"
