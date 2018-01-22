@@ -25,7 +25,7 @@ module Shipitron
           else
             Logger.info 'Fetching new git commits'
             FileUtils.cd('/home/shipitron/git-cache') do
-              `git fetch #{Shellwords.escape repository_url} #{Shellwords.escape repository_branch}:#{Shellwords.escape repository_branch}`
+              `git fetch -f #{Shellwords.escape repository_url} #{Shellwords.escape repository_branch}:#{Shellwords.escape repository_branch}`
             end
           end
         end
