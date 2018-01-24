@@ -102,42 +102,34 @@ module Shipitron
         context.shipitron_task
       end
 
-      def escape(str)
-        Shellwords.escape(str)
-      end
-
-      def escaped(sym)
-        escape(context[sym])
-      end
-
       def command_args(cluster)
         [
           'server_deploy',
-          '--name', escaped(:application),
-          '--repository', escaped(:repository_url),
-          '--bucket', escaped(:s3_cache_bucket),
-          '--image-name', escaped(:image_name),
-          '--named-tag', escaped(:named_tag),
-          '--region', escape(cluster.region),
+          '--name', context.application,
+          '--repository', context.repository_url,
+          '--bucket', context.s3_cache_bucket,
+          '--image-name', context.image_name,
+          '--named-tag', context.named_tag,
+          '--region', cluster.region,
         ].tap do |ary|
           ary << '--clusters'
-          ary.concat(context.clusters.map {|c| escape(c.name)})
+          ary.concat(context.clusters.map(&:name))
 
           ary << '--ecs-task-defs'
-          ary.concat(context.ecs_task_defs.map {|s| escape(s)})
+          ary.concat(context.ecs_task_defs)
 
           unless context.ecs_services.empty?
             ary << '--ecs-services'
-            ary.concat(context.ecs_services.map {|s| escape(s)})
+            ary.concat(context.ecs_services)
           end
 
           if context.build_script != nil
-            ary.concat ['--build-script', escaped(:build_script)]
+            ary.concat ['--build-script', context.build_script]
           end
 
           if !context.post_builds.empty?
             ary << '--post-builds'
-            ary.concat(context.post_builds.map(&:to_s).map {|s| escape(s)})
+            ary.concat(context.post_builds.map(&:to_s))
           end
 
           if !context.ecs_task_def_templates.empty?
@@ -163,13 +155,13 @@ module Shipitron
           end
 
           unless context.repository_branch.nil?
-            ary.concat ['--repository-branch', escaped(:repository_branch)]
+            ary.concat ['--repository-branch', context.repository_branch]
           end
 
           if simulate?
-            Logger.info "server_deploy command: #{ary.join(' ')}"
+            Logger.info "server_deploy command: #{ary.shelljoin}"
           else
-            Logger.debug "server_deploy command: #{ary.join(' ')}"
+            Logger.debug "server_deploy command: #{ary.shelljoin}"
           end
         end
       end
