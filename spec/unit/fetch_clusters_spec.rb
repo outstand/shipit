@@ -19,7 +19,7 @@ RSpec.describe Shipitron::Client::FetchClusters do
         Resolv::DNS::Resource::IN::SRV.new(10, 0, 0, 'blue.us-east-1'),
         Resolv::DNS::Resource::IN::SRV.new(10, 10, 0, 'green.us-east-1'),
         Resolv::DNS::Resource::IN::SRV.new(10, 20, 0, 'red.us-east-1')
-      ]
+      ].shuffle
     }
 
     it 'returns red,green,blue' do
@@ -41,7 +41,7 @@ RSpec.describe Shipitron::Client::FetchClusters do
         Resolv::DNS::Resource::IN::SRV.new(20, 0, 0, 'blue.us-west-1'),
         Resolv::DNS::Resource::IN::SRV.new(20, 10, 0, 'green.us-west-1'),
         Resolv::DNS::Resource::IN::SRV.new(20, 20, 0, 'red.us-west-1')
-      ]
+      ].shuffle
     }
 
     it 'returns red,green,blue with east first' do
