@@ -15,11 +15,7 @@ applications:
       - ecs_task: dummy-app
         container_name: dummy-app
         command: echo postbuild
-    ecs_clusters:
-      - name: us-east-1-prod-blue
-        region: us-east-1
-      - name: us-east-1-prod-green
-        region: us-east-1
+    cluster_discovery: _ecs-prod._tcp.example.com
     shipitron_task: shipitron
     ecs_task_defs:
       - dummy-app
