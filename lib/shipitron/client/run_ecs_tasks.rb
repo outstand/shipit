@@ -121,7 +121,7 @@ module Shipitron
           '--region', escape(cluster.region),
         ].tap do |ary|
           ary << '--clusters'
-          ary.concat(context.clusters.each {|c| escape(c)})
+          ary.concat(context.clusters.each {|c| escape(c.name)})
 
           ary << '--ecs-task-defs'
           ary.concat(context.ecs_task_defs.each {|s| escape(s)})
