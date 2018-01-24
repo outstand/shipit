@@ -121,14 +121,14 @@ module Shipitron
           '--region', escape(cluster.region),
         ].tap do |ary|
           ary << '--clusters'
-          ary.concat(context.clusters.each {|c| escape(c.name)})
+          ary.concat(context.clusters.map {|c| escape(c.name)})
 
           ary << '--ecs-task-defs'
-          ary.concat(context.ecs_task_defs.each {|s| escape(s)})
+          ary.concat(context.ecs_task_defs.map {|s| escape(s)})
 
           unless context.ecs_services.empty?
             ary << '--ecs-services'
-            ary.concat(context.ecs_services.each {|s| escape(s)})
+            ary.concat(context.ecs_services.map {|s| escape(s)})
           end
 
           if context.build_script != nil
@@ -137,7 +137,7 @@ module Shipitron
 
           if !context.post_builds.empty?
             ary << '--post-builds'
-            ary.concat(context.post_builds.map(&:to_s).each {|s| escape(s)})
+            ary.concat(context.post_builds.map(&:to_s).map {|s| escape(s)})
           end
 
           if !context.ecs_task_def_templates.empty?
