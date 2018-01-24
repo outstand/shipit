@@ -16,7 +16,7 @@ module Shipitron
       required :image_name
       required :named_tag
       required :region
-      required :cluster_name
+      required :clusters
       required :ecs_task_defs
       optional :ecs_task_def_templates
       optional :ecs_services
@@ -39,7 +39,7 @@ module Shipitron
           s3_cache_bucket
           named_tag
           region
-          cluster_name
+          clusters
           ecs_services
           build_script
         ].each_with_object(cli_args) { |k, args| args[k] = context[k] }
