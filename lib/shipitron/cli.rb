@@ -90,7 +90,7 @@ module Shipitron
     desc 'bootstrap <app>', 'Bootstrap ECS task definitions and services'
     option :region, required: true
     option :cluster_name, required: true
-    option :service_count, type: :numeric, default: 3
+    option :service_count, type: :numeric, default: 0
     option :task_def_dir, default: 'shipitron/ecs_task_defs'
     option :service_dir, default: 'shipitron/ecs_services'
     option :secrets_file, default: 'shipitron/secrets.yml'
