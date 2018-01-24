@@ -42,7 +42,7 @@ module Shipitron
     option :image_name, required: true
     option :named_tag, default: 'latest'
     option :region, required: true
-    option :cluster_name, required: true
+    option :clusters, type: :array, required: true
     option :ecs_task_defs, type: :array, required: true
     option :ecs_task_def_templates, type: :array, default: []
     option :ecs_services, type: :array, default: []
@@ -65,7 +65,7 @@ module Shipitron
         image_name: options[:image_name],
         named_tag: options[:named_tag],
         region: options[:region],
-        cluster_name: options[:cluster_name],
+        clusters: options[:clusters],
         ecs_task_defs: options[:ecs_task_defs],
         ecs_task_def_templates: options[:ecs_task_def_templates],
         ecs_services: options[:ecs_services],

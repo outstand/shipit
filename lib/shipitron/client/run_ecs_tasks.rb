@@ -2,6 +2,8 @@ require 'shipitron'
 require 'shipitron/ecs_client'
 require 'shellwords'
 require 'base64'
+require 'tty-table'
+require 'pastel'
 
 module Shipitron
   module Client
@@ -35,40 +37,55 @@ module Shipitron
       def call
         Logger.info "Skipping ECS run_task calls due to --simulate" if simulate?
 
-        clusters.each do |cluster|
-          begin
-            if simulate?
-              command_args(cluster)
-              next
+        Logger.info "Deploying to:"
+        pastel = Pastel.new
+        table = TTY::Table.new do |t|
+          clusters.each_with_index do |cluster, i|
+            if i == 0
+              t << [pastel.yellow('*'), cluster.name, cluster.region, '[' + pastel.green('shipitron') + ']']
+            else
+              t << ['', cluster.name, cluster.region, '']
             end
-
-            response = ecs_client(region: cluster.region).run_task(
-              cluster: cluster.name,
-              task_definition: shipitron_task,
-              overrides: {
-                container_overrides: [
-                  {
-                    name: 'shipitron',
-                    command: command_args(cluster)
-                  }
-                ]
-              },
-              count: 1,
-              started_by: 'shipitron'
-            )
-
-            if !response.failures.empty?
-              response.failures.each do |failure|
-                fail_with_error! message: "ECS run_task failure: #{failure.arn}: #{failure.reason}"
-              end
-            end
-
-          rescue Aws::ECS::Errors::ServiceError => e
-            fail_with_errors!(messages: [
-              "Error: #{e.message}",
-              e.backtrace.join("\n")
-            ])
           end
+        end
+        table.render.each_line do |line|
+          Logger.info line.chomp
+        end
+
+        cluster = clusters.first
+
+        begin
+          if simulate?
+            command_args(cluster)
+            return
+          end
+
+          response = ecs_client(region: cluster.region).run_task(
+            cluster: cluster.name,
+            task_definition: shipitron_task,
+            overrides: {
+              container_overrides: [
+                {
+                  name: 'shipitron',
+                  command: command_args(cluster)
+                }
+              ]
+            },
+            count: 1,
+            started_by: 'shipitron'
+          )
+
+          if !response.failures.empty?
+            response.failures.each do |failure|
+              fail_with_error! message: "ECS run_task failure: #{failure.arn}: #{failure.reason}"
+            end
+          end
+
+        rescue Aws::ECS::Errors::ServiceError => e
+          fail_with_errors!(messages: [
+            "Error: #{e.message}",
+            e.backtrace.join("\n")
+          ])
         end
       end
 
@@ -102,8 +119,10 @@ module Shipitron
           '--image-name', escaped(:image_name),
           '--named-tag', escaped(:named_tag),
           '--region', escape(cluster.region),
-          '--cluster-name', escape(cluster.name),
         ].tap do |ary|
+          ary << '--clusters'
+          ary.concat(context.clusters.each {|c| escape(c)})
+
           ary << '--ecs-task-defs'
           ary.concat(context.ecs_task_defs.each {|s| escape(s)})
 

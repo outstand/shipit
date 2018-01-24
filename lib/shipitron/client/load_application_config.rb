@@ -22,7 +22,7 @@ module Shipitron
                                   config.post_builds.map {|pb| PostBuild.new(pb) }
                                 end
                               end
-        context.clusters = config.ecs_clusters
+        context.cluster_discovery = config.cluster_discovery
         context.shipitron_task = config.shipitron_task
         context.ecs_task_defs = config.ecs_task_defs
         context.ecs_services = config.ecs_services

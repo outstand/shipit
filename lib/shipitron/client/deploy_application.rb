@@ -1,6 +1,7 @@
 require 'shipitron'
 require 'shipitron/client/load_application_config'
 require 'shipitron/client/load_templates'
+require 'shipitron/client/fetch_clusters'
 require 'shipitron/client/ensure_deploy_not_running'
 require 'shipitron/client/run_ecs_tasks'
 
@@ -16,6 +17,7 @@ module Shipitron
       organize [
         LoadApplicationConfig,
         LoadTemplates,
+        FetchClusters,
         EnsureDeployNotRunning,
         RunEcsTasks
       ]

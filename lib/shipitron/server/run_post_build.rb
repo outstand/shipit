@@ -8,7 +8,7 @@ module Shipitron
       include EcsClient
 
       required :region
-      required :cluster_name
+      required :clusters
       optional :post_builds
 
       def call
@@ -20,7 +20,7 @@ module Shipitron
           post_builds.each do |post_build|
             Logger.info "Running #{post_build.command}"
             response = ecs_client(region: region).run_task(
-              cluster: cluster_name,
+              cluster: clusters.first,
               task_definition: post_build.ecs_task,
               overrides: {
                 container_overrides: [
@@ -45,7 +45,7 @@ module Shipitron
             Logger.info 'Waiting for task to finish'
             loop do
               response = ecs_client(region: region).describe_tasks(
-                cluster: cluster_name,
+                cluster: clusters.first,
                 tasks: [task_arn]
               )
               next if response.tasks.empty?
@@ -72,8 +72,8 @@ module Shipitron
         context.region
       end
 
-      def cluster_name
-        context.cluster_name
+      def clusters
+        context.clusters
       end
     end
   end
