@@ -13,7 +13,13 @@ module Shipitron
         context.repository_branch = config.repository_branch
         context.s3_cache_bucket = config.cache_bucket
         context.image_name = config.image_name
-        context.named_tag = config.named_tag
+        context.named_tag = begin
+                              if config.named_tag.nil?
+                                'latest'
+                              else
+                                config.named_tag
+                              end
+                            end
         context.build_script = config.build_script
         context.post_builds = begin
                                 if config.post_builds.nil?
