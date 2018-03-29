@@ -6,7 +6,7 @@ require 'shipitron/smash'
 
 module Shipitron
   CONFIG_FILE = 'shipitron/config.yml'.freeze
-  SECRETS_FILE = 'shipitron/secrets.yml'.freeze
+  SECRETS_FILE = '~/.config/shipitron/secrets.yml'.freeze
 
   class << self
     def config_file
@@ -18,7 +18,7 @@ module Shipitron
     end
 
     def config
-      @config ||= Smash.load(config_file).merge(secrets)
+      @config ||= Smash.load(Pathname.new(config_file).expand_path.to_s).merge(secrets)
     rescue ArgumentError
       Logger.warn "Config file '#{config_file}' does not exist"
       @config = secrets
@@ -33,7 +33,7 @@ module Shipitron
     end
 
     def secrets
-      @secrets ||= Smash.load(secrets_file)
+      @secrets ||= Smash.load(Pathname.new(secrets_file).expand_path.to_s)
     rescue ArgumentError
       Logger.warn "Secrets file '#{secrets_file}' does not exist"
       @secrets = Smash.new
