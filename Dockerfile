@@ -16,9 +16,11 @@ RUN addgroup -S shipitron && \
 ENV GOSU_VERSION 1.10
 ENV DUMB_INIT_VERSION 1.2.0
 
-RUN apk add --no-cache ca-certificates openssl tini su-exec
-
 RUN apk add --no-cache \
+    ca-certificates \
+    openssl \
+    tini \
+    su-exec \
     build-base \
     git \
     openssh-client \
