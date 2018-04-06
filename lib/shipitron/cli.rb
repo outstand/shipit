@@ -11,7 +11,7 @@ module Shipitron
 
     desc 'deploy <app>', 'Deploys the app'
     option :config_file, default: 'shipitron/config.yml'
-    option :secrets_file, default: 'shipitron/secrets.yml'
+    option :secrets_file, default: '~/.config/shipitron/secrets.yml'
     option :debug, type: :boolean, default: false
     option :simulate, type: :boolean, default: false
     def deploy(app)
@@ -49,7 +49,7 @@ module Shipitron
     option :ecs_service_templates, type: :array, default: []
     option :build_script, default: nil
     option :post_builds, type: :array
-    option :secrets_file, default: 'shipitron/secrets.yml'
+    option :secrets_file, default: '~/.config/shipitron/secrets.yml'
     option :debug, type: :boolean, default: false
     def server_deploy
       setup(
@@ -93,7 +93,7 @@ module Shipitron
     option :service_count, type: :numeric, default: 0
     option :task_def_dir, default: 'shipitron/ecs_task_defs'
     option :service_dir, default: 'shipitron/ecs_services'
-    option :secrets_file, default: 'shipitron/secrets.yml'
+    option :secrets_file, default: '~/.config/shipitron/secrets.yml'
     option :debug, type: :boolean, default: false
     def bootstrap(app)
       setup(

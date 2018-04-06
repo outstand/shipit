@@ -1,4 +1,4 @@
-#!/bin/dumb-init /bin/sh
+#!/bin/sh
 set -e
 
 if [ -n "$USE_BUNDLE_EXEC" ]; then
@@ -8,7 +8,7 @@ else
 fi
 
 if ${BINARY} help "$1" 2>&1 | grep -q "shipitron $1"; then
-  set -- gosu shipitron ${BINARY} "$@"
+  set -- su-exec shipitron ${BINARY} "$@"
 
   if [ -n "$FOG_LOCAL" ]; then
     chown -R shipitron:shipitron /fog
