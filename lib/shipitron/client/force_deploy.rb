@@ -1,5 +1,8 @@
 require 'shipitron'
 require 'shipitron/ecs_client'
+require 'shipitron/client/load_application_config'
+require 'shipitron/client/fetch_clusters'
+require 'shipitron/client/ensure_deploy_not_running'
 
 module Shipitron
   module Client
