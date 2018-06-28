@@ -34,6 +34,30 @@ module Shipitron
       end
     end
 
+    desc 'force_deploy <app>', 'Forces a redeploy of the app'
+    option :config_file, default: 'shipitron/config.yml'
+    option :secrets_file, default: '~/.config/shipitron/secrets.yml'
+    option :debug, type: :boolean, default: false
+    def force_deploy(app)
+      setup(
+        config_file: options[:config_file],
+        secrets_file: options[:secrets_file]
+      )
+
+      require 'shipitron/client/force_deploy'
+      result = Client::ForceDeploy.call(
+        application: app
+      )
+
+      if result.failure?
+        result.errors.each do |error|
+          Logger.fatal error
+        end
+        Logger.fatal 'Deploy failed.'
+      end
+    end
+
+
     desc 'server_deploy', 'Server-side component of deploy'
     option :name, required: true
     option :repository, required: true
