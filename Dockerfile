@@ -1,4 +1,4 @@
-FROM ruby:2.5.0-alpine3.7 as cache
+FROM ruby:2.5.1-alpine3.7 as cache
 COPY cache/ /tmp/
 RUN   cd /usr/local/bundle && \
     ([ -f /tmp/bundler-data.tar.gz ] && \
@@ -12,9 +12,6 @@ RUN addgroup -S shipitron && \
     adduser -S -G shipitron shipitron && \
     addgroup -g 1101 docker && \
     addgroup shipitron docker
-
-ENV GOSU_VERSION 1.10
-ENV DUMB_INIT_VERSION 1.2.0
 
 RUN apk add --no-cache \
     ca-certificates \
