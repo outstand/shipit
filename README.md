@@ -9,6 +9,7 @@ applications:
   dummy-app:
     repository: git@github.com:outstand/dummy-app
     cache_bucket: bucket
+    build_cache_location: tmp/build-cache.tar.gz
     image_name: outstand/dummy-app
     build_script: shipitron/build.sh
     post_builds:

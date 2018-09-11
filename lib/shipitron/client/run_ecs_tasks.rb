@@ -16,6 +16,7 @@ module Shipitron
       required :shipitron_task
       required :repository_url
       required :s3_cache_bucket
+      required :build_cache_location
       required :image_name
       required :named_tag
       required :ecs_task_defs
@@ -108,6 +109,7 @@ module Shipitron
           '--name', context.application,
           '--repository', context.repository_url,
           '--bucket', context.s3_cache_bucket,
+          '--build-cache-location', context.build_cache_location,
           '--image-name', context.image_name,
           '--named-tag', context.named_tag,
           '--region', cluster.region,

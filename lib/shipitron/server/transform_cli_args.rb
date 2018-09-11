@@ -13,6 +13,7 @@ module Shipitron
       required :repository_url
       optional :repository_branch
       required :s3_cache_bucket
+      required :build_cache_location
       required :image_name
       required :named_tag
       required :region
@@ -37,6 +38,7 @@ module Shipitron
           repository_url
           repository_branch
           s3_cache_bucket
+          build_cache_location
           named_tag
           region
           clusters
