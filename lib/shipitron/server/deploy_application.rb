@@ -19,6 +19,7 @@ module Shipitron
       required :application
       required :repository_url
       required :s3_cache_bucket
+      required :build_cache_location
       required :docker_image
       required :named_tag
       required :region

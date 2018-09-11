@@ -12,6 +12,7 @@ module Shipitron
         context.repository_url = config.repository
         context.repository_branch = config.repository_branch
         context.s3_cache_bucket = config.cache_bucket
+        context.build_cache_location = config.build_cache_location
         context.image_name = config.image_name
         context.named_tag = begin
                               if config.named_tag.nil?
