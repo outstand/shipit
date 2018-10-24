@@ -20,7 +20,7 @@ trap cleanup EXIT
 build_args=''
 mkdir -p ${bundler_data_dir}
 
-docker build -t ${build_image} -f ${dockerfile} ${build_args} .
+docker build --pull -t ${build_image} -f ${dockerfile} ${build_args} .
 
 docker run -t --cidfile=${bundler_data_dir}/cidfile -w /usr/local/bundle ${build_image} tar -zcf /tmp/bundler-data.tar.gz .
 tar_container=$(cat ${bundler_data_dir}/cidfile)

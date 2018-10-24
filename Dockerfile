@@ -1,12 +1,12 @@
-FROM ruby:2.5.1-alpine3.7 as cache
+FROM ruby:2.5.3-alpine3.8 as cache
 COPY cache/ /tmp/
 RUN   cd /usr/local/bundle && \
     ([ -f /tmp/bundler-data.tar.gz ] && \
     tar -zxf /tmp/bundler-data.tar.gz && \
     rm /tmp/bundler-data.tar.gz) || true
 
-FROM ruby:2.5.0-alpine3.7
-MAINTAINER Ryan Schlesinger <ryan@outstand.com>
+FROM ruby:2.5.3-alpine3.8
+LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
 RUN addgroup -S shipitron && \
     adduser -S -G shipitron shipitron && \
