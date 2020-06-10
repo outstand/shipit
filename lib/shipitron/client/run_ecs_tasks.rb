@@ -24,6 +24,7 @@ module Shipitron
       optional :ecs_services
       optional :ecs_service_templates
       optional :build_script
+      optional :skip_push
       optional :post_builds
       optional :simulate
       optional :repository_branch
@@ -127,6 +128,10 @@ module Shipitron
 
           if context.build_script != nil
             ary.concat ['--build-script', context.build_script]
+          end
+
+          if context.skip_push != nil
+            ary.concat ['--skip-push', context.skip_push]
           end
 
           if !context.post_builds.empty?

@@ -66,6 +66,7 @@ module Shipitron
     option :build_cache_location, default: 'tmp/build-cache.tar.gz'
     option :image_name, required: true
     option :named_tag, default: 'latest'
+    option :skip_push, default: false
     option :region, required: true
     option :clusters, type: :array, required: true
     option :ecs_task_defs, type: :array, required: true
@@ -90,6 +91,7 @@ module Shipitron
         build_cache_location: options[:build_cache_location],
         image_name: options[:image_name],
         named_tag: options[:named_tag],
+        skip_push: options[:skip_push],
         region: options[:region],
         clusters: options[:clusters],
         ecs_task_defs: options[:ecs_task_defs],

@@ -31,6 +31,7 @@ module Shipitron
       optional :build_script
       optional :post_builds
       optional :repository_branch
+      optional :skip_push, default: false
 
       around do |interactor|
         if ENV['CONSUL_HOST'].nil?

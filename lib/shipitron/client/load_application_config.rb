@@ -21,6 +21,7 @@ module Shipitron
                                 config.named_tag
                               end
                             end
+        context.skip_push = config.skip_push
         context.build_script = config.build_script
         context.post_builds = begin
                                 if config.post_builds.nil?
