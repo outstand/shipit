@@ -131,7 +131,7 @@ module Shipitron
           end
 
           if context.skip_push != nil
-            ary.concat ['--skip-push', context.skip_push]
+            ary.concat ['--skip-push', context.skip_push.to_s]
           end
 
           if !context.post_builds.empty?
