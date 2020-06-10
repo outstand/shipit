@@ -22,7 +22,7 @@ module Shipitron
         build_cache.open('rb') do |local_file|
           bucket.files.create(
             key: "#{application}.build-cache.archive",
-            body: local_file.read
+            body: local_file
           )
         end
       end
