@@ -23,6 +23,7 @@ module Shipitron
       optional :ecs_services
       optional :ecs_service_templates
       optional :build_script
+      optional :skip_push, default: false
       optional :post_builds
 
       before do
@@ -44,6 +45,7 @@ module Shipitron
           clusters
           ecs_services
           build_script
+          skip_push
         ].each_with_object(cli_args) { |k, args| args[k] = context[k] }
 
         cli_args.docker_image = DockerImage.new(name: context.image_name)
