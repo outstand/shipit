@@ -54,6 +54,10 @@ module Shipitron
         def build_script
           context.build_script
         end
+
+        def registry
+          context.registry
+        end
       end
     end
   end
