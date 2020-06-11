@@ -15,16 +15,12 @@ module Shipitron
         end
 
         def call
-          docker_auth = begin
-                          key = fetch_key(key: "shipitron/#{application}/docker_auth")
-                          key = fetch_key!(key: 'shipitron/docker_auth') if key.nil?
-                          key
-                        end
-          auth_file = Pathname.new('/home/shipitron/.docker/config.json')
-          auth_file.parent.mkpath
-          auth_file.open('wb') do |file|
-            file.puts(docker_auth.to_s)
-            file.chmod(0600)
+          username = fetch_scoped_key('docker_user')
+          password = fetch_scoped_key('docker_password')
+
+          Logger.info `docker login --username #{username} --password #{password}`
+          if $? != 0
+            fail_with_error!(message: 'Docker login failed.')
           end
         end
 
@@ -33,6 +29,11 @@ module Shipitron
           context.application
         end
 
+        def fetch_scoped_key(key)
+          value = fetch_key(key: "shipitron/#{application}/#{key}")
+          value = fetch_key!(key: "shipitron/#{key}") if value.nil?
+          value
+        end
       end
     end
   end
