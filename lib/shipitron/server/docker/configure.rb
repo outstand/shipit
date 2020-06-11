@@ -54,6 +54,10 @@ module Shipitron
           context.application
         end
 
+        def registry
+          context.registry
+        end
+
         def fetch_scoped_key(key)
           value = fetch_key(key: "shipitron/#{application}/#{key}")
           value = fetch_key!(key: "shipitron/#{key}") if value.nil?
