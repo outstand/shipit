@@ -2,6 +2,7 @@ require 'shipitron'
 
 module Shipitron
   class DockerImage < Hashie::Dash
+    property :registry
     property :name
     property :tag
 
@@ -13,7 +14,9 @@ module Shipitron
         tag_str = tag_str.dup.prepend(':')
       end
 
-      "#{name}#{tag_str}"
+      name_with_registry = [registry, name].compact.join('/')
+
+      "#{name_with_registry}#{tag_str}"
     end
 
     def to_s

@@ -12,10 +12,12 @@ module Shipitron
         required :git_sha
         required :named_tag
         optional :build_script, default: 'shipitron/build.sh'
+        optional :registry
 
         def call
           Logger.info 'Building docker image'
 
+          docker_image.registry = registry if registry != nil
           docker_image.tag = git_sha
 
           FileUtils.cd("/home/shipitron/#{application}") do

@@ -14,6 +14,7 @@ module Shipitron
         required :docker_image
         required :git_sha
         required :named_tag
+        optional :registry
 
         organize [
           DownloadBuildCache,
