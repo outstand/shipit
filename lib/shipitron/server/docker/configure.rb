@@ -35,15 +35,20 @@ module Shipitron
               # ECR
               config_file = Pathname.new('/home/shipitron/.docker/config.json')
               config_file.parent.mkpath
-              config_file.open('r+b') do |file|
-                json = file.read
-                hash = JSON.parse(json) rescue {}
-                hash['credHelpers'] ||= {}
-                hash['credHelpers'][registry] = 'ecr-login'
 
-                file.rewind
-                file.puts(JSON.generate(hash))
-                file.truncate(file.pos)
+              config_hash = {}
+              if config_file.file?
+                config_file.open('rb') do |file|
+                  json = file.read
+                  config_hash = JSON.parse(json) rescue {}
+                end
+              end
+
+              config_hash['credHelpers'] ||= {}
+              config_hash['credHelpers'][registry] = 'ecr-login'
+
+              config_file.open('wb') do |file|
+                file.puts(JSON.generate(config_hash))
                 file.chmod(0600)
               end
             end
@@ -61,7 +66,7 @@ module Shipitron
 
         def fetch_scoped_key(key)
           value = fetch_key(key: "shipitron/#{application}/#{key}")
-          value = fetch_key!(key: "shipitron/#{key}") if value.nil?
+          value = fetch_key(key: "shipitron/#{key}") if value.nil?
           value
         end
       end
