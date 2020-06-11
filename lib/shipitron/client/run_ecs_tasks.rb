@@ -1,4 +1,5 @@
 require 'shipitron'
+require 'shipitron/client'
 require 'shipitron/ecs_client'
 require 'shellwords'
 require 'base64'
@@ -74,7 +75,7 @@ module Shipitron
               ]
             },
             count: 1,
-            started_by: 'shipitron'
+            started_by: Shipitron::Client::STARTED_BY
           )
 
           if !response.failures.empty?

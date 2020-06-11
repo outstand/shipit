@@ -1,4 +1,5 @@
 require 'shipitron'
+require 'shipitron/client'
 require 'shipitron/client/register_ecs_task_definitions'
 require 'shipitron/client/create_ecs_services'
 

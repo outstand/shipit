@@ -1,4 +1,5 @@
 require 'shipitron'
+require 'shipitron/client'
 require 'resolv'
 
 module Shipitron
