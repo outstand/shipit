@@ -41,8 +41,9 @@ module Shipitron
                 hash['credHelpers'] ||= {}
                 hash['credHelpers'][registry] = 'ecr-login'
 
-                file.truncate(0)
+                file.rewind
                 file.puts(JSON.generate(hash))
+                file.truncate(file.pos)
                 file.chmod(0600)
               end
             end
