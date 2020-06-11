@@ -15,13 +15,14 @@ module Shipitron
         end
 
         def call
-          username = fetch_scoped_key('docker_user')
-          password = fetch_scoped_key('docker_password')
-
-          Logger.info `docker login --username #{username} --password #{password}`
-          if $? != 0
-            fail_with_error!(message: 'Docker login failed.')
-          end
+          return # try no-op
+          # username = fetch_scoped_key('docker_user')
+          # password = fetch_scoped_key('docker_password')
+          #
+          # Logger.info `docker login --username #{username} --password #{password}`
+          # if $? != 0
+          #   fail_with_error!(message: 'Docker login failed.')
+          # end
         end
 
         private
