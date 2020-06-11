@@ -14,11 +14,12 @@ module Shipitron
       required :docker_image
       required :ecs_task_defs
       optional :ecs_task_def_templates
+      optional :registry
 
       before do
         context.ecs_task_def_templates ||= []
         context.templates = context.ecs_task_def_templates
-        context.template_context = { tag: docker_image.tag }
+        context.template_context = { tag: docker_image.tag, registry: context.registry }
       end
 
       organize [

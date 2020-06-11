@@ -32,8 +32,6 @@ RUN cd /usr/local/bin && \
       wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIAL_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login && \
       chmod +x docker-credential-ecr-login
 
-COPY --chown=shipitron:shipitron build_env/docker-config.json /home/shipitron/.docker/config.json
-
 USER shipitron
 ENV BUILDX_VERSION v0.4.1
 RUN cd /home/shipitron && \

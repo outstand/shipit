@@ -12,6 +12,7 @@ module Shipitron
       required :application
       required :repository_url
       optional :repository_branch
+      optional :registry
       required :s3_cache_bucket
       required :build_cache_location
       required :image_name
@@ -38,6 +39,7 @@ module Shipitron
           application
           repository_url
           repository_branch
+          registry
           s3_cache_bucket
           build_cache_location
           named_tag

@@ -50,7 +50,7 @@ describe Shipitron::Client::RunEcsTasks do
         cluster: 'blue',
         task_definition: shipitron_task,
         count: 1,
-        started_by: 'shipitron'
+        started_by: Shipitron::Client::STARTED_BY
       )
     )
   end

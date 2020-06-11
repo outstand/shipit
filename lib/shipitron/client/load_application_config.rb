@@ -12,6 +12,7 @@ module Shipitron
       def call
         context.repository_url = config.repository
         context.repository_branch = config.repository_branch
+        context.registry = config.registry
         context.s3_cache_bucket = config.cache_bucket
         context.build_cache_location = config.build_cache_location
         context.image_name = config.image_name

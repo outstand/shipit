@@ -29,6 +29,7 @@ module Shipitron
       optional :post_builds
       optional :simulate
       optional :repository_branch
+      optional :registry
 
       before do
         context.post_builds ||= []
@@ -125,6 +126,10 @@ module Shipitron
           unless context.ecs_services.empty?
             ary << '--ecs-services'
             ary.concat(context.ecs_services)
+          end
+
+          if context.registry != nil
+            ary.concat ['--registry', context.registry]
           end
 
           if context.build_script != nil

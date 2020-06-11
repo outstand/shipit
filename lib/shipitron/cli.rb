@@ -62,6 +62,7 @@ module Shipitron
     option :name, required: true
     option :repository, required: true
     option :repository_branch, default: 'master'
+    option :registry, default: nil
     option :bucket, required: true
     option :build_cache_location, default: 'tmp/build-cache.tar.gz'
     option :image_name, required: true
@@ -87,6 +88,7 @@ module Shipitron
         application: options[:name],
         repository_url: options[:repository],
         repository_branch: options[:repository_branch],
+        registry: options[:registry],
         s3_cache_bucket: options[:bucket],
         build_cache_location: options[:build_cache_location],
         image_name: options[:image_name],
