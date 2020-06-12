@@ -32,6 +32,13 @@ RUN cd /usr/local/bin && \
       wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIAL_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login && \
       chmod +x docker-credential-ecr-login
 
+ENV BUILDKIT_VERSION v0.7.1
+RUN cd /usr/local/bin && \
+      wget -nv https://github.com/moby/buildkit/releases/download/${BUILDKIT_VERSION}/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz && \
+      tar --strip-components=1 -zxvf buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz bin/buildctl && \
+      chmod +x buildctl && \
+      rm -f buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz
+
 USER shipitron
 ENV BUILDX_VERSION v0.4.1
 RUN cd /home/shipitron && \
