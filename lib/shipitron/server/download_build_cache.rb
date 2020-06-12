@@ -13,7 +13,7 @@ module Shipitron
       def call
         Logger.info "Downloading build cache from bucket #{s3_cache_bucket}"
 
-        s3_file = bucket.files.get("#{application}.build-cache.archive")
+        s3_file = bucket.files.head("#{application}.build-cache.archive")
         if s3_file.nil?
           Logger.warn 'Build cache not found.'
           return
@@ -22,7 +22,9 @@ module Shipitron
         build_cache = Pathname.new("/home/shipitron/#{application}/#{build_cache_location}")
         build_cache.parent.mkpath
         build_cache.open('wb') do |local_file|
-          local_file.write(s3_file.body)
+          bucket.files.get("#{application}.build-cache.archive") do |chunk, _remaining_bytes, _total_bytes|
+            local_file.write(chunk)
+          end
         end
 
         Logger.info 'Download complete.'
