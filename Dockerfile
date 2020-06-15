@@ -25,8 +25,7 @@ RUN apk add --no-cache \
     bash \
     curl \
     wget \
-    jq \
-    aws-cli
+    jq
 
 ENV ECR_CREDENTIAL_HELPER_VERSION 0.4.0
 RUN cd /usr/local/bin && \
