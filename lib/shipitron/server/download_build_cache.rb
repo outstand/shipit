@@ -21,10 +21,13 @@ module Shipitron
 
         build_cache = Pathname.new("/home/shipitron/#{application}/#{build_cache_location}")
         build_cache.parent.mkpath
-        build_cache.open('wb') do |local_file|
-          bucket.files.get("#{application}.build-cache.archive") do |chunk, _remaining_bytes, _total_bytes|
-            local_file.write(chunk)
-          end
+
+        result = S3Copy.call(
+          source: "s3://#{s3_cache_bucket}/#{application}.build-cache.archive",
+          destination: build_cache.to_s
+        )
+        if result.failure?
+          fail_with_error!(message: 'Failed to download build cache!')
         end
 
         Logger.info 'Download complete.'

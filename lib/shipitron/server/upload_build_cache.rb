@@ -19,11 +19,12 @@ module Shipitron
           return
         end
 
-        build_cache.open('rb') do |local_file|
-          bucket.files.create(
-            key: "#{application}.build-cache.archive",
-            body: local_file
-          )
+        result = S3Copy.call(
+          source: build_cache.to_s,
+          destination: "s3://#{s3_cache_bucket}/#{application}.build-cache.archive"
+        )
+        if result.failure?
+          Logger.warn 'Failed to upload build cache!'
         end
       end
 
@@ -38,10 +39,6 @@ module Shipitron
 
       def build_cache_location
         context.build_cache_location
-      end
-
-      def bucket
-        @bucket ||= FetchBucket.call!(name: s3_cache_bucket).bucket
       end
     end
   end
