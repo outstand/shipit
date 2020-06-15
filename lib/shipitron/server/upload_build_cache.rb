@@ -25,6 +25,8 @@ module Shipitron
         )
         if result.failure?
           Logger.warn 'Failed to upload build cache!'
+        else
+          Logger.info 'Upload complete.'
         end
       end
 
