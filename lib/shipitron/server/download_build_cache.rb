@@ -1,5 +1,6 @@
 require 'shipitron'
 require 'shipitron/fetch_bucket'
+require 'shipitron/s3_copy'
 
 module Shipitron
   module Server
