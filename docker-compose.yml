@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  shipitron:
+    image: outstand/shipitron:dev
+    environment:
+      FOG_LOCAL: 'true'
+      APP_PATH: ~/dev/pages
+    working_dir: /shipitron
+    volumes:
+      - ~/dev/pages:/app
+      - fog:/fog
+      - shipitron-home:/home/shipitron
+      - ~/.config/shipitron:/home/shipitron/.config/shipitron
+      - .:/shipitron
+
+volumes:
+  fog:
+  shipitron-home:
