@@ -6,6 +6,7 @@ module Shipitron
 
     required :source
     required :destination
+    required :region
 
     def call
       if ENV['FOG_LOCAL']
@@ -15,7 +16,7 @@ module Shipitron
         end
       else
         # TODO: Deal with docker mounting from the host but we're in a container already
-        Logger.info `docker run --rm -it amazon/aws-cli:latest s3 cp #{source} #{destination}`
+        Logger.info `docker run --rm -it amazon/aws-cli:latest --region #{region} s3 cp #{source} #{destination}`
         if $? != 0
           fail_with_error!('Failed to transfer to/from s3.')
         end
@@ -29,6 +30,10 @@ module Shipitron
 
     def destination
       context.destination
+    end
+
+    def region
+      context.region
     end
   end
 end

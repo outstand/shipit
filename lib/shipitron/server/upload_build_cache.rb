@@ -9,6 +9,7 @@ module Shipitron
       required :application
       required :s3_cache_bucket
       required :build_cache_location
+      required :region
 
       def call
         Logger.info "Uploading build cache to bucket #{s3_cache_bucket}"
@@ -21,7 +22,8 @@ module Shipitron
 
         result = S3Copy.call(
           source: build_cache.to_s,
-          destination: "s3://#{s3_cache_bucket}/#{application}.build-cache.archive"
+          destination: "s3://#{s3_cache_bucket}/#{application}.build-cache.archive",
+          region: context.region
         )
         if result.failure?
           Logger.warn 'Failed to upload build cache!'
