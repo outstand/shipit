@@ -15,8 +15,7 @@ module Shipitron
           fail_with_error!(message: 'Failed to transfer to/from s3 (mocked).')
         end
       else
-        # TODO: Deal with docker mounting from the host but we're in a container already
-        Logger.info `docker run --rm -it amazon/aws-cli:latest --region #{region} s3 cp #{source} #{destination}`
+        Logger.info `docker run --rm -t -v shipitron-home:/home/shipitron amazon/aws-cli:latest --region #{region} s3 cp #{source} #{destination}`
         if $? != 0
           fail_with_error!(message: 'Failed to transfer to/from s3.')
         end
