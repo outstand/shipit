@@ -12,13 +12,13 @@ module Shipitron
       if ENV['FOG_LOCAL']
         Logger.info `cp #{source.gsub('s3://', '/fog/')} #{destination.gsub('s3://', '/fog/')}`
         if $? != 0
-          fail_with_error!('Failed to transfer to/from s3 (mocked).')
+          fail_with_error!(message: 'Failed to transfer to/from s3 (mocked).')
         end
       else
         # TODO: Deal with docker mounting from the host but we're in a container already
         Logger.info `docker run --rm -it amazon/aws-cli:latest --region #{region} s3 cp #{source} #{destination}`
         if $? != 0
-          fail_with_error!('Failed to transfer to/from s3.')
+          fail_with_error!(message: 'Failed to transfer to/from s3.')
         end
       end
     end
