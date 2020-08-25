@@ -3,11 +3,19 @@ services:
   shipitron:
     image: outstand/shipitron:dev
     environment:
-      FOG_LOCAL: 'true'
       APP_PATH: ~/dev/pages
-    working_dir: /shipitron
     volumes:
       - ~/dev/pages:/app
+      - shipitron-home:/home/shipitron
+      - ~/.config/shipitron:/home/shipitron/.config/shipitron
+      - .:/shipitron
+  shipitron_specs:
+    image: outstand/shipitron:dev
+    command: rspec spec
+    environment:
+      FOG_LOCAL: 'true'
+    working_dir: /shipitron
+    volumes:
       - fog:/fog
       - shipitron-home:/home/shipitron
       - ~/.config/shipitron:/home/shipitron/.config/shipitron
