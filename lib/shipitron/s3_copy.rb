@@ -20,6 +20,8 @@ module Shipitron
         if $? != 0
           fail_with_error!(message: 'Failed to transfer to/from s3.')
         end
+
+        Logger.info "S3 result: #{Pathname.new(destination).parent.children.inspect}"
       end
     end
 
