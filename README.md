@@ -41,6 +41,7 @@ applications:
 - `dev run --rm -v /bin/docker:/bin/docker -v /var/run/docker.sock:/var/run/docker.sock shipitron server_deploy --name dummy-app --repository git@github.com:outstand/dummy-app --bucket outstand-shipitron --image-name outstand/dummy-app --region us-east-1 --cluster-name us-east-1-prod-blue --ecs-task-defs dummy-app --ecs-services dummy-app --build-script shipitron/build.sh --post-builds 'ecs_task:dummy-app,container_name:dummy-app,command:echo postbuild' --ecs-task-def-templates LS0tCmZhbWlseTogZHVtbXktYXBwCmNvbnRhaW5lcl9kZWZpbml0aW9uczoKICAtIG5hbWU6IGR1bW15LWFwcAogICAgaW1hZ2U6IG91dHN0YW5kL2R1bW15LWFwcDp7e3RhZ319CiAgICBtZW1vcnk6IDEyOAogICAgZXNzZW50aWFsOiB0cnVlCiAgICBwb3J0X21hcHBpbmdzOgogICAgICAtIGNvbnRhaW5lcl9wb3J0OiA4MAogICAgZW52aXJvbm1lbnQ6CiAgICAgIC0gbmFtZTogU0VSVklDRV84MF9OQU1FCiAgICAgICAgdmFsdWU6IGR1bW15Cg== --ecs-service-templates LS0tCmNsdXN0ZXI6IHt7Y2x1c3Rlcn19CnNlcnZpY2VfbmFtZTogZHVtbXktYXBwCnRhc2tfZGVmaW5pdGlvbjogZHVtbXktYXBwe3tyZXZpc2lvbn19CmRlc2lyZWRfY291bnQ6IHt7Y291bnR9fQojcm9sZToge3tyb2xlfX0KZGVwbG95bWVudF9jb25maWd1cmF0aW9uOgogIG1heGltdW1fcGVyY2VudDogMjAwCiAgbWluaW11bV9oZWFsdGh5X3BlcmNlbnQ6IDUwCg== --debug` to run server side (dummy-app is an example)
 
 Running a dev version in production:
+- Update `Shipitron::Client::STARTED_BY`
 - `docker push outstand/shipitron:dev`
 - Update config to use `shipitron_task: shipitron-dev`
 - `dev run --rm shipitron deploy <app> --debug`
