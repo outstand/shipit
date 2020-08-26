@@ -1,4 +1,5 @@
 require 'shipitron'
+require 'shipitron/find_docker_volume_name'
 
 module Shipitron
   class S3Copy
@@ -16,22 +17,13 @@ module Shipitron
         end
       else
         Logger.info "S3 Copy from #{source} to #{destination}"
-        begin
-          response = Excon.get(
-            "#{ENV['ECS_CONTAINER_METADATA_URI_V4']}/task",
-            expects: [200],
-            connect_timeout: 5,
-            read_timeout: 5,
-            write_timeout: 5,
-            tcp_nodelay: true
-          )
 
-          Logger.info "Metadata result:"
-          Logger.info(response.body)
-          Logger.info "\n"
-        rescue Excon::Errors::SocketError, Excon::Errors::HTTPStatusError
-        end
-        Logger.info `docker run --rm -t -v shipitron-home:/home/shipitron -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI amazon/aws-cli:latest --region #{region} s3 cp #{source} #{destination} --quiet --only-show-errors`
+        shipitron_home_volume = FindDockerVolumeName.call!(
+          container_name: 'shipitron',
+          volume_search: /shipitron-home/
+        ).volume_name
+
+        Logger.info `docker run --rm -t -v #{shipitron_home_volume}:/home/shipitron -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI amazon/aws-cli:latest --region #{region} s3 cp #{source} #{destination} --quiet --only-show-errors`
         if $? != 0
           fail_with_error!(message: 'Failed to transfer to/from s3.')
         end
