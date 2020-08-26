@@ -10,15 +10,14 @@ module Shipitron
         required :application
         required :docker_image
         required :git_sha
-        optional :build_script
-
-        before do
-          context.build_script ||= 'shipitron/build.sh'
-        end
+        required :named_tag
+        optional :build_script, default: 'shipitron/build.sh'
+        optional :registry
 
         def call
           Logger.info 'Building docker image'
 
+          docker_image.registry = registry if registry != nil
           docker_image.tag = git_sha
 
           FileUtils.cd("/home/shipitron/#{application}") do
@@ -27,7 +26,7 @@ module Shipitron
             end
 
             cmd = TTY::Command.new
-            result = cmd.run!("#{build_script} #{docker_image}")
+            result = cmd.run!("#{build_script} #{docker_image} #{named_tag}")
 
             if result.failure?
               fail_with_error!(message: "build script exited with non-zero code: #{result.exit_status}")
@@ -48,8 +47,16 @@ module Shipitron
           context.git_sha
         end
 
+        def named_tag
+          context.named_tag
+        end
+
         def build_script
           context.build_script
+        end
+
+        def registry
+          context.registry
         end
       end
     end

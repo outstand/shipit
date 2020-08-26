@@ -1,4 +1,5 @@
 require 'shipitron'
+require 'shipitron/client'
 require 'shipitron/ecs_client'
 require 'shellwords'
 require 'base64'
@@ -24,9 +25,11 @@ module Shipitron
       optional :ecs_services
       optional :ecs_service_templates
       optional :build_script
+      optional :skip_push
       optional :post_builds
       optional :simulate
       optional :repository_branch
+      optional :registry
 
       before do
         context.post_builds ||= []
@@ -73,7 +76,7 @@ module Shipitron
               ]
             },
             count: 1,
-            started_by: 'shipitron'
+            started_by: Shipitron::Client::STARTED_BY
           )
 
           if !response.failures.empty?
@@ -125,8 +128,16 @@ module Shipitron
             ary.concat(context.ecs_services)
           end
 
+          if context.registry != nil
+            ary.concat ['--registry', context.registry]
+          end
+
           if context.build_script != nil
             ary.concat ['--build-script', context.build_script]
+          end
+
+          if context.skip_push != nil
+            ary.concat ['--skip-push', context.skip_push.to_s]
           end
 
           if !context.post_builds.empty?

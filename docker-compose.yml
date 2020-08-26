@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  shipitron:
+    image: outstand/shipitron:dev
+    volumes:
+      - ~/dev/pages:/app # Set this to the application to be shipitron'd
+      - shipitron-home:/home/shipitron
+      - ~/.config/shipitron:/home/shipitron/.config/shipitron
+      - .:/shipitron
+  shipitron_specs:
+    image: outstand/shipitron:dev
+    command: rspec spec
+    environment:
+      FOG_LOCAL: 'true'
+    working_dir: /shipitron
+    volumes:
+      - fog:/fog
+      - shipitron-home:/home/shipitron
+      - ~/.config/shipitron:/home/shipitron/.config/shipitron
+      - .:/shipitron
+
+volumes:
+  fog:
+  shipitron-home:

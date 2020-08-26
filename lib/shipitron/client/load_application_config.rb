@@ -1,4 +1,5 @@
 require 'shipitron'
+require 'shipitron/client'
 require 'shipitron/post_build'
 
 module Shipitron
@@ -11,6 +12,7 @@ module Shipitron
       def call
         context.repository_url = config.repository
         context.repository_branch = config.repository_branch
+        context.registry = config.registry
         context.s3_cache_bucket = config.cache_bucket
         context.build_cache_location = config.build_cache_location
         context.image_name = config.image_name
@@ -21,6 +23,7 @@ module Shipitron
                                 config.named_tag
                               end
                             end
+        context.skip_push = config.skip_push
         context.build_script = config.build_script
         context.post_builds = begin
                                 if config.post_builds.nil?

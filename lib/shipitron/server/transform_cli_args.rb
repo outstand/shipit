@@ -12,6 +12,7 @@ module Shipitron
       required :application
       required :repository_url
       optional :repository_branch
+      optional :registry
       required :s3_cache_bucket
       required :build_cache_location
       required :image_name
@@ -23,6 +24,7 @@ module Shipitron
       optional :ecs_services
       optional :ecs_service_templates
       optional :build_script
+      optional :skip_push, default: false
       optional :post_builds
 
       before do
@@ -37,6 +39,7 @@ module Shipitron
           application
           repository_url
           repository_branch
+          registry
           s3_cache_bucket
           build_cache_location
           named_tag
@@ -44,6 +47,7 @@ module Shipitron
           clusters
           ecs_services
           build_script
+          skip_push
         ].each_with_object(cli_args) { |k, args| args[k] = context[k] }
 
         cli_args.docker_image = DockerImage.new(name: context.image_name)

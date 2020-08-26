@@ -1,4 +1,5 @@
 require 'shipitron'
+require 'shipitron/client'
 require 'shipitron/ecs_client'
 require 'shipitron/client/load_application_config'
 require 'shipitron/client/fetch_clusters'

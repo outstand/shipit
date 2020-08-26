@@ -17,21 +17,22 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency 'thor', '~> 0.20'
+  spec.add_runtime_dependency 'thor', '~> 1.0'
   spec.add_runtime_dependency 'aws-sdk-ecs', '~> 1.8'
-  spec.add_runtime_dependency 'hashie', '~> 3.5'
-  spec.add_runtime_dependency 'metaractor', '~> 0.5'
+  spec.add_runtime_dependency 'hashie', '~> 4.1'
+  spec.add_runtime_dependency 'metaractor', '~> 3.0'
   spec.add_runtime_dependency 'diplomat', '~> 2.0'
-  spec.add_runtime_dependency 'fog-aws', '~> 2.0'
+  spec.add_runtime_dependency 'fog-aws', '~> 3.6'
   spec.add_runtime_dependency 'mime-types', '~> 3.1'
   spec.add_runtime_dependency 'minitar', '~> 0.6'
   spec.add_runtime_dependency 'mustache', '~> 1.0'
   spec.add_runtime_dependency 'tty-command', '~> 0.7'
   spec.add_runtime_dependency 'tty-table', '~> 0.9'
   spec.add_runtime_dependency 'pastel', '~> 0.7'
+  spec.add_runtime_dependency 'excon', '~> 0.76'
 
-  spec.add_development_dependency "bundler", "~> 1.16"
-  spec.add_development_dependency "rake", "~> 12.3"
+  spec.add_development_dependency "bundler", "~> 2.1"
+  spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "pry-byebug", "~> 3.5"
   spec.add_development_dependency "rspec", "~> 3.7"
   spec.add_development_dependency "fivemat", "~> 1.3"

@@ -13,6 +13,9 @@ module Shipitron
         required :application
         required :docker_image
         required :git_sha
+        required :named_tag
+        required :region
+        optional :registry
 
         organize [
           DownloadBuildCache,

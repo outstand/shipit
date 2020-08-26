@@ -27,7 +27,7 @@ module Shipitron
       )
 
       if result.failure?
-        result.errors.each do |error|
+        result.error_messages.each do |error|
           Logger.fatal error
         end
         Logger.fatal 'Deploy failed.'
@@ -50,7 +50,7 @@ module Shipitron
       )
 
       if result.failure?
-        result.errors.each do |error|
+        result.error_messages.each do |error|
           Logger.fatal error
         end
         Logger.fatal 'Deploy failed.'
@@ -62,10 +62,12 @@ module Shipitron
     option :name, required: true
     option :repository, required: true
     option :repository_branch, default: 'master'
+    option :registry, default: nil
     option :bucket, required: true
     option :build_cache_location, default: 'tmp/build-cache.tar.gz'
     option :image_name, required: true
     option :named_tag, default: 'latest'
+    option :skip_push, type: :boolean, default: false
     option :region, required: true
     option :clusters, type: :array, required: true
     option :ecs_task_defs, type: :array, required: true
@@ -86,10 +88,12 @@ module Shipitron
         application: options[:name],
         repository_url: options[:repository],
         repository_branch: options[:repository_branch],
+        registry: options[:registry],
         s3_cache_bucket: options[:bucket],
         build_cache_location: options[:build_cache_location],
         image_name: options[:image_name],
         named_tag: options[:named_tag],
+        skip_push: options[:skip_push],
         region: options[:region],
         clusters: options[:clusters],
         ecs_task_defs: options[:ecs_task_defs],
@@ -106,7 +110,7 @@ module Shipitron
       )
 
       if result.failure?
-        result.errors.each do |error|
+        result.error_messages.each do |error|
           Logger.fatal error
         end
         Logger.fatal 'Deploy failed.'
@@ -137,7 +141,7 @@ module Shipitron
       )
 
       if result.failure?
-        result.errors.each do |error|
+        result.error_messages.each do |error|
           Logger.fatal error
         end
         Logger.fatal 'Bootstrap failed.'

@@ -10,6 +10,7 @@ describe Shipitron::Client::RunEcsTasks do
   let(:shipitron_task) { 'shipitron' }
   let(:repository_url) { 'git@github.com:outstand/dummy-app' }
   let(:s3_cache_bucket) { 'outstand-shipitron' }
+  let(:build_cache_location) { 'tmp/build-cache.tar.gz' }
   let(:image_name) { 'outstand/dummy-app' }
   let(:named_tag) { 'latest' }
   let(:ecs_task_defs) { ['dummy-app'] }
@@ -21,6 +22,7 @@ describe Shipitron::Client::RunEcsTasks do
       shipitron_task: shipitron_task,
       repository_url: repository_url,
       s3_cache_bucket: s3_cache_bucket,
+      build_cache_location: build_cache_location,
       image_name: image_name,
       named_tag: named_tag,
       ecs_task_defs: ecs_task_defs,
@@ -48,21 +50,14 @@ describe Shipitron::Client::RunEcsTasks do
         cluster: 'blue',
         task_definition: shipitron_task,
         count: 1,
-        started_by: 'shipitron'
+        started_by: Shipitron::Client::STARTED_BY
       )
     )
   end
 
-  it 'runs the task for the green cluster' do
+  it 'does not run the task for the green cluster' do
     action.run!
-    expect(west_ecs_client).to have_received(:run_task).with(
-      hash_including(
-        cluster: 'green',
-        task_definition: shipitron_task,
-        count: 1,
-        started_by: 'shipitron'
-      )
-    )
+    expect(west_ecs_client).to_not have_received(:run_task)
   end
 
   context 'when there is a ServiceError' do

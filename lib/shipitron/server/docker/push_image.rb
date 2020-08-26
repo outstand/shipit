@@ -8,8 +8,11 @@ module Shipitron
 
         required :docker_image
         required :named_tag
+        optional :skip_push, default: false
 
         def call
+          return if context.skip_push
+
           Logger.info "Pushing docker image #{docker_image} and #{docker_image.name_with_tag(named_tag)}"
 
           Logger.info `docker tag #{docker_image} #{docker_image.name_with_tag(named_tag)}`

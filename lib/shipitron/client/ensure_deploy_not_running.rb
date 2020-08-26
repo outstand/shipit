@@ -1,4 +1,5 @@
 require 'shipitron'
+require 'shipitron/client'
 require 'shipitron/ecs_client'
 
 # Note: This is a best effort client side check to make sure there
@@ -21,7 +22,7 @@ module Shipitron
             begin
               response = ecs_client(region: cluster.region).list_tasks(
                 cluster: cluster.name,
-                started_by: 'shipitron',
+                started_by: Shipitron::Client::STARTED_BY,
                 max_results: 1,
                 desired_status: status
               )
