@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'tty-command', '~> 0.7'
   spec.add_runtime_dependency 'tty-table', '~> 0.9'
   spec.add_runtime_dependency 'pastel', '~> 0.7'
+  spec.add_runtime_dependency 'docker-api', '~> 2.0.0.pre.1'
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 13.0"
