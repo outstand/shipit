@@ -31,6 +31,41 @@ applications:
 - Add deploy ref key to `shipitron/<app name>/deploy_ref_key`
 - `docker run -it --rm -v shipitron.yml:/shipitron/config/shipitron.yml outstand/shipitron:<version> deploy <app>`
 
+### New shipitron config file keys:
+
+- registry (specifies an alternate docker registry):
+```yaml
+---
+applications:
+  foobar:
+    registry: 12345.dkr.ecr.us-east-1.amazonaws.com
+```
+
+- skip_push (shipitron will skip pushing the docker images; use if the build script takes care of this):
+```yaml
+---
+applications:
+  foobar:
+    skip_push: true
+```
+Additionally, the build script will receive the named tag in use as `$2`.
+
+### Containerized tool support
+Shipitron now supports starting other containers as part of the build process. We're using this to use the aws cli to transfer files to/from s3. Shipitron's task definition needs to have a task scoped docker volume added with the name `shipitron-home`. This volume will be mounted at `/home/shipitron` and should be shared with any new containers:
+
+```
+shipitron_home_volume = FindDockerVolumeName.call!(
+  container_name: 'shipitron',
+  volume_search: /shipitron-home/
+).volume_name
+
+docker run ... -v #{shipitron_home_volume}:/home/shipitron ...
+```
+
+This allows the containers to share data with each other. ECS will automatically clean up the task scoped container.
+
+If a containerized tool requires access to AWS resources, be sure to pass the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` to it so it can inherit any task roles.
+
 ## Development
 
 - `./build_dev.sh`
