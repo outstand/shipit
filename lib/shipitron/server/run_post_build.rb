@@ -52,6 +52,10 @@ module Shipitron
                       {
                         name: "GIT_BRANCH",
                         value: git_info.branch
+                      },
+                      {
+                        name: "GIT_TAG",
+                        value: git_info.tag
                       }
                     ]
                   }
