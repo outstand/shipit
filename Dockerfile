@@ -15,7 +15,7 @@ RUN addgroup -S shipitron && \
 
 RUN apk add --no-cache \
     ca-certificates \
-    openssl \
+    openssl-dev \
     tini \
     su-exec \
     build-base \
@@ -25,7 +25,8 @@ RUN apk add --no-cache \
     bash \
     curl \
     wget \
-    jq
+    jq \
+    cmake
 
 ENV ECR_CREDENTIAL_HELPER_VERSION 0.4.0
 RUN cd /usr/local/bin && \

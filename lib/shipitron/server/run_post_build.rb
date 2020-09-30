@@ -9,6 +9,7 @@ module Shipitron
 
       required :region
       required :clusters
+      required :git_info
       optional :post_builds
 
       def call
@@ -26,7 +27,33 @@ module Shipitron
                 container_overrides: [
                   {
                     name: post_build.container_name,
-                    command: post_build.command_ary
+                    command: post_build.command_ary,
+                    environment: [
+                      {
+                        name: "GIT_SHA",
+                        value: git_info.sha
+                      },
+                      {
+                        name: "GIT_EMAIL",
+                        value: git_info.email
+                      },
+                      {
+                        name: "GIT_NAME",
+                        value: git_info.name
+                      },
+                      {
+                        name: "GIT_MESSAGE",
+                        value: git_info.summary
+                      },
+                      {
+                        name: "GIT_TIMESTAMP",
+                        value: git_info.timestamp
+                      },
+                      {
+                        name: "GIT_BRANCH",
+                        value: git_info.branch
+                      }
+                    ]
                   }
                 ]
               },
@@ -74,6 +101,10 @@ module Shipitron
 
       def clusters
         context.clusters
+      end
+
+      def git_info
+        context.git_info
       end
     end
   end

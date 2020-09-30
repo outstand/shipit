@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'tty-table', '~> 0.9'
   spec.add_runtime_dependency 'pastel', '~> 0.7'
   spec.add_runtime_dependency 'excon', '~> 0.76'
+  spec.add_runtime_dependency 'rugged', '~> 1.0'
 
   spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "rake", "~> 13.0"
