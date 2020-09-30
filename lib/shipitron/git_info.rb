@@ -33,7 +33,7 @@ module Shipitron
 
     def self.branch_name(repo:)
       ref = repo.head
-      ref.branch? ? ref.name.sub('refs/heads/', '') : ''
+      ref.branch? ? ref.name.sub('refs/heads/', '') : nil
     end
 
     def self.tag_name(repo:)
