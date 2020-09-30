@@ -25,7 +25,7 @@ module Shipitron
         email: commit.author.dig(:email),
         name: commit.author.dig(:name),
         summary: commit.summary,
-        timestamp: commit.epoch_time,
+        timestamp: commit.epoch_time.to_s,
         branch: branch_name(repo: repo),
         tag: tag_name(repo: repo)
       )

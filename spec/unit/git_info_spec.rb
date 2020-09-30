@@ -22,7 +22,7 @@ RSpec.describe Shipitron::GitInfo do
       expect(git_info.email).to eq 'ryan@ryanschlesinger.com'
       expect(git_info.name).to eq 'Ryan Schlesinger'
       expect(git_info.summary).to eq 'Add bar'
-      expect(git_info.timestamp).to eq 1601476924
+      expect(git_info.timestamp).to eq '1601476924'
       expect(git_info.branch).to eq 'master'
       expect(git_info.tag).to eq 'bar-tag'
 
