@@ -20,6 +20,7 @@ RUN apk add --no-cache \
     su-exec \
     build-base \
     git \
+    git-lfs \
     openssh-client \
     perl \
     bash \
