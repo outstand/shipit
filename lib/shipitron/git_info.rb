@@ -11,7 +11,7 @@ module Shipitron
     property :branch
 
     def one_liner
-      "#{name} (#{short_sha}): #{message}"
+      "#{name} (#{short_sha}): #{summary}"
     end
 
     def self.from_path(path:)
