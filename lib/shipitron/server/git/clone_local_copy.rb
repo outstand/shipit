@@ -1,5 +1,6 @@
 require 'shipitron'
 require 'shellwords'
+require 'shipitron/git_info'
 
 module Shipitron
   module Server
@@ -22,10 +23,8 @@ module Shipitron
           end
 
           Logger.info 'Using this git commit:'
-          FileUtils.cd("/home/shipitron/#{application}") do
-            context.git_sha = `git rev-parse --short=12 HEAD`.chomp
-            Logger.info `git --no-pager log --format='%aN (%h): %s' -n 1`.chomp
-          end
+          context.git_info = GitInfo.from_path(path: "/home/shipitron/#{application}")
+          Logger.info context.git_info.one_liner
         end
 
         private

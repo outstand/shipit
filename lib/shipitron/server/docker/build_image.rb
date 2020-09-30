@@ -12,7 +12,7 @@ module Shipitron
 
         required :application
         required :docker_image
-        required :git_sha
+        required :git_info
         required :named_tag
         required :region
         optional :registry

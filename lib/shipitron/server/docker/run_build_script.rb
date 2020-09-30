@@ -9,7 +9,7 @@ module Shipitron
 
         required :application
         required :docker_image
-        required :git_sha
+        required :git_info
         required :named_tag
         optional :build_script, default: 'shipitron/build.sh'
         optional :registry
@@ -18,7 +18,7 @@ module Shipitron
           Logger.info 'Building docker image'
 
           docker_image.registry = registry if registry != nil
-          docker_image.tag = git_sha
+          docker_image.tag = git_info.short_sha
 
           FileUtils.cd("/home/shipitron/#{application}") do
             unless Pathname.new(build_script).exist?
@@ -43,8 +43,8 @@ module Shipitron
           context.docker_image
         end
 
-        def git_sha
-          context.git_sha
+        def git_info
+          context.git_info
         end
 
         def named_tag
