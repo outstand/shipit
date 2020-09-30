@@ -34,6 +34,10 @@ module Shipitron
                         value: git_info.sha
                       },
                       {
+                        name: "GIT_SHORT_SHA",
+                        value: git_info.short_sha
+                      },
+                      {
                         name: "GIT_EMAIL",
                         value: git_info.email
                       },
