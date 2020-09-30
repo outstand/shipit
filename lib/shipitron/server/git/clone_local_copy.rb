@@ -1,5 +1,6 @@
 require 'shipitron'
 require 'shellwords'
+require 'shipitron/git_info'
 
 module Shipitron
   module Server
