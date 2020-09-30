@@ -3,3 +3,4 @@
 Gemfile.lock
 /tmp/
 /cache/
+/spec/fixtures/test_repo

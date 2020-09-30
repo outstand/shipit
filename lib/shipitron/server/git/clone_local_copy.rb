@@ -1,6 +1,5 @@
 require 'shipitron'
 require 'shellwords'
-require 'rugged'
 
 module Shipitron
   module Server
