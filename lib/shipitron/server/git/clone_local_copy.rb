@@ -23,7 +23,7 @@ module Shipitron
           end
 
           Logger.info 'Using this git commit:'
-          context.git_info = GitInfo.from_path("/home/shipitron/#{application}")
+          context.git_info = GitInfo.from_path(path: "/home/shipitron/#{application}")
           Logger.info context.git_info.one_liner
         end
 
