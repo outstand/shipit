@@ -30,13 +30,12 @@ module Shipitron
 
           service_def = Smash.load(
             path.to_s,
-            parser: MustacheYamlParser.new(
-              context: {
-                cluster: cluster_name,
-                revision: nil, # ECS will default to latest ACTIVE
-                count: service_count
-              }
-            )
+            parser: MustacheYamlParser,
+            context: {
+              cluster: cluster_name,
+              revision: nil, # ECS will default to latest ACTIVE
+              count: service_count
+            }
           ).merge(
             client_token: SecureRandom.uuid
           )

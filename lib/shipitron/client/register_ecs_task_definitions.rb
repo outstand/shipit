@@ -27,11 +27,10 @@ module Shipitron
 
           task_def = Smash.load(
             path.to_s,
-            parser: MustacheYamlParser.new(
-              context: {
-                tag: 'latest'
-              }
-            )
+            parser: MustacheYamlParser,
+            context: {
+              tag: 'latest'
+            }
           )
 
           begin
