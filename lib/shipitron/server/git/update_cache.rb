@@ -13,7 +13,7 @@ module Shipitron
         optional :repository_branch
 
         before do
-          context.repository_branch ||= 'master'
+          context.repository_branch ||= 'main'
         end
 
         def call

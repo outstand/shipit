@@ -61,7 +61,7 @@ module Shipitron
     desc 'server_deploy', 'Server-side component of deploy'
     option :name, required: true
     option :repository, required: true
-    option :repository_branch, default: 'master'
+    option :repository_branch, default: 'main'
     option :registry, default: nil
     option :bucket, required: true
     option :build_cache_location, default: 'tmp/build-cache.tar.gz'
