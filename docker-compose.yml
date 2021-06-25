@@ -20,7 +20,6 @@ services:
       - bundler-data:/usr/local/bundle
       - fog:/fog
       - shipitron-home:/home/shipitron
-      - ~/.config/shipitron:/home/shipitron/.config/shipitron
       - .:/shipitron
 
   release_gem:
