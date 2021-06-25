@@ -55,6 +55,9 @@ USER root
 ENV USE_BUNDLE_EXEC true
 ENV BUNDLE_GEMFILE /shipitron/Gemfile
 
+ENV BUNDLER_VERSION 2.2.21
+RUN gem install bundler -v ${BUNDLER_VERSION} -i /usr/local/lib/ruby/gems/$(ls /usr/local/lib/ruby/gems) --force
+
 WORKDIR /app
 COPY Gemfile shipitron.gemspec /shipitron/
 COPY lib/shipitron/version.rb /shipitron/lib/shipitron/
