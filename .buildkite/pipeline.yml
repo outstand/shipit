@@ -24,7 +24,7 @@ steps:
           region: "us-east-1"
 
       - https://github.com/outstand/docker-compose-buildkite-plugin.git#${PLUGIN_DOCKER_COMPOSE_VERSION}:
-          build: shipitron
+          build: specs
           image-repository: 786715713882.dkr.ecr.us-east-1.amazonaws.com/ci-images
           config:
             - docker-compose.yml
@@ -47,7 +47,6 @@ steps:
 
       - https://github.com/outstand/docker-compose-buildkite-plugin.git#${PLUGIN_DOCKER_COMPOSE_VERSION}:
           run: specs
-          pull: shipitron
           dependencies: false
           config:
             - docker-compose.yml
@@ -80,7 +79,6 @@ steps:
 
       - https://github.com/outstand/docker-compose-buildkite-plugin.git#${PLUGIN_DOCKER_COMPOSE_VERSION}:
           run: specs
-          pull: shipitron
           config:
             - docker-compose.yml
 

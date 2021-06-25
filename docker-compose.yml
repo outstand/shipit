@@ -11,6 +11,7 @@ services:
       - .:/shipitron
 
   specs:
+    build: .
     image: outstand/shipitron:dev
     command: rspec
     environment:
