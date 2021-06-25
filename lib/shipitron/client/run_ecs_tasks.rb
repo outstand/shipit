@@ -50,16 +50,19 @@ module Shipitron
           Logger.info line.chomp
         end
 
-        cluster = clusters.first
+        @cluster = clusters.first
 
         begin
           if simulate?
-            server_deploy_args(cluster: cluster)
+            server_deploy_args
+            generate_deploy!
             return
           end
 
+          generate_deploy!
+
           response = ecs_client(region: cluster.region).run_task(
-            cluster: cluster.name,
+            cluster: @cluster.name,
             task_definition: shipitron_task,
             overrides: {
               container_overrides: [
@@ -103,10 +106,15 @@ module Shipitron
       def deploy_id
         return @_deploy_id if defined?(@_deploy_id)
 
-        result = Shipitron::Client::GenerateDeploy.call!(
-          server_deploy_args: server_deploy_args(cluster: cluster)
+        @_deploy_id = SecureRandom.uuid
+      end
+
+      def generate_deploy!
+        Shipitron::Client::GenerateDeploy.call!(
+          s3_cache_bucket: context.s3_cache_bucket,
+          server_deploy_args: server_deploy_args,
+          deploy_id: deploy_id
         )
-        @_deploy_id = result.deploy_id
       end
 
       def command_args(deploy_id:)
@@ -116,7 +124,7 @@ module Shipitron
         ]
       end
 
-      def server_deploy_args(cluster:)
+      def server_deploy_args
         return @_server_deploy_args if defined?(@_server_deploy_args)
 
         @_server_deploy_args =
@@ -128,7 +136,7 @@ module Shipitron
             '--build-cache-location', context.build_cache_location,
             '--image-name', context.image_name,
             '--named-tag', context.named_tag,
-            '--region', cluster.region,
+            '--region', @cluster.region,
           ].tap do |ary|
             ary << '--clusters'
             ary.concat(context.clusters.map(&:name))
