@@ -21,22 +21,15 @@ module Shipitron
       required :image_name
       required :named_tag
       required :ecs_task_defs
-      optional :ecs_task_def_templates
-      optional :ecs_services
-      optional :ecs_service_templates
+      optional :ecs_task_def_templates, default: []
+      optional :ecs_services: default: []
+      optional :ecs_service_templates, default: []
       optional :build_script
       optional :skip_push
-      optional :post_builds
+      optional :post_builds, default: []
       optional :simulate
       optional :repository_branch
       optional :registry
-
-      before do
-        context.post_builds ||= []
-        context.ecs_task_def_templates ||= {}
-        context.ecs_services ||= []
-        context.ecs_service_templates ||= {}
-      end
 
       def call
         Logger.info "Skipping ECS run_task calls due to --simulate" if simulate?
