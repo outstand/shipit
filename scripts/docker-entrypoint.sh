@@ -30,6 +30,8 @@ if [ "$(ls -A /usr/local/bundle/bin)" = '' ]; then
   echo 'command not in path and bundler not initialized'
   echo 'running bundle install'
   su-exec shipitron bundle install
+else
+  su-exec shipitron bash -c 'bundle check || bundle install'
 fi
 
 if ${BINARY} help "$1" 2>&1 | grep -q "shipitron $1"; then
@@ -38,8 +40,6 @@ if ${BINARY} help "$1" 2>&1 | grep -q "shipitron $1"; then
   if [ -n "${FOG_LOCAL:-}" ]; then
     chown -R shipitron:shipitron /fog
   fi
-
-  su-exec shipitron bash -c 'bundle check || bundle install'
 fi
 
 exec "$@"
