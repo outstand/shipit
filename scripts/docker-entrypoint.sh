@@ -34,7 +34,10 @@ else
   su-exec shipitron bash -c 'bundle check || bundle install'
 fi
 
-if ${BINARY} help "$1" 2>&1 | grep -q "shipitron $1"; then
+if ls /usr/local/bundle/bin | grep -q "\b$1\b"; then
+  set -- su-exec shipitron bundle exec "$@"
+
+elif ${BINARY} help "$1" 2>&1 | grep -q "shipitron $1"; then
   set -- su-exec shipitron ${BINARY} "$@"
 
   if [ -n "${FOG_LOCAL:-}" ]; then
