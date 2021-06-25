@@ -2,10 +2,13 @@
 
 set -euo pipefail
 
+su-exec ${FIXUID:?Missing FIXUID var}:${FIXGID:?Missing FIXGID var} fixuid
+
 chown_dir() {
   dir=$1
-  if [ "$(stat -c %u ${dir})" = '0' ]; then
-    chown -R shipitron:shipitron $dir
+  if [[ -d ${dir} ]] && [[ "$(stat -c %u:%g ${dir})" != "${FIXUID}:${FIXGID}" ]]; then
+    echo chown $dir
+    chown shipitron:shipitron $dir
   fi
 }
 
