@@ -22,7 +22,7 @@ module Shipitron
       required :named_tag
       required :ecs_task_defs
       optional :ecs_task_def_templates, default: []
-      optional :ecs_services: default: []
+      optional :ecs_services, default: []
       optional :ecs_service_templates, default: []
       optional :build_script
       optional :skip_push
