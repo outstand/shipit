@@ -1,10 +1,3 @@
-FROM ruby:2.7.3-alpine as cache
-COPY cache/ /tmp/
-RUN   cd /usr/local/bundle && \
-    ([ -f /tmp/bundler-data.tar.gz ] && \
-    tar -zxf /tmp/bundler-data.tar.gz && \
-    rm /tmp/bundler-data.tar.gz) || true
-
 FROM ruby:2.7.3-alpine
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
@@ -57,12 +50,9 @@ WORKDIR /app
 COPY Gemfile shipitron.gemspec /shipitron/
 COPY lib/shipitron/version.rb /shipitron/lib/shipitron/
 
-COPY --from=cache /usr/local/bundle /usr/local/bundle
-RUN (bundle check || bundle install) && \
-      git config --global push.default simple
+RUN git config --global push.default simple
 COPY . /shipitron/
-RUN ln -s /shipitron/exe/shipitron /usr/local/bin/shipitron && \
-    mkdir -p /home/shipitron/.ssh && \
+RUN mkdir -p /home/shipitron/.ssh && \
     chown shipitron:shipitron /home/shipitron/.ssh && \
     chmod 700 /home/shipitron/.ssh
 
