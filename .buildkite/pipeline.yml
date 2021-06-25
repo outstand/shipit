@@ -47,6 +47,7 @@ steps:
 
       - https://github.com/outstand/docker-compose-buildkite-plugin.git#${PLUGIN_DOCKER_COMPOSE_VERSION}:
           run: specs
+          pull: shipitron
           dependencies: false
           config:
             - docker-compose.yml
@@ -79,6 +80,7 @@ steps:
 
       - https://github.com/outstand/docker-compose-buildkite-plugin.git#${PLUGIN_DOCKER_COMPOSE_VERSION}:
           run: specs
+          pull: shipitron
           config:
             - docker-compose.yml
 
