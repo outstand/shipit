@@ -90,8 +90,8 @@ module Shipitron
 
       deploy_options = Server::FetchDeploy.call!(
         deploy_bucket: ENV["SHIPITRON_DEPLOY_BUCKET"],
-        deploy_bucket_region: ENV["SHIPITRON_DEPLOY_BUCKET_REGION"]
-        deploy_id: options[:deploy_id],
+        deploy_bucket_region: ENV["SHIPITRON_DEPLOY_BUCKET_REGION"],
+        deploy_id: options[:deploy_id]
       ).deploy_options
 
       require 'shipitron/server/transform_cli_args'

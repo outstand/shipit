@@ -34,6 +34,8 @@ else
   su-exec shipitron bash -c 'bundle check || bundle install'
 fi
 
+# ${BINARY} help "$1"
+
 if ls /usr/local/bundle/bin | grep -q "\b$1\b"; then
   set -- su-exec shipitron bundle exec "$@"
 
