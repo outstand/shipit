@@ -12,12 +12,14 @@ module Shipitron
     desc 'deploy <app>', 'Deploys the app'
     option :config_file, default: 'shipitron/config.yml'
     option :secrets_file, default: '~/.config/shipitron/secrets.yml'
+    option :global_config_file, default: '~/.config/shipitron/config.yml'
     option :debug, type: :boolean, default: false
     option :simulate, type: :boolean, default: false
     def deploy(app)
       setup(
         config_file: options[:config_file],
-        secrets_file: options[:secrets_file]
+        secrets_file: options[:secrets_file],
+        global_config_file: options[:global_config_file]
       )
 
       require 'shipitron/client/deploy_application'
@@ -149,7 +151,7 @@ module Shipitron
     end
 
     private
-    def setup(config_file:nil, secrets_file:nil)
+    def setup(config_file:nil, secrets_file:nil, global_config_file:nil)
       $stdout.sync = true
       if options[:debug] == false
         Logger.level = :info
@@ -157,6 +159,7 @@ module Shipitron
 
       Shipitron.config_file = config_file unless config_file.nil?
       Shipitron.secrets_file = secrets_file unless secrets_file.nil?
+      Shipitron.global_config_file = global_config_file unless global_config_file.nil?
     end
   end
 end

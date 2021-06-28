@@ -61,7 +61,7 @@ module Shipitron
 
           generate_deploy!
 
-          response = ecs_client(region: cluster.region).run_task(
+          response = ecs_client(region: @cluster.region).run_task(
             cluster: @cluster.name,
             task_definition: shipitron_task,
             overrides: {
@@ -111,7 +111,6 @@ module Shipitron
 
       def generate_deploy!
         Shipitron::Client::GenerateDeploy.call!(
-          s3_cache_bucket: context.s3_cache_bucket,
           server_deploy_args: server_deploy_args,
           deploy_id: deploy_id
         )

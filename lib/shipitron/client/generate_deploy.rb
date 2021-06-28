@@ -11,22 +11,31 @@ module Shipitron
 
       BUCKET_PREFIX = "deploys/"
 
-      required :s3_cache_bucket
       required :server_deploy_args
       required :deploy_id
 
       def call
         s3_key = "#{BUCKET_PREFIX}#{context.deploy_id}"
-        Logger.info "Uploading deploy config to s3://#{context.s3_cache_bucket}#{s3_key}"
+        Logger.info "Uploading deploy config to s3://#{deploy_bucket}#{s3_key}"
 
-        client = Aws::S3::Client.new(region: context.region)
+        client = Aws::S3::Client.new(region: deploy_bucket_region)
 
-        # TODO: Do something clever with aws-sdk-s3
+        client.put_object(
+          bucket: deploy_bucket,
+          key: s3_key,
+          body: context.server_deploy_args.to_json,
+          acl: "private"
+        )
+      end
 
-        # bucket.files.create(
-        #   key: s3_key,
-        #   body: context.server_deploy_args.to_json
-        # )
+      private
+
+      def deploy_bucket
+        Shipitron.config.deploy_bucket
+      end
+
+      def deploy_bucket_region
+        Shipitron.config.deploy_bucket_region
       end
     end
   end

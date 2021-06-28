@@ -40,14 +40,17 @@ module Shipitron
         context.ecs_task_def_dir = config.ecs_task_def_dir
         context.ecs_service_dir = config.ecs_service_dir
 
-        if Shipitron.config.aws_access_key_id? && Shipitron.config.aws_secret_access_key
+        if Shipitron.config.aws_access_key_id? && Shipitron.config.aws_secret_access_key?
           Aws.config.update(
-            region: "???", # TODO
             credentials: Aws::Credentials.new(
               Shipitron.config.aws_access_key_id,
               Shipitron.config.aws_secret_access_key
             )
           )
+        end
+
+        if !Shipitron.config.deploy_bucket? || !Shipitron.config.deploy_bucket_region?
+          raise "Missing required deploy bucket configuration!"
         end
       end
 

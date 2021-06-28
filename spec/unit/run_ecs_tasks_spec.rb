@@ -43,6 +43,7 @@ describe Shipitron::Client::RunEcsTasks do
     allow(east_ecs_client).to receive(:run_task).and_return(response)
     allow(west_ecs_client).to receive(:run_task).and_return(response)
     allow(action).to receive(:deploy_id) { deploy_id }
+    allow(action).to receive(:generate_deploy!)
   end
 
   it 'runs the task for the blue cluster' do
@@ -66,6 +67,7 @@ describe Shipitron::Client::RunEcsTasks do
         started_by: Shipitron::Client::STARTED_BY
       )
     )
+    expect(action).to have_received(:generate_deploy!)
   end
 
   it 'does not run the task for the green cluster' do
