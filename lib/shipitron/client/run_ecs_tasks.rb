@@ -55,7 +55,6 @@ module Shipitron
         begin
           if simulate?
             server_deploy_opts
-            generate_deploy!
             return
           end
 
