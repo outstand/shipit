@@ -54,7 +54,7 @@ module Shipitron
 
         begin
           if simulate?
-            server_deploy_args
+            server_deploy_opts
             generate_deploy!
             return
           end
@@ -111,7 +111,7 @@ module Shipitron
 
       def generate_deploy!
         Shipitron::Client::GenerateDeploy.call!(
-          server_deploy_args: server_deploy_args,
+          server_deploy_opts: server_deploy_opts,
           deploy_id: deploy_id
         )
       end
@@ -123,77 +123,73 @@ module Shipitron
         ]
       end
 
-      def server_deploy_args
-        return @_server_deploy_args if defined?(@_server_deploy_args)
+      def server_deploy_opts
+        return @_server_deploy_opts if defined?(@_server_deploy_opts)
 
-        @_server_deploy_args =
-          [
-            '--name', context.application,
-            '--repository', context.repository_url,
-            '--bucket', context.s3_cache_bucket,
-            '--build-cache-location', context.build_cache_location,
-            '--image-name', context.image_name,
-            '--named-tag', context.named_tag,
-            '--region', @cluster.region,
-          ].tap do |ary|
-            ary << '--clusters'
-            ary.concat(context.clusters.map(&:name))
+        @_server_deploy_opts =
+          {
+            name: context.application,
+            repository: context.repository_url,
+            bucket: context.s3_cache_bucket,
+            build_cache_location: context.build_cache_location,
+            image_name: context.image_name,
+            named_tag: context.named_tag,
+            region: @cluster.region
+          }.tap do |opts|
+            opts[:clusters] =
+              context.clusters.map(&:name)
 
-            ary << '--ecs-task-defs'
-            ary.concat(context.ecs_task_defs)
+            opts[:ecs_task_defs] =
+              context.ecs_task_defs
 
             unless context.ecs_services.empty?
-              ary << '--ecs-services'
-              ary.concat(context.ecs_services)
+              opts[:ecs_services] =
+                context.ecs_services
             end
 
             if context.registry != nil
-              ary.concat ['--registry', context.registry]
+              opts[:registry] = context.registry
             end
 
             if context.build_script != nil
-              ary.concat ['--build-script', context.build_script]
+              opts[:build_script] = context.build_script
             end
 
             if context.skip_push != nil
-              ary.concat ['--skip-push', context.skip_push.to_s]
+              opts[:skip_push] = context.skip_push.to_s
             end
 
             if !context.post_builds.empty?
-              ary << '--post-builds'
-              ary.concat(context.post_builds.map(&:to_s))
+              opts[:post_builds] =
+                context.post_builds.map(&:to_s)
             end
 
             if !context.ecs_task_def_templates.empty?
-              ary << '--ecs-task-def-templates'
-              ary.concat(
+              opts[:ecs_task_def_templates] =
                 context.ecs_task_def_templates.map do |name, data|
                   if context.ecs_task_defs.include?(name)
                     Base64.urlsafe_encode64(data)
                   end
                 end.compact
-              )
             end
 
             if !context.ecs_service_templates.empty?
-              ary << '--ecs-service-templates'
-              ary.concat(
+              opts[:ecs_service_templates] =
                 context.ecs_service_templates.map do |name, data|
                   if context.ecs_services.include?(name)
                     Base64.urlsafe_encode64(data)
                   end
                 end.compact
-              )
             end
 
             unless context.repository_branch.nil?
-              ary.concat ['--repository-branch', context.repository_branch]
+              opts[:repository_branch] = context.repository_branch
             end
 
             if simulate?
-              Logger.info "server_deploy args: #{ary.shelljoin}"
+              Logger.info "server_deploy deploy opts: #{opts.to_json}"
             else
-              Logger.debug "server_deploy args: #{ary.shelljoin}"
+              Logger.debug "server_deploy deploy opts: #{opts.to_json}"
             end
           end
       end

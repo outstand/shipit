@@ -8,6 +8,7 @@ module Shipitron
   CONFIG_FILE = 'shipitron/config.yml'.freeze
   SECRETS_FILE = '~/.config/shipitron/secrets.yml'.freeze
   GLOBAL_CONFIG_FILE = '~/.config/shipitron/config.yml'.freeze
+  DEPLOY_BUCKET_PREFIX = "deploys/"
 
   class << self
     def config_file

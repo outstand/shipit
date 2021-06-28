@@ -9,13 +9,11 @@ module Shipitron
     class GenerateDeploy
       include Metaractor
 
-      BUCKET_PREFIX = "deploys/"
-
-      required :server_deploy_args
+      required :server_deploy_opts
       required :deploy_id
 
       def call
-        s3_key = "#{BUCKET_PREFIX}#{context.deploy_id}"
+        s3_key = "#{Shipitron::BUCKET_PREFIX}#{context.deploy_id}"
         Logger.info "Uploading deploy config to s3://#{deploy_bucket}#{s3_key}"
 
         client = Aws::S3::Client.new(region: deploy_bucket_region)
@@ -23,7 +21,7 @@ module Shipitron
         client.put_object(
           bucket: deploy_bucket,
           key: s3_key,
-          body: context.server_deploy_args.to_json,
+          body: context.server_deploy_opts.to_json,
           acl: "private"
         )
       end
