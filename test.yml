@@ -2,4 +2,4 @@ version: '3.8'
 services:
   shipitron:
     volumes:
-      - "/var/lib/buildkite-agent/buildkite-agent:/usr/local/bin/buildkite-agent"
+      - "/var/lib/buildkite-agent/buildkite-agent:/usr/bin/buildkite-agent"
