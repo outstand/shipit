@@ -14,7 +14,7 @@ module Shipitron
 
       def call
         s3_key = "#{Shipitron::DEPLOY_BUCKET_PREFIX}#{context.deploy_id}"
-        Logger.info "Uploading deploy config to s3://#{deploy_bucket}#{s3_key}"
+        Logger.info "Uploading deploy config to s3://#{deploy_bucket}/#{s3_key}"
 
         client = Aws::S3::Client.new(region: deploy_bucket_region)
 
