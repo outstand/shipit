@@ -128,7 +128,6 @@ module Shipitron
 
         @_server_deploy_args =
           [
-            'server_deploy',
             '--name', context.application,
             '--repository', context.repository_url,
             '--bucket', context.s3_cache_bucket,
