@@ -13,6 +13,7 @@ RUN apk add --no-cache \
     su-exec \
     build-base \
     git \
+    git-lfs \
     openssh-client \
     perl \
     bash \
@@ -42,15 +43,21 @@ RUN cd /home/shipitron && \
       chmod a+x ~/.docker/cli-plugins/docker-buildx
 
 USER root
+ENV USE_BUNDLE_EXEC true
+ENV BUNDLE_GEMFILE /shipitron/Gemfile
+
+ENV BUNDLER_VERSION 2.2.21
+RUN gem install bundler -v ${BUNDLER_VERSION} -i /usr/local/lib/ruby/gems/$(ls /usr/local/lib/ruby/gems) --force
+
+WORKDIR /shipitron
+COPY Gemfile shipitron.gemspec /shipitron/
+COPY lib/shipitron/version.rb /shipitron/lib/shipitron/
+
+RUN bundle install
+
+COPY . /shipitron/
 
 WORKDIR /app
-
-ENV SHIPITRON_VERSION=1.3.2
-
-RUN gem install shipitron -v ${SHIPITRON_VERSION} && \
-    mkdir -p /home/shipitron/.ssh && \
-    chown shipitron:shipitron /home/shipitron/.ssh && \
-    chmod 700 /home/shipitron/.ssh
 
 COPY scripts/release-entrypoint.sh /docker-entrypoint.sh
 
