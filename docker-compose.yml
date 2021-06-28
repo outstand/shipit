@@ -3,9 +3,6 @@ services:
   shipitron:
     build: .
     image: outstand/shipitron:dev
-    environment:
-      FIXUID:
-      FIXGID:
     volumes:
       - bundler-data:/usr/local/bundle
       - ~/dev/app:/app # Set this to the application to be shipitron'd
@@ -19,8 +16,6 @@ services:
     command: rspec
     environment:
       FOG_LOCAL: 'true'
-      FIXUID:
-      FIXGID:
       BUILDKITE:
       BUILDKITE_BUILD_URL:
       BUILDKITE_JOB_ID:

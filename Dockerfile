@@ -1,5 +1,3 @@
-FROM outstand/fixuid as fixuid
-
 FROM ruby:2.7.3-alpine
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
@@ -23,13 +21,6 @@ RUN apk add --no-cache \
     wget \
     jq \
     cmake
-
-COPY --from=fixuid /usr/local/bin/fixuid /usr/local/bin/fixuid
-RUN chmod 4755 /usr/local/bin/fixuid && \
-      USER=shipitron && \
-      GROUP=shipitron && \
-      mkdir -p /etc/fixuid && \
-      printf "user: $USER\ngroup: $GROUP\n" > /etc/fixuid/config.yml
 
 ENV ECR_CREDENTIAL_HELPER_VERSION 0.5.0
 RUN cd /usr/local/bin && \
