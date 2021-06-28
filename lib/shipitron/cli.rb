@@ -61,25 +61,6 @@ module Shipitron
 
 
     desc 'server_deploy', 'Server-side component of deploy'
-    # option :name, required: true
-    # option :repository, required: true
-    # option :repository_branch, default: 'main'
-    # option :registry, default: nil
-    # option :bucket, required: true
-    # option :build_cache_location, default: 'tmp/build-cache.tar.gz'
-    # option :image_name, required: true
-    # option :named_tag, default: 'latest'
-    # option :skip_push, type: :boolean, default: false
-    # option :region, required: true
-    # option :clusters, type: :array, required: true
-    # option :ecs_task_defs, type: :array, required: true
-    # option :ecs_task_def_templates, type: :array, default: []
-    # option :ecs_services, type: :array, default: []
-    # option :ecs_service_templates, type: :array, default: []
-    # option :build_script, default: nil
-    # option :post_builds, type: :array
-    # option :secrets_file, default: '~/.config/shipitron/secrets.yml'
-    # option :debug, type: :boolean, default: false
     option :deploy_id, required: true
     def server_deploy
       setup
