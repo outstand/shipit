@@ -28,6 +28,7 @@ steps:
           image-repository: 786715713882.dkr.ecr.us-east-1.amazonaws.com/ci-images
           config:
             - docker-compose.yml
+            - test.yml
 
   - label: ":bundler: :rubygems:"
     key: bundle_install
@@ -50,6 +51,7 @@ steps:
           dependencies: false
           config:
             - docker-compose.yml
+            - test.yml
 
       - https://github.com/outstand/docker-cache-buildkite-plugin.git#${PLUGIN_DOCKER_CACHE_VERSION}:
           name: bundler-cache
@@ -81,6 +83,7 @@ steps:
           run: specs
           config:
             - docker-compose.yml
+            - test.yml
 
       - https://github.com/outstand/docker-cache-buildkite-plugin.git#${PLUGIN_DOCKER_CACHE_VERSION}:
           name: bundler-cache
