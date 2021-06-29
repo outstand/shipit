@@ -189,9 +189,9 @@ module Shipitron
             end
 
             if simulate?
-              Logger.info "server_deploy deploy opts: #{opts.to_json}"
+              Logger.info "server_deploy opts:\n#{JSON.pretty_generate(opts)}"
             else
-              Logger.debug "server_deploy deploy opts: #{opts.to_json}"
+              Logger.debug "server_deploy opts:\n#{JSON.pretty_generate(opts)}"
             end
           end
       end
