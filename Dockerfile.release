@@ -45,7 +45,7 @@ USER root
 
 WORKDIR /app
 
-ENV SHIPITRON_VERSION=1.4.0
+ENV SHIPITRON_VERSION=1.4.1
 
 RUN gem install shipitron -v ${SHIPITRON_VERSION} && \
     mkdir -p /home/shipitron/.ssh && \
