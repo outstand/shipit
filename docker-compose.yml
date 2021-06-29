@@ -41,6 +41,8 @@ services:
       FIXGID:
     volumes:
       - bundler-data:/usr/local/bundle
+      - shipitron-home:/home/shipitron
+      - .:/shipitron
       - ~/.gitconfig:/root/.gitconfig
       - ~/.gitconfig.user:/root/.gitconfig.user
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
