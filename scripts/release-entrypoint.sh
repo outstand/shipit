@@ -8,7 +8,7 @@ else
   BINARY=shipitron
 fi
 
-${BINARY} help "$1"
+# ${BINARY} help "$1"
 
 if ls /usr/local/bundle/bin | grep -q "\b$1\b"; then
   set -- su-exec shipitron bundle exec "$@"
