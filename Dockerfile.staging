@@ -52,6 +52,8 @@ RUN gem install bundler -v ${BUNDLER_VERSION} -i /usr/local/lib/ruby/gems/$(ls /
 WORKDIR /shipitron
 COPY Gemfile shipitron.gemspec /shipitron/
 COPY lib/shipitron/version.rb /shipitron/lib/shipitron/
+COPY exe/shipitron /shipitron/exe/shipitron
+COPY .git/ /shipitron/
 
 RUN bundle install
 
