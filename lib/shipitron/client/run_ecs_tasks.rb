@@ -29,6 +29,7 @@ module Shipitron
       optional :skip_push
       optional :post_builds, default: []
       optional :simulate
+      optional :simulate_store_deploy
       optional :repository_branch
       optional :registry
 
@@ -55,6 +56,8 @@ module Shipitron
         begin
           if simulate?
             server_deploy_opts
+            generate_deploy! if context.simulate_store_deploy == true
+
             return
           end
 
@@ -194,7 +197,7 @@ module Shipitron
       end
 
       def simulate?
-        context.simulate == true
+        context.simulate == true || context.simulate_store_deploy == true
       end
     end
   end

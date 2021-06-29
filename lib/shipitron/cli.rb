@@ -15,6 +15,7 @@ module Shipitron
     option :global_config_file, default: '~/.config/shipitron/config.yml'
     option :debug, type: :boolean, default: false
     option :simulate, type: :boolean, default: false
+    option :simulate_store_deploy, type: :boolean, default: false
     def deploy(app)
       setup(
         config_file: options[:config_file],
@@ -25,7 +26,8 @@ module Shipitron
       require 'shipitron/client/deploy_application'
       result = Client::DeployApplication.call(
         application: app,
-        simulate: options[:simulate]
+        simulate: options[:simulate],
+        simulate_store_deploy: options[:simulate_store_deploy]
       )
 
       if result.failure?
