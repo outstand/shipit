@@ -22,7 +22,7 @@ elif [ "$1" = 'rake' ] && [ "$2" = 'release' ]; then
   exec "$@"
 fi
 
-if [ -n "$USE_BUNDLE_EXEC" ]; then
+if [ -n "${USE_BUNDLE_EXEC:-}" ]; then
   BINARY="bundle exec shipitron"
 else
   BINARY=shipitron
