@@ -15,7 +15,7 @@ module Shipitron
     option :global_config_file, default: '~/.config/shipitron/config.yml'
     option :debug, type: :boolean, default: false
     option :simulate, type: :boolean, default: false
-    option :simulate_store_deploy, type: :boolean, default: false
+    option :simulate_store_deploy, type: :boolean, default: false, desc: "Simulate and store deploy config in S3"
     def deploy(app)
       setup(
         config_file: options[:config_file],
