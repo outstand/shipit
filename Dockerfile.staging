@@ -58,6 +58,9 @@ COPY .git/ /shipitron/
 RUN bundle install
 
 COPY . /shipitron/
+RUN mkdir -p /home/shipitron/.ssh && \
+    chown shipitron:shipitron /home/shipitron/.ssh && \
+    chmod 700 /home/shipitron/.ssh
 
 WORKDIR /app
 
