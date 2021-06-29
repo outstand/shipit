@@ -64,6 +64,7 @@ module Shipitron
 
     desc 'server_deploy', 'Server-side component of deploy'
     option :deploy_id, required: true
+    option :debug, type: :boolean, default: false
     def server_deploy
       setup
 
