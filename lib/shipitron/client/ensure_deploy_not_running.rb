@@ -22,7 +22,7 @@ module Shipitron
             begin
               response = ecs_client(region: cluster.region).list_tasks(
                 cluster: cluster.name,
-                started_by: Shipitron::Client::STARTED_BY,
+                started_by: Shipitron::Client.started_by,
                 max_results: 1,
                 desired_status: status
               )

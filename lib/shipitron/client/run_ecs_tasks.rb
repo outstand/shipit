@@ -72,7 +72,7 @@ module Shipitron
               ]
             },
             count: 1,
-            started_by: Shipitron::Client::STARTED_BY
+            started_by: Shipitron::Client.started_by
           )
 
           if !response.failures.empty?
