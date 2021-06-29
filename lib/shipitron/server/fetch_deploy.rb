@@ -1,3 +1,8 @@
+require 'shipitron'
+require 'shipitron/server'
+require 'aws-sdk-s3'
+require 'json'
+
 module Shipitron
   module Server
     class FetchDeploy

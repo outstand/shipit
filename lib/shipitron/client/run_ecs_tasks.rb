@@ -6,6 +6,7 @@ require 'shellwords'
 require 'base64'
 require 'tty-table'
 require 'pastel'
+require 'securerandom'
 
 module Shipitron
   module Client

@@ -1,7 +1,6 @@
 require 'shipitron'
 require 'shipitron/client'
 require 'shipitron/fetch_bucket'
-require 'securerandom'
 require 'aws-sdk-s3'
 require 'pastel'
 
