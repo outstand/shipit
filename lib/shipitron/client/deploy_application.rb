@@ -14,6 +14,7 @@ module Shipitron
 
       required :application
       optional :simulate
+      optional :simulate_store_deploy
 
       organize [
         LoadApplicationConfig,

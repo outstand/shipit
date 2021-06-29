@@ -1,24 +1,52 @@
 version: '3.8'
 services:
   shipitron:
+    build: .
     image: outstand/shipitron:dev
-    volumes:
-      - ~/dev/pages:/app # Set this to the application to be shipitron'd
-      - shipitron-home:/home/shipitron
-      - ~/.config/shipitron:/home/shipitron/.config/shipitron
-      - .:/shipitron
-  shipitron_specs:
-    image: outstand/shipitron:dev
-    command: rspec spec
     environment:
-      FOG_LOCAL: 'true'
-    working_dir: /shipitron
+      FIXUID:
+      FIXGID:
     volumes:
-      - fog:/fog
+      - bundler-data:/usr/local/bundle
+      - ~/dev/app:/app # Set this to the application to be shipitron'd
       - shipitron-home:/home/shipitron
       - ~/.config/shipitron:/home/shipitron/.config/shipitron
       - .:/shipitron
 
+  specs:
+    build: .
+    image: outstand/shipitron:dev
+    command: rspec
+    environment:
+      FOG_LOCAL: 'true'
+      FIXUID:
+      FIXGID:
+      BUILDKITE:
+      BUILDKITE_BUILD_URL:
+      BUILDKITE_JOB_ID:
+      BUILDKITE_AGENT_ACCESS_TOKEN:
+    working_dir: /shipitron
+    volumes:
+      - bundler-data:/usr/local/bundle
+      - fog:/fog
+      - shipitron-home:/home/shipitron
+      - .:/shipitron
+
+  release_gem:
+    image: outstand/shipitron:dev
+    command: rake release
+    working_dir: /shipitron
+    environment:
+      FIXUID:
+      FIXGID:
+    volumes:
+      - bundler-data:/usr/local/bundle
+      - ~/.gitconfig:/root/.gitconfig
+      - ~/.gitconfig.user:/root/.gitconfig.user
+      - ~/.ssh/id_rsa:/root/.ssh/id_rsa
+      - ~/.gem:/root/.gem
+
 volumes:
   fog:
   shipitron-home:
+  bundler-data:

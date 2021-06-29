@@ -1,0 +1,5 @@
+version: '3.8'
+services:
+  specs:
+    volumes:
+      - "/var/lib/buildkite-agent/buildkite-agent:/usr/local/bin/buildkite-agent"

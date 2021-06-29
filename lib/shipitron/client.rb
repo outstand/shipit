@@ -2,8 +2,8 @@ require 'shipitron'
 
 module Shipitron
   module Client
-    STARTED_BY = 'shipitron'
-    # Use this for testing.
-    # STARTED_BY = 'shipitron-dev'
+    def self.started_by
+      ENV.fetch("SHIPITRON_STARTED_BY", "shipitron")
+    end
   end
 end

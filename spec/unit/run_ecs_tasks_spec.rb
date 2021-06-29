@@ -32,6 +32,7 @@ describe Shipitron::Client::RunEcsTasks do
   let(:result) { action.context }
   let(:east_ecs_client) { double(:east_ecs_client) }
   let(:west_ecs_client) { double(:west_ecs_client) }
+  let(:deploy_id) { "TOTALLY-A-UUID" }
   let(:response) do
     Shipitron::Smash.new(failures: [])
   end
@@ -41,6 +42,8 @@ describe Shipitron::Client::RunEcsTasks do
     allow(action).to receive(:ecs_client).with(region: 'us-west-1').and_return west_ecs_client
     allow(east_ecs_client).to receive(:run_task).and_return(response)
     allow(west_ecs_client).to receive(:run_task).and_return(response)
+    allow(action).to receive(:deploy_id) { deploy_id }
+    allow(action).to receive(:generate_deploy!)
   end
 
   it 'runs the task for the blue cluster' do
@@ -49,10 +52,22 @@ describe Shipitron::Client::RunEcsTasks do
       hash_including(
         cluster: 'blue',
         task_definition: shipitron_task,
+        overrides: {
+          container_overrides: [
+            {
+              name: 'shipitron',
+              command: [
+                'server_deploy',
+                '--deploy-id', deploy_id
+              ]
+            }
+          ]
+        },
         count: 1,
-        started_by: Shipitron::Client::STARTED_BY
+        started_by: Shipitron::Client.started_by
       )
     )
+    expect(action).to have_received(:generate_deploy!)
   end
 
   it 'does not run the task for the green cluster' do

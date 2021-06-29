@@ -1,6 +1,7 @@
 require 'shipitron'
 require 'shipitron/client'
 require 'shipitron/post_build'
+require 'aws-sdk-core'
 
 module Shipitron
   module Client
@@ -38,6 +39,19 @@ module Shipitron
         context.ecs_services = config.ecs_services
         context.ecs_task_def_dir = config.ecs_task_def_dir
         context.ecs_service_dir = config.ecs_service_dir
+
+        if Shipitron.config.aws_access_key_id? && Shipitron.config.aws_secret_access_key?
+          Aws.config.update(
+            credentials: Aws::Credentials.new(
+              Shipitron.config.aws_access_key_id,
+              Shipitron.config.aws_secret_access_key
+            )
+          )
+        end
+
+        if !Shipitron.config.deploy_bucket? || !Shipitron.config.deploy_bucket_region?
+          raise "Missing required deploy bucket configuration!"
+        end
       end
 
       private

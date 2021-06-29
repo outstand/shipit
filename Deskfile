@@ -1,0 +1,15 @@
+function bundle() {
+  dev run --rm shipitron bundle "$@"
+}
+
+function shipitron() {
+  dev run --rm shipitron "$@"
+}
+
+function rspec() {
+  dev run --rm specs rspec "$@"
+}
+
+function release_gem() {
+  dev run --rm release_gem
+}

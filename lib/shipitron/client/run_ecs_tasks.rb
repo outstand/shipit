@@ -1,10 +1,12 @@
 require 'shipitron'
 require 'shipitron/client'
 require 'shipitron/ecs_client'
+require 'shipitron/client/generate_deploy'
 require 'shellwords'
 require 'base64'
 require 'tty-table'
 require 'pastel'
+require 'securerandom'
 
 module Shipitron
   module Client
@@ -21,22 +23,16 @@ module Shipitron
       required :image_name
       required :named_tag
       required :ecs_task_defs
-      optional :ecs_task_def_templates
-      optional :ecs_services
-      optional :ecs_service_templates
+      optional :ecs_task_def_templates, default: []
+      optional :ecs_services, default: []
+      optional :ecs_service_templates, default: []
       optional :build_script
       optional :skip_push
-      optional :post_builds
+      optional :post_builds, default: []
       optional :simulate
+      optional :simulate_store_deploy
       optional :repository_branch
       optional :registry
-
-      before do
-        context.post_builds ||= []
-        context.ecs_task_def_templates ||= {}
-        context.ecs_services ||= []
-        context.ecs_service_templates ||= {}
-      end
 
       def call
         Logger.info "Skipping ECS run_task calls due to --simulate" if simulate?
@@ -56,27 +52,31 @@ module Shipitron
           Logger.info line.chomp
         end
 
-        cluster = clusters.first
+        @cluster = clusters.first
 
         begin
           if simulate?
-            command_args(cluster)
+            server_deploy_opts
+            generate_deploy! if context.simulate_store_deploy == true
+
             return
           end
 
-          response = ecs_client(region: cluster.region).run_task(
-            cluster: cluster.name,
+          generate_deploy!
+
+          response = ecs_client(region: @cluster.region).run_task(
+            cluster: @cluster.name,
             task_definition: shipitron_task,
             overrides: {
               container_overrides: [
                 {
                   name: 'shipitron',
-                  command: command_args(cluster)
+                  command: command_args(deploy_id: deploy_id)
                 }
               ]
             },
             count: 1,
-            started_by: Shipitron::Client::STARTED_BY
+            started_by: Shipitron::Client.started_by
           )
 
           if !response.failures.empty?
@@ -106,81 +106,99 @@ module Shipitron
         context.shipitron_task
       end
 
-      def command_args(cluster)
+      def deploy_id
+        return @_deploy_id if defined?(@_deploy_id)
+
+        @_deploy_id = SecureRandom.uuid
+      end
+
+      def generate_deploy!
+        Shipitron::Client::GenerateDeploy.call!(
+          server_deploy_opts: server_deploy_opts,
+          deploy_id: deploy_id
+        )
+      end
+
+      def command_args(deploy_id:)
         [
           'server_deploy',
-          '--name', context.application,
-          '--repository', context.repository_url,
-          '--bucket', context.s3_cache_bucket,
-          '--build-cache-location', context.build_cache_location,
-          '--image-name', context.image_name,
-          '--named-tag', context.named_tag,
-          '--region', cluster.region,
-        ].tap do |ary|
-          ary << '--clusters'
-          ary.concat(context.clusters.map(&:name))
+          '--deploy-id', deploy_id
+        ]
+      end
 
-          ary << '--ecs-task-defs'
-          ary.concat(context.ecs_task_defs)
+      def server_deploy_opts
+        return @_server_deploy_opts if defined?(@_server_deploy_opts)
 
-          unless context.ecs_services.empty?
-            ary << '--ecs-services'
-            ary.concat(context.ecs_services)
+        @_server_deploy_opts =
+          {
+            name: context.application,
+            repository: context.repository_url,
+            bucket: context.s3_cache_bucket,
+            build_cache_location: context.build_cache_location,
+            image_name: context.image_name,
+            named_tag: context.named_tag,
+            region: @cluster.region
+          }.tap do |opts|
+            opts[:clusters] =
+              context.clusters.map(&:name)
+
+            opts[:ecs_task_defs] =
+              context.ecs_task_defs
+
+            unless context.ecs_services.empty?
+              opts[:ecs_services] =
+                context.ecs_services
+            end
+
+            if context.registry != nil
+              opts[:registry] = context.registry
+            end
+
+            if context.build_script != nil
+              opts[:build_script] = context.build_script
+            end
+
+            if context.skip_push != nil
+              opts[:skip_push] = context.skip_push.to_s
+            end
+
+            if !context.post_builds.empty?
+              opts[:post_builds] =
+                context.post_builds.map(&:to_s)
+            end
+
+            if !context.ecs_task_def_templates.empty?
+              opts[:ecs_task_def_templates] =
+                context.ecs_task_def_templates.map do |name, data|
+                  if context.ecs_task_defs.include?(name)
+                    Base64.urlsafe_encode64(data)
+                  end
+                end.compact
+            end
+
+            if !context.ecs_service_templates.empty?
+              opts[:ecs_service_templates] =
+                context.ecs_service_templates.map do |name, data|
+                  if context.ecs_services.include?(name)
+                    Base64.urlsafe_encode64(data)
+                  end
+                end.compact
+            end
+
+            unless context.repository_branch.nil?
+              opts[:repository_branch] = context.repository_branch
+            end
+
+            if simulate?
+              Logger.info "server_deploy opts:\n#{JSON.pretty_generate(opts)}"
+            else
+              Logger.debug "server_deploy opts:\n#{JSON.pretty_generate(opts)}"
+            end
           end
-
-          if context.registry != nil
-            ary.concat ['--registry', context.registry]
-          end
-
-          if context.build_script != nil
-            ary.concat ['--build-script', context.build_script]
-          end
-
-          if context.skip_push != nil
-            ary.concat ['--skip-push', context.skip_push.to_s]
-          end
-
-          if !context.post_builds.empty?
-            ary << '--post-builds'
-            ary.concat(context.post_builds.map(&:to_s))
-          end
-
-          if !context.ecs_task_def_templates.empty?
-            ary << '--ecs-task-def-templates'
-            ary.concat(
-              context.ecs_task_def_templates.map do |name, data|
-                if context.ecs_task_defs.include?(name)
-                  Base64.urlsafe_encode64(data)
-                end
-              end.compact
-            )
-          end
-
-          if !context.ecs_service_templates.empty?
-            ary << '--ecs-service-templates'
-            ary.concat(
-              context.ecs_service_templates.map do |name, data|
-                if context.ecs_services.include?(name)
-                  Base64.urlsafe_encode64(data)
-                end
-              end.compact
-            )
-          end
-
-          unless context.repository_branch.nil?
-            ary.concat ['--repository-branch', context.repository_branch]
-          end
-
-          if simulate?
-            Logger.info "server_deploy command: #{ary.shelljoin}"
-          else
-            Logger.debug "server_deploy command: #{ary.shelljoin}"
-          end
-        end
       end
 
       def simulate?
-        context.simulate == true
+        context.simulate == true || context.simulate_store_deploy == true
       end
     end
   end
