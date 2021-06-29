@@ -18,6 +18,8 @@ chown_dir /usr/local/bundle
 if [ "$1" = 'bundle' ]; then
   set -- su-exec shipitron "$@"
   exec "$@"
+elif [ "$1" = 'rake' ] && [ "$2" = 'release' ]; then
+  exec "$@"
 fi
 
 if [ -n "$USE_BUNDLE_EXEC" ]; then
