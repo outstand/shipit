@@ -1,5 +1,4 @@
 require 'shipitron'
-require 'shipitron/server'
 require 'aws-sdk-s3'
 require 'json'
 
@@ -16,17 +15,28 @@ module Shipitron
         s3_key = "#{Shipitron::DEPLOY_BUCKET_PREFIX}#{context.deploy_id}"
         Logger.info "Fetching deploy config from s3://#{deploy_bucket}/#{s3_key}"
 
-        client = Aws::S3::Client.new(region: deploy_bucket_region)
-
         response = client.get_object(
           bucket: deploy_bucket,
           key: s3_key
         )
 
-        context.deploy_options = JSON.parse(response.body.read)
+        context.deploy_options =
+          JSON.parse(response.body.read)
+          .transform_keys {|k| k.to_sym }
       end
 
       private
+
+      def client
+        Aws::S3::Client.new(
+          region: deploy_bucket_region,
+          **client_opts
+        )
+      end
+
+      def client_opts
+        {}
+      end
 
       def deploy_bucket
         context.deploy_bucket
