@@ -71,6 +71,7 @@ module Shipitron
         raise "Missing shipitron deploy bucket env vars!"
       end
 
+      require 'shipitron/server/fetch_deploy'
       deploy_options = Server::FetchDeploy.call!(
         deploy_bucket: ENV["SHIPITRON_DEPLOY_BUCKET"],
         deploy_bucket_region: ENV["SHIPITRON_DEPLOY_BUCKET_REGION"],
