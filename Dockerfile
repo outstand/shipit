@@ -1,6 +1,6 @@
 FROM outstand/fixuid as fixuid
 
-FROM ruby:2.7.3-alpine
+FROM ruby:2.7.4-alpine
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
 RUN addgroup -S shipitron && \
