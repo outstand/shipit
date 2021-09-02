@@ -2,7 +2,7 @@ FROM ruby:2.7.4-alpine
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
 RUN addgroup -S -g 1000 shipitron && \
-    adduser -S -G -u 1000 shipitron shipitron && \
+    adduser -S -u 1000 -G shipitron shipitron && \
     addgroup -g 1101 docker && \
     addgroup shipitron docker
 
