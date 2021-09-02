@@ -1,8 +1,8 @@
 FROM ruby:2.7.4-alpine
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
-RUN addgroup -S -u 1000 shipitron && \
-    adduser -S -G -g 1000 shipitron shipitron && \
+RUN addgroup -S -g 1000 shipitron && \
+    adduser -S -G -u 1000 shipitron shipitron && \
     addgroup -g 1101 docker && \
     addgroup shipitron docker
 
