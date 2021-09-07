@@ -1,8 +1,8 @@
-FROM ruby:2.7.4-alpine
+FROM ruby:2.7.4-alpine3.13
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
-RUN addgroup -S shipitron && \
-    adduser -S -G shipitron shipitron && \
+RUN addgroup -S -g 1000 shipitron && \
+    adduser -S -u 1000 -G shipitron shipitron && \
     addgroup -g 1101 docker && \
     addgroup shipitron docker
 
@@ -46,7 +46,7 @@ USER root
 ENV USE_BUNDLE_EXEC true
 ENV BUNDLE_GEMFILE /shipitron/Gemfile
 
-ENV BUNDLER_VERSION 2.2.21
+ENV BUNDLER_VERSION 2.2.27
 RUN gem install bundler -v ${BUNDLER_VERSION} -i /usr/local/lib/ruby/gems/$(ls /usr/local/lib/ruby/gems) --force
 
 WORKDIR /shipitron

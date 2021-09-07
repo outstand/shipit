@@ -1,6 +1,6 @@
 FROM outstand/fixuid as fixuid
 
-FROM ruby:2.7.4-alpine
+FROM ruby:2.7.4-alpine3.13
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
 RUN addgroup -S shipitron && \
@@ -55,7 +55,7 @@ USER root
 ENV USE_BUNDLE_EXEC true
 ENV BUNDLE_GEMFILE /shipitron/Gemfile
 
-ENV BUNDLER_VERSION 2.2.21
+ENV BUNDLER_VERSION 2.2.27
 RUN gem install bundler -v ${BUNDLER_VERSION} -i /usr/local/lib/ruby/gems/$(ls /usr/local/lib/ruby/gems) --force
 
 WORKDIR /app
