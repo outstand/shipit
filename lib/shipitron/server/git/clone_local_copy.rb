@@ -19,7 +19,7 @@ module Shipitron
         def call
           Logger.info "Using this branch: #{repository_branch}"
           FileUtils.cd('/home/shipitron') do
-            `git clone git-cache #{Shellwords.escape application} --recursive --branch #{Shellwords.escape repository_branch}`
+            `/usr/bin/git clone git-cache #{Shellwords.escape application} --recursive --branch #{Shellwords.escape repository_branch}`
           end
 
           Logger.info 'Using this git commit:'

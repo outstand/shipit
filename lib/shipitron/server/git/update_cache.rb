@@ -20,13 +20,13 @@ module Shipitron
           if !Pathname.new('/home/shipitron/git-cache/objects').directory?
             Logger.info 'Cloning the git repository'
             FileUtils.cd('/home/shipitron') do
-              `git clone --bare #{Shellwords.escape repository_url} git-cache`
+              `/usr/bin/git clone --bare #{Shellwords.escape repository_url} git-cache`
             end
           else
             Logger.info 'Fetching new git commits'
             FileUtils.cd('/home/shipitron/git-cache') do
-              `git gc --auto`
-              `git fetch -f #{Shellwords.escape repository_url} #{Shellwords.escape repository_branch}:#{Shellwords.escape repository_branch}`
+              `/usr/bin/git gc --auto`
+              `/usr/bin/git fetch -f #{Shellwords.escape repository_url} #{Shellwords.escape repository_branch}:#{Shellwords.escape repository_branch}`
             end
           end
         end
