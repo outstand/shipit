@@ -1,9 +1,6 @@
 require 'shipitron'
 require 'shipitron/server/git/configure'
-require 'shipitron/server/git/download_cache'
-require 'shipitron/server/git/update_cache'
-require 'shipitron/server/git/upload_cache'
-require 'shipitron/server/git/clone_local_copy'
+require 'shipitron/server/git/clone'
 
 module Shipitron
   module Server
@@ -14,15 +11,11 @@ module Shipitron
 
         required :application
         required :repository_url
-        required :s3_cache_bucket
         optional :repository_branch
 
         organize [
           Configure,
-          DownloadCache,
-          UpdateCache,
-          UploadCache,
-          CloneLocalCopy
+          Clone
         ]
       end
     end

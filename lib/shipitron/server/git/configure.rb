@@ -10,7 +10,6 @@ module Shipitron
 
         required :application
         required :repository_url
-        required :s3_cache_bucket
 
         before do
           configure_consul_client!

@@ -5,7 +5,7 @@ require 'shipitron/git_info'
 module Shipitron
   module Server
     module Git
-      class CloneLocalCopy
+      class Clone
         include Metaractor
 
         required :application
@@ -19,7 +19,7 @@ module Shipitron
         def call
           Logger.info "Using this branch: #{repository_branch}"
           FileUtils.cd('/home/shipitron') do
-            `git clone git-cache #{Shellwords.escape application} --recursive --branch #{Shellwords.escape repository_branch}`
+            `git clone #{Shellwords.escape repository_url} --recursive --branch #{Shellwords.escape repository_branch} #{Shellwords.escape application}`
           end
 
           Logger.info 'Using this git commit:'
