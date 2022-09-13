@@ -71,7 +71,7 @@ If a containerized tool requires access to AWS resources, be sure to pass the `A
 - `desk go`
 - `dev build --pull shipitron`
 - `rspec specs` to run specs
-- Set the application path in the volumes section in `docker-compose.yml`.
+- Set the application path in the volumes section in `compose.yml`.
 - `shipitron deploy <app>` to run client side
 - `shipitron deploy <app> --simulate-store-deploy` to save the deploy options to S3 and generate deploy id
 - `dev run --rm -v /bin/docker:/bin/docker -v /var/run/docker.sock:/var/run/docker.sock shipitron server_deploy --deploy-id <deploy_id>` to run server side

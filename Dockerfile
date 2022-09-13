@@ -31,12 +31,12 @@ RUN chmod 4755 /usr/local/bin/fixuid && \
       mkdir -p /etc/fixuid && \
       printf "user: $USER\ngroup: $GROUP\n" > /etc/fixuid/config.yml
 
-ENV ECR_CREDENTIAL_HELPER_VERSION 0.5.0
+ENV ECR_CREDENTIAL_HELPER_VERSION 0.6.0
 RUN cd /usr/local/bin && \
       wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIAL_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login && \
       chmod +x docker-credential-ecr-login
 
-ENV BUILDKIT_VERSION v0.8.3
+ENV BUILDKIT_VERSION v0.10.4
 RUN cd /usr/local/bin && \
       wget -nv https://github.com/moby/buildkit/releases/download/${BUILDKIT_VERSION}/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz && \
       tar --strip-components=1 -zxvf buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz bin/buildctl && \
@@ -44,7 +44,7 @@ RUN cd /usr/local/bin && \
       rm -f buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz
 
 USER shipitron
-ENV BUILDX_VERSION v0.5.1
+ENV BUILDX_VERSION v0.9.1
 RUN cd /home/shipitron && \
       wget -nv https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.linux-amd64 && \
       mkdir -p ~/.docker/cli-plugins && \
@@ -55,7 +55,7 @@ USER root
 ENV USE_BUNDLE_EXEC true
 ENV BUNDLE_GEMFILE /shipitron/Gemfile
 
-ENV BUNDLER_VERSION 2.2.27
+ENV BUNDLER_VERSION 2.3.22
 RUN gem install bundler -v ${BUNDLER_VERSION} -i /usr/local/lib/ruby/gems/$(ls /usr/local/lib/ruby/gems) --force
 
 WORKDIR /app
