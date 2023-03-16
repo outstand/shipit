@@ -27,7 +27,7 @@ steps:
           build: specs
           image-repository: 786715713882.dkr.ecr.us-east-1.amazonaws.com/ci-images
           config:
-            - docker-compose.yml
+            - compose.yml
             - test.yml
 
   - label: ":bundler: :rubygems:"
@@ -50,7 +50,7 @@ steps:
           run: specs
           dependencies: false
           config:
-            - docker-compose.yml
+            - compose.yml
             - test.yml
 
       - https://github.com/outstand/docker-cache-buildkite-plugin.git#${PLUGIN_DOCKER_CACHE_VERSION}:
@@ -82,7 +82,7 @@ steps:
       - https://github.com/outstand/docker-compose-buildkite-plugin.git#${PLUGIN_DOCKER_COMPOSE_VERSION}:
           run: specs
           config:
-            - docker-compose.yml
+            - compose.yml
             - test.yml
 
       - https://github.com/outstand/docker-cache-buildkite-plugin.git#${PLUGIN_DOCKER_CACHE_VERSION}:
