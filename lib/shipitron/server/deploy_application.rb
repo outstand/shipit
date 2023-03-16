@@ -35,14 +35,6 @@ module Shipitron
       optional :registry
 
       around do |interactor|
-        if ENV['CONSUL_HOST'].nil?
-          fail_with_error!(message: 'Environment variable CONSUL_HOST required')
-        end
-
-        Diplomat.configure do |config|
-          config.url = "http://#{ENV['CONSUL_HOST']}:8500"
-        end
-
         begin
           with_lock(key: "shipitron/#{application}/deploy_lock") do
             interactor.call

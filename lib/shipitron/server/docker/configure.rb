@@ -12,10 +12,6 @@ module Shipitron
         required :application
         optional :registry
 
-        before do
-          configure_consul_client!
-        end
-
         def call
           username = fetch_scoped_key('docker_user')
           password = fetch_scoped_key('docker_password')
@@ -56,6 +52,7 @@ module Shipitron
         end
 
         private
+
         def application
           context.application
         end

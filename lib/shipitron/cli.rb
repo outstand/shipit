@@ -145,7 +145,8 @@ module Shipitron
     end
 
     private
-    def setup(config_file:nil, secrets_file:nil, global_config_file:nil)
+
+    def setup(config_file: nil, secrets_file: nil, global_config_file: nil)
       $stdout.sync = true
       if options[:debug] == false
         Logger.level = :info
@@ -154,6 +155,17 @@ module Shipitron
       Shipitron.config_file = config_file unless config_file.nil?
       Shipitron.secrets_file = secrets_file unless secrets_file.nil?
       Shipitron.global_config_file = global_config_file unless global_config_file.nil?
+
+      if present?(ENV["CONSUL_HTTP_TOKEN_FILE"]) &&
+          !present?(ENV["CONSUL_HTTP_TOKEN"])
+        ENV["CONSUL_HTTP_TOKEN"] = ENV["CONSUL_HTTP_TOKEN_FILE"]
+      end
+    end
+
+    def present?(val)
+      !val.nil? && (
+        !val.respond_to?(:empty?) || !val.empty?
+      )
     end
   end
 end

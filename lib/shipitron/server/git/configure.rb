@@ -11,10 +11,6 @@ module Shipitron
         required :application
         required :repository_url
 
-        before do
-          configure_consul_client!
-        end
-
         def call
           host_key = begin
                        key = fetch_key(key: "shipitron/#{application}/git_host_key")
@@ -37,6 +33,7 @@ module Shipitron
         end
 
         private
+
         def application
           context.application
         end
