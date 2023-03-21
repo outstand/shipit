@@ -3,3 +3,28 @@ services:
   specs:
     volumes:
       - "/var/lib/buildkite-agent/buildkite-agent:/usr/local/bin/buildkite-agent"
+
+  s3:
+    environment:
+      S3BACKEND: mem
+
+  tls-proxy:
+    image: caddy:2.5.2-alpine
+    restart: unless-stopped
+    ports:
+      - "80"
+      - "443"
+    networks:
+      default:
+        aliases:
+          - s3.test
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile
+      - tls-proxy-data:/data
+      - tls-proxy-config:/config
+    depends_on:
+      - s3
+
+volumes:
+  tls-proxy-data:
+  tls-proxy-config:

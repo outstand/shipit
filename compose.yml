@@ -12,6 +12,24 @@ services:
       - ~/.config/shipitron:/home/shipitron/.config/shipitron
       - .:/shipitron
 
+  s3:
+    image: 786715713882.dkr.ecr.us-east-1.amazonaws.com/cloudserver:latest
+    environment:
+      REMOTE_MANAGEMENT_DISABLE: 1
+      ENDPOINT: s3.test
+      LISTEN_ADDR: 0.0.0.0
+      VIRTUAL_HOST: .s3.test
+      VIRTUAL_PORT: 8000
+      HTTPS_METHOD: noredirect
+      SERVICE_8000_NAME: s3
+    extra_hosts:
+      - "s3.test:127.0.0.1"
+    ports:
+      - '8000'
+    volumes:
+      - s3-data:/usr/src/app/localData
+      - s3-metadata:/usr/src/app/localMetadata
+
   specs:
     build: .
     image: outstand/shipitron:dev
@@ -48,3 +66,5 @@ services:
 volumes:
   shipitron-home:
   bundler-data:
+  s3-data:
+  s3-metadata:
