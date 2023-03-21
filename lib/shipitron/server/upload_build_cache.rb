@@ -1,5 +1,4 @@
 require 'shipitron'
-require 'shipitron/fetch_bucket'
 
 module Shipitron
   module Server

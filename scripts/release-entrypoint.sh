@@ -16,7 +16,7 @@ if [ "$1" = 'console' ]; then
 elif ls /usr/local/bundle/bin | grep -q "\b$1\b"; then
   set -- su-exec shipitron bundle exec "$@"
 
-elif ${BINARY} help "$1" 2>&1 | grep -q "shipitron $1"; then
+elif su-exec shipitron ${BINARY} help "$1" 2>&1 | grep -q "shipitron $1"; then
   set -- su-exec shipitron ${BINARY} "$@"
 fi
 

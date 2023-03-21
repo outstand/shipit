@@ -24,7 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'hashie', '~> 4.1'
   spec.add_runtime_dependency 'metaractor', '~> 3.1'
   spec.add_runtime_dependency 'diplomat', '~> 2.0'
-  spec.add_runtime_dependency 'fog-aws', '~> 3.6'
   spec.add_runtime_dependency 'mime-types', '~> 3.1'
   spec.add_runtime_dependency 'minitar', '~> 0.6'
   spec.add_runtime_dependency 'mustache', '~> 1.0'
@@ -33,11 +32,10 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'pastel', '~> 0.7'
   spec.add_runtime_dependency 'excon', '~> 0.82'
   spec.add_runtime_dependency 'rugged', '~> 1.0'
+  spec.add_runtime_dependency 'nokogiri', '>= 1.14.2'
 
   spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "pry-byebug", "~> 3.9"
   spec.add_development_dependency "rspec", "~> 3.10"
   spec.add_development_dependency "fivemat", "~> 1.3"
-  spec.add_development_dependency "fog-local", "~> 0.4"
 end

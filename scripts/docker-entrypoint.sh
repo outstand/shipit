@@ -43,10 +43,6 @@ if ls /usr/local/bundle/bin | grep -q "\b$1\b"; then
 
 elif ${BINARY} help "$1" 2>&1 | grep -q "shipitron $1"; then
   set -- su-exec shipitron ${BINARY} "$@"
-
-  if [ -n "${FOG_LOCAL:-}" ]; then
-    chown -R shipitron:shipitron /fog
-  fi
 fi
 
 exec "$@"

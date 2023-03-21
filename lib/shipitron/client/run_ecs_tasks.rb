@@ -1,6 +1,7 @@
 require 'shipitron'
 require 'shipitron/client'
 require 'shipitron/ecs_client'
+require 'shipitron/ssm_client'
 require 'shipitron/client/generate_deploy'
 require 'shellwords'
 require 'base64'
@@ -13,6 +14,7 @@ module Shipitron
     class RunEcsTasks
       include Metaractor
       include EcsClient
+      include SsmClient
 
       required :application
       required :clusters
@@ -216,7 +218,8 @@ module Shipitron
 
       def awsvpc_private_subnet_ids
         resp =
-          ssm_client.get_parameter(
+          ssm_client(region: @cluster.region)
+          .get_parameter(
             name: "/console/#{@cluster.name}/private_subnet_ids"
           )
         JSON.parse(resp.parameter.value)
@@ -224,17 +227,11 @@ module Shipitron
 
       def awsvpc_security_group_ids
         resp =
-          ssm_client.get_parameter(
+          ssm_client(region: @cluster.region)
+          .get_parameter(
             name: "/console/#{@cluster.name}/client_nodes_security_group_ids"
           )
         JSON.parse(resp.parameter.value)
-      end
-
-      def ssm_client
-        return @ssm_client if defined?(@ssm_client)
-
-        @ssm_client =
-          Aws::SSM::Client.new
       end
     end
   end

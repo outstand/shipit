@@ -17,7 +17,6 @@ services:
     image: outstand/shipitron:dev
     command: rspec
     environment:
-      FOG_LOCAL: 'true'
       FIXUID:
       FIXGID:
       BUILDKITE:
@@ -27,7 +26,6 @@ services:
     working_dir: /shipitron
     volumes:
       - bundler-data:/usr/local/bundle
-      - fog:/fog
       - shipitron-home:/home/shipitron
       - .:/shipitron
 
@@ -48,6 +46,5 @@ services:
       - ~/.gem:/root/.gem
 
 volumes:
-  fog:
   shipitron-home:
   bundler-data:
