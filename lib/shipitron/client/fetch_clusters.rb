@@ -31,6 +31,7 @@ module Shipitron
       end
 
       private
+
       def dns_resources
         Resolv::DNS.open do |dns|
           dns.getresources(

@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'thor', '~> 1.0'
   spec.add_runtime_dependency 'aws-sdk-ecs', '~> 1.8'
   spec.add_runtime_dependency 'aws-sdk-s3', '~> 1.96'
+  spec.add_runtime_dependency 'aws-sdk-ssm', '~> 1.96'
   spec.add_runtime_dependency 'hashie', '~> 4.1'
   spec.add_runtime_dependency 'metaractor', '~> 3.1'
   spec.add_runtime_dependency 'diplomat', '~> 2.0'

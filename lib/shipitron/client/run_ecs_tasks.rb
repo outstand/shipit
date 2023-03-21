@@ -64,22 +64,35 @@ module Shipitron
 
           generate_deploy!
 
-          response = ecs_client(region: @cluster.region).run_task(
+          overrides = {
+            container_overrides: [
+              {
+                name: "shipitron",
+                command: command_args(deploy_id:)
+              }
+            ]
+          }
+
+          run_task_args = {
             cluster: @cluster.name,
             task_definition: shipitron_task,
-            overrides: {
-              container_overrides: [
-                {
-                  name: 'shipitron',
-                  command: command_args(deploy_id: deploy_id)
-                }
-              ]
+            network_configuration: {
+              awsvpc_configuration: {
+                subnets: awsvpc_private_subnet_ids,
+                security_groups: awsvpc_security_group_ids
+              }
             },
+            overrides:,
+            propagate_tags: "TASK_DEFINITION",
             count: 1,
             started_by: Shipitron::Client.started_by
-          )
+          }
 
-          if !response.failures.empty?
+          response =
+            ecs_client(region: @cluster.region)
+            .run_task(run_task_args)
+
+          unless response.failures.empty?
             response.failures.each do |failure|
               fail_with_error! message: "ECS run_task failure: #{failure.arn}: #{failure.reason}"
             end
@@ -199,6 +212,29 @@ module Shipitron
 
       def simulate?
         context.simulate == true || context.simulate_store_deploy == true
+      end
+
+      def awsvpc_private_subnet_ids
+        resp =
+          ssm_client.get_parameter(
+            name: "/console/#{@cluster.name}/private_subnet_ids"
+          )
+        JSON.parse(resp.parameter.value)
+      end
+
+      def awsvpc_security_group_ids
+        resp =
+          ssm_client.get_parameter(
+            name: "/console/#{@cluster.name}/client_nodes_security_group_ids"
+          )
+        JSON.parse(resp.parameter.value)
+      end
+
+      def ssm_client
+        return @ssm_client if defined?(@ssm_client)
+
+        @ssm_client =
+          Aws::SSM::Client.new
       end
     end
   end
