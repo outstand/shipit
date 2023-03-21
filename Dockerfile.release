@@ -1,9 +1,11 @@
 FROM ruby:3.2.1-alpine3.17
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
+ARG docker_socket_group=900
+
 RUN addgroup -S -g 1000 shipitron && \
     adduser -S -u 1000 -G shipitron shipitron && \
-    addgroup -g 1101 docker && \
+    addgroup -g ${docker_socket_group} docker && \
     addgroup shipitron docker
 
 RUN apk add --no-cache \
@@ -20,7 +22,8 @@ RUN apk add --no-cache \
     curl \
     wget \
     jq \
-    cmake
+    cmake \
+    docker-cli
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -55,7 +58,7 @@ RUN gem install shipitron -v ${SHIPITRON_VERSION} && \
     chown shipitron:shipitron /home/shipitron/.ssh && \
     chmod 700 /home/shipitron/.ssh
 
-COPY scripts/release-entrypoint.sh /docker-entrypoint.sh
+COPY docker/release-entrypoint.sh /docker-entrypoint.sh
 
 ENTRYPOINT ["/sbin/tini", "-g", "--", "/docker-entrypoint.sh"]
 CMD ["help"]

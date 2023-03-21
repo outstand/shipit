@@ -17,10 +17,11 @@ module Shipitron
         Logger.info "Downloading build cache from bucket #{s3_cache_bucket}"
 
         begin
-          s3_client.head_object(
-            bucket: s3_cache_bucket,
-            key: "#{application}.build-cache.archive"
-          )
+          s3_client(region: context.region)
+            .head_object(
+              bucket: s3_cache_bucket,
+              key: "#{application}.build-cache.archive"
+            )
         rescue Aws::S3::Errors::NoSuchKey
           Logger.warn 'Build cache not found.'
           return

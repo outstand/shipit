@@ -3,9 +3,11 @@ FROM outstand/fixuid as fixuid
 FROM ruby:3.2.1-alpine3.17
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
+ARG docker_socket_group=900
+
 RUN addgroup -S shipitron && \
     adduser -S -G shipitron shipitron && \
-    addgroup -g 1101 docker && \
+    addgroup -g ${docker_socket_group} docker && \
     addgroup shipitron docker
 
 RUN apk add --no-cache \
@@ -22,7 +24,8 @@ RUN apk add --no-cache \
     curl \
     wget \
     jq \
-    cmake
+    cmake \
+    docker-cli
 
 COPY --from=fixuid /usr/local/bin/fixuid /usr/local/bin/fixuid
 RUN chmod 4755 /usr/local/bin/fixuid && \
@@ -68,7 +71,7 @@ RUN mkdir -p /home/shipitron/.ssh && \
     chown shipitron:shipitron /home/shipitron/.ssh && \
     chmod 700 /home/shipitron/.ssh
 
-COPY scripts/docker-entrypoint.sh /docker-entrypoint.sh
+COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
 
 ENTRYPOINT ["/sbin/tini", "-g", "--", "/docker-entrypoint.sh"]
 CMD ["help"]
