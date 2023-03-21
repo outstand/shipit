@@ -158,7 +158,7 @@ module Shipitron
 
       if present?(ENV["CONSUL_HTTP_TOKEN_FILE"]) &&
           !present?(ENV["CONSUL_HTTP_TOKEN"])
-        ENV["CONSUL_HTTP_TOKEN"] = ENV["CONSUL_HTTP_TOKEN_FILE"]
+        ENV["CONSUL_HTTP_TOKEN"] = Pathname.new(ENV["CONSUL_HTTP_TOKEN_FILE"]).read
       end
     end
 
