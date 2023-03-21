@@ -1,4 +1,4 @@
-FROM ruby:2.7.4-alpine3.13
+FROM ruby:3.2.1-alpine3.17
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
 RUN addgroup -S -g 1000 shipitron && \
@@ -22,12 +22,14 @@ RUN apk add --no-cache \
     jq \
     cmake
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 ENV ECR_CREDENTIAL_HELPER_VERSION 0.6.0
 RUN cd /usr/local/bin && \
       wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIAL_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login && \
       chmod +x docker-credential-ecr-login
 
-ENV BUILDKIT_VERSION v0.10.4
+ENV BUILDKIT_VERSION v0.11.4
 RUN cd /usr/local/bin && \
       wget -nv https://github.com/moby/buildkit/releases/download/${BUILDKIT_VERSION}/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz && \
       tar --strip-components=1 -zxvf buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz bin/buildctl && \
@@ -35,7 +37,7 @@ RUN cd /usr/local/bin && \
       rm -f buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz
 
 USER shipitron
-ENV BUILDX_VERSION v0.9.1
+ENV BUILDX_VERSION v0.10.4
 RUN cd /home/shipitron && \
       wget -nv https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.linux-amd64 && \
       mkdir -p ~/.docker/cli-plugins && \
@@ -50,20 +52,24 @@ ENV BUNDLER_VERSION 2.4.8
 RUN gem install bundler -v ${BUNDLER_VERSION} -i /usr/local/lib/ruby/gems/$(ls /usr/local/lib/ruby/gems) --force
 
 WORKDIR /shipitron
-COPY Gemfile shipitron.gemspec /shipitron/
-COPY lib/shipitron/version.rb /shipitron/lib/shipitron/
-COPY exe/shipitron /shipitron/exe/shipitron
-COPY .git/ /shipitron/
+RUN chown -R shipitron:shipitron /shipitron /usr/local/bundle
 
+COPY --chown=shipitron:shipitron Gemfile shipitron.gemspec /shipitron/
+COPY --chown=shipitron:shipitron lib/shipitron/version.rb /shipitron/lib/shipitron/
+COPY --chown=shipitron:shipitron exe/shipitron /shipitron/exe/shipitron
+COPY --chown=shipitron:shipitron .git/ /shipitron/
+
+USER shipitron
 RUN bundle install
 
-COPY . /shipitron/
+COPY --chown=shipitron:shipitron . /shipitron/
 RUN mkdir -p /home/shipitron/.ssh && \
     chown shipitron:shipitron /home/shipitron/.ssh && \
     chmod 700 /home/shipitron/.ssh
 
 WORKDIR /app
 
+USER root
 COPY scripts/release-entrypoint.sh /docker-entrypoint.sh
 
 ENTRYPOINT ["/sbin/tini", "-g", "--", "/docker-entrypoint.sh"]

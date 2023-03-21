@@ -1,4 +1,4 @@
-FROM ruby:2.7.4-alpine3.13
+FROM ruby:3.2.1-alpine3.17
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
 RUN addgroup -S -g 1000 shipitron && \
@@ -13,6 +13,7 @@ RUN apk add --no-cache \
     su-exec \
     build-base \
     git \
+    git-lfs \
     openssh-client \
     perl \
     bash \
@@ -28,32 +29,15 @@ RUN cd /usr/local/bin && \
       wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIAL_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login && \
       chmod +x docker-credential-ecr-login
 
-ENV BUILDKIT_VERSION v0.10.4
+ENV BUILDKIT_VERSION v0.11.4
 RUN cd /usr/local/bin && \
       wget -nv https://github.com/moby/buildkit/releases/download/${BUILDKIT_VERSION}/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz && \
       tar --strip-components=1 -zxvf buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz bin/buildctl && \
       chmod +x buildctl && \
       rm -f buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz
 
-ENV GIT_LFS_VERSION 3.2.0
-ENV GIT_LFS_HASH d6730b8036d9d99f872752489a331995930fec17b61c87c7af1945c65a482a50
-RUN set -eux; \
-      \
-      mkdir -p /tmp/build; \
-	    cd /tmp/build; \
-      \
-      curl -sSL -o git-lfs.tgz https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/git-lfs-linux-amd64-v${GIT_LFS_VERSION}.tar.gz; \
-      echo "${GIT_LFS_HASH}  git-lfs.tgz" | sha256sum -c -; \
-      tar -xzf git-lfs.tgz --strip-components=1; \
-      cp git-lfs /usr/local/bin/; \
-      \
-      cd; \
-      rm -rf /tmp/build; \
-      \
-      git lfs install --system
-
 USER shipitron
-ENV BUILDX_VERSION v0.9.1
+ENV BUILDX_VERSION v0.10.4
 RUN cd /home/shipitron && \
       wget -nv https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.linux-amd64 && \
       mkdir -p ~/.docker/cli-plugins && \

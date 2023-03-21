@@ -8,9 +8,12 @@ else
   BINARY=shipitron
 fi
 
-# ${BINARY} help "$1"
+# su-exec shipitron ${BINARY} help "$1"
 
-if ls /usr/local/bundle/bin | grep -q "\b$1\b"; then
+if [ "$1" = 'console' ]; then
+  shift
+  set -- su-exec shipitron bash "$@"
+elif ls /usr/local/bundle/bin | grep -q "\b$1\b"; then
   set -- su-exec shipitron bundle exec "$@"
 
 elif ${BINARY} help "$1" 2>&1 | grep -q "shipitron $1"; then
