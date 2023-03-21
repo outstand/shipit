@@ -1,6 +1,6 @@
 FROM outstand/fixuid as fixuid
 
-FROM ruby:2.7.4-alpine3.13
+FROM ruby:3.2.1-alpine3.17
 LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
 
 RUN addgroup -S shipitron && \
@@ -36,7 +36,7 @@ RUN cd /usr/local/bin && \
       wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIAL_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login && \
       chmod +x docker-credential-ecr-login
 
-ENV BUILDKIT_VERSION v0.10.4
+ENV BUILDKIT_VERSION v0.11.4
 RUN cd /usr/local/bin && \
       wget -nv https://github.com/moby/buildkit/releases/download/${BUILDKIT_VERSION}/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz && \
       tar --strip-components=1 -zxvf buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz bin/buildctl && \
@@ -44,7 +44,7 @@ RUN cd /usr/local/bin && \
       rm -f buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz
 
 USER shipitron
-ENV BUILDX_VERSION v0.9.1
+ENV BUILDX_VERSION v0.10.4
 RUN cd /home/shipitron && \
       wget -nv https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.linux-amd64 && \
       mkdir -p ~/.docker/cli-plugins && \
