@@ -113,34 +113,26 @@ module Shipitron
       end
     end
 
-    desc 'bootstrap <app>', 'Bootstrap ECS task definitions and services'
+    desc 'monitor_deploy', 'Monitors a deployment'
     option :region, required: true
-    option :cluster_name, required: true
-    option :service_count, type: :numeric, default: 0
-    option :task_def_dir, default: 'shipitron/ecs_task_defs'
-    option :service_dir, default: 'shipitron/ecs_services'
-    option :secrets_file, default: '~/.config/shipitron/secrets.yml'
+    option :cluster, required: true
+    option :task_arn, required: true
     option :debug, type: :boolean, default: false
-    def bootstrap(app)
-      setup(
-        secrets_file: options[:secrets_file]
-      )
+    def monitor_deploy
+      setup
 
-      require 'shipitron/client/bootstrap_application'
-      result = Client::BootstrapApplication.call(
-        application: app,
+      require 'shipitron/client/monitor_deploy'
+      result = Client::MonitorDeploy.call(
         region: options[:region],
-        cluster_name: options[:cluster_name],
-        service_count: options[:service_count],
-        task_def_directory: options[:task_def_dir],
-        service_directory: options[:service_dir]
+        cluster: options[:cluster],
+        task_arn: options[:task_arn]
       )
 
       if result.failure?
         result.error_messages.each do |error|
           Logger.fatal error
         end
-        Logger.fatal 'Bootstrap failed.'
+        Logger.fatal 'Failed.'
       end
     end
 

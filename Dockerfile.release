@@ -28,23 +28,29 @@ RUN apk add --no-cache \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV ECR_CREDENTIAL_HELPER_VERSION 0.6.0
-RUN cd /usr/local/bin && \
-      wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIAL_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login && \
+RUN set -eux; \
+      \
+      cd /usr/local/bin; \
+      wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIAL_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login; \
       chmod +x docker-credential-ecr-login
 
 ENV BUILDKIT_VERSION v0.11.4
-RUN cd /usr/local/bin && \
-      wget -nv https://github.com/moby/buildkit/releases/download/${BUILDKIT_VERSION}/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz && \
-      tar --strip-components=1 -zxvf buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz bin/buildctl && \
-      chmod +x buildctl && \
+RUN set -eux; \
+      \
+      cd /usr/local/bin; \
+      wget -nv https://github.com/moby/buildkit/releases/download/${BUILDKIT_VERSION}/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz; \
+      tar --strip-components=1 -zxvf buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz bin/buildctl; \
+      chmod +x buildctl; \
       rm -f buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz
 
 USER shipitron
 ENV BUILDX_VERSION v0.10.4
-RUN cd /home/shipitron && \
-      wget -nv https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.linux-amd64 && \
-      mkdir -p ~/.docker/cli-plugins && \
-      mv buildx-${BUILDX_VERSION}.linux-amd64 ~/.docker/cli-plugins/docker-buildx && \
+RUN set -eux; \
+      \
+      cd /home/shipitron; \
+      wget -nv https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.linux-amd64; \
+      mkdir -p ~/.docker/cli-plugins; \
+      mv buildx-${BUILDX_VERSION}.linux-amd64 ~/.docker/cli-plugins/docker-buildx; \
       chmod a+x ~/.docker/cli-plugins/docker-buildx
 
 USER root
@@ -53,10 +59,12 @@ WORKDIR /app
 
 ENV SHIPITRON_VERSION=1.4.1
 
-RUN gem install shipitron -v ${SHIPITRON_VERSION} && \
-    mkdir -p /home/shipitron/.ssh && \
-    chown shipitron:shipitron /home/shipitron/.ssh && \
-    chmod 700 /home/shipitron/.ssh
+RUN set -eux; \
+      \
+      gem install shipitron -v ${SHIPITRON_VERSION}; \
+      mkdir -p /home/shipitron/.ssh; \
+      chown shipitron:shipitron /home/shipitron/.ssh; \
+      chmod 700 /home/shipitron/.ssh
 
 COPY docker/release-entrypoint.sh /docker-entrypoint.sh
 

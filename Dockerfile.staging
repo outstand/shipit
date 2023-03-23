@@ -28,23 +28,29 @@ RUN apk add --no-cache \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV ECR_CREDENTIAL_HELPER_VERSION 0.6.0
-RUN cd /usr/local/bin && \
-      wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIAL_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login && \
+RUN set -eux; \
+      \
+      cd /usr/local/bin; \
+      wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIAL_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login; \
       chmod +x docker-credential-ecr-login
 
 ENV BUILDKIT_VERSION v0.11.4
-RUN cd /usr/local/bin && \
-      wget -nv https://github.com/moby/buildkit/releases/download/${BUILDKIT_VERSION}/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz && \
-      tar --strip-components=1 -zxvf buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz bin/buildctl && \
-      chmod +x buildctl && \
+RUN set -eux; \
+      \
+      cd /usr/local/bin; \
+      wget -nv https://github.com/moby/buildkit/releases/download/${BUILDKIT_VERSION}/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz; \
+      tar --strip-components=1 -zxvf buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz bin/buildctl; \
+      chmod +x buildctl; \
       rm -f buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz
 
 USER shipitron
 ENV BUILDX_VERSION v0.10.4
-RUN cd /home/shipitron && \
-      wget -nv https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.linux-amd64 && \
-      mkdir -p ~/.docker/cli-plugins && \
-      mv buildx-${BUILDX_VERSION}.linux-amd64 ~/.docker/cli-plugins/docker-buildx && \
+RUN set -eux; \
+      \
+      cd /home/shipitron; \
+      wget -nv https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.linux-amd64; \
+      mkdir -p ~/.docker/cli-plugins; \
+      mv buildx-${BUILDX_VERSION}.linux-amd64 ~/.docker/cli-plugins/docker-buildx; \
       chmod a+x ~/.docker/cli-plugins/docker-buildx
 
 USER root
@@ -52,10 +58,15 @@ ENV USE_BUNDLE_EXEC true
 ENV BUNDLE_GEMFILE /shipitron/Gemfile
 
 ENV BUNDLER_VERSION 2.4.8
-RUN gem install bundler -v ${BUNDLER_VERSION} -i /usr/local/lib/ruby/gems/$(ls /usr/local/lib/ruby/gems) --force
+RUN set -eux; \
+      \
+      gem install bundler -v ${BUNDLER_VERSION} \
+      -i /usr/local/lib/ruby/gems/$(ls /usr/local/lib/ruby/gems) --force
 
 WORKDIR /shipitron
-RUN chown -R shipitron:shipitron /shipitron /usr/local/bundle
+RUN set -eux; \
+      \
+      chown -R shipitron:shipitron /shipitron /usr/local/bundle
 
 COPY --chown=shipitron:shipitron Gemfile shipitron.gemspec /shipitron/
 COPY --chown=shipitron:shipitron lib/shipitron/version.rb /shipitron/lib/shipitron/
@@ -63,12 +74,16 @@ COPY --chown=shipitron:shipitron exe/shipitron /shipitron/exe/shipitron
 COPY --chown=shipitron:shipitron .git/ /shipitron/
 
 USER shipitron
-RUN bundle install
+RUN set -eux; \
+      \
+      bundle install
 
 COPY --chown=shipitron:shipitron . /shipitron/
-RUN mkdir -p /home/shipitron/.ssh && \
-    chown shipitron:shipitron /home/shipitron/.ssh && \
-    chmod 700 /home/shipitron/.ssh
+RUN set -eux; \
+      \
+      mkdir -p /home/shipitron/.ssh; \
+      chown shipitron:shipitron /home/shipitron/.ssh; \
+      chmod 700 /home/shipitron/.ssh
 
 WORKDIR /app
 

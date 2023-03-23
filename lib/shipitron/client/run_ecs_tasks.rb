@@ -54,6 +54,8 @@ module Shipitron
           Logger.info line.chomp
         end
 
+        context.cluster = clusters.first.name
+        context.region = clusters.first.region
         @cluster = clusters.first
 
         begin
@@ -100,6 +102,7 @@ module Shipitron
             end
           end
 
+          context.task_arn = response.tasks.first.task_arn
         rescue Aws::ECS::Errors::ServiceError => e
           fail_with_errors!(messages: [
             "Error: #{e.message}",

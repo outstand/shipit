@@ -5,6 +5,7 @@ require 'shipitron/client/load_templates'
 require 'shipitron/client/fetch_clusters'
 require 'shipitron/client/ensure_deploy_not_running'
 require 'shipitron/client/run_ecs_tasks'
+require 'shipitron/client/monitor_deploy'
 
 module Shipitron
   module Client
@@ -21,7 +22,8 @@ module Shipitron
         LoadTemplates,
         FetchClusters,
         EnsureDeployNotRunning,
-        RunEcsTasks
+        RunEcsTasks,
+        MonitorDeploy
       ]
 
       def call

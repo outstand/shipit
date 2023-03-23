@@ -1,0 +1,80 @@
+# syntax=docker/dockerfile:1
+FROM outstand/su-exec as su-exec
+
+FROM ruby:3.2.1-bullseye
+LABEL maintainer="Ryan Schlesinger <ryan@outstand.com>"
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ENV DEBIAN_FRONTEND=noninteractive
+
+ARG docker_socket_group=900
+
+RUN set -eux; \
+      \
+      groupadd -g 1000 --system shipitron; \
+      useradd -u 1000 -g shipitron -ms /bin/bash --system shipitron; \
+      groupadd -g ${docker_socket_group} docker; \
+      usermod -a -G docker shipitron; \
+      \
+      apt-get update -y; \
+      apt-get install -y --no-install-recommends \
+        ca-certificates \
+        libssl-dev \
+        tini \
+        build-essential \
+        cmake \
+        git \
+        git-lfs \
+        openssh-client \
+        perl \
+        curl \
+        wget \
+        gnupg \
+        coreutils \
+        lsb-release \
+        jq \
+      ; \
+      \
+      apt-get clean; \
+      rm -f /var/lib/apt/lists/*_*/
+
+### Install docker
+RUN set -eux; \
+      \
+      mkdir -m 0755 -p /etc/apt/keyrings; \
+      curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg; \
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list; \
+      \
+      apt-get update; \
+      apt-get install -y \
+        docker-ce-cli \
+        docker-buildx-plugin \
+        docker-compose-plugin \
+      ; \
+      apt-get clean; \
+      rm -f /var/lib/apt/lists/*_*
+
+ENV BUILDKIT_VERSION v0.11.4
+RUN set -eux; \
+      \
+      cd /usr/local/bin; \
+      wget -nv https://github.com/moby/buildkit/releases/download/${BUILDKIT_VERSION}/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz; \
+      tar --strip-components=1 -zxvf buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz bin/; \
+      chmod +x buildctl buildkit-runc buildkitd; \
+      rm -f buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz
+
+ENV ECR_CREDENTIAL_HELPER_VERSION 0.6.0
+RUN set -eux; \
+      \
+      cd /usr/local/bin; \
+      wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ECR_CREDENTIAL_HELPER_VERSION}/linux-amd64/docker-credential-ecr-login; \
+      chmod +x docker-credential-ecr-login
+
+COPY --from=su-exec /sbin/su-exec /sbin/
+
+COPY docker/util-entrypoint.sh /docker-entrypoint.sh
+
+ENV BUILDKIT_PROGRESS=plain
+
+ENTRYPOINT ["/usr/bin/tini", "-g", "--", "/docker-entrypoint.sh"]
+CMD ["help"]

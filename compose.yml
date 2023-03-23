@@ -1,7 +1,7 @@
 services:
   shipitron:
     build: .
-    image: outstand/shipitron:dev
+    image: 786715713882.dkr.ecr.us-east-1.amazonaws.com/shipitron:dev
     environment:
       FIXUID:
       FIXGID:
@@ -11,6 +11,18 @@ services:
       - shipitron-home:/home/shipitron
       - ~/.config/shipitron:/home/shipitron/.config/shipitron
       - .:/shipitron
+
+  util:
+    build:
+      context: .
+      dockerfile: Dockerfile.util
+    image: 786715713882.dkr.ecr.us-east-1.amazonaws.com/shipitron:util
+
+  staging:
+    build:
+      context: .
+      dockerfile: Dockerfile.staging
+    image: public.ecr.aws/a5k7g6j4/shipitron:staging
 
   s3:
     image: 786715713882.dkr.ecr.us-east-1.amazonaws.com/cloudserver:latest
@@ -32,7 +44,7 @@ services:
 
   specs:
     build: .
-    image: outstand/shipitron:dev
+    image: 786715713882.dkr.ecr.us-east-1.amazonaws.com/shipitron:dev
     command: rspec
     environment:
       FIXUID:
@@ -48,7 +60,7 @@ services:
       - .:/shipitron
 
   release_gem:
-    image: outstand/shipitron:dev
+    image: 786715713882.dkr.ecr.us-east-1.amazonaws.com/shipitron:dev
     command: rake release
     working_dir: /shipitron
     environment:
